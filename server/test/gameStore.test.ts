@@ -109,4 +109,30 @@ describe('GameStore', () => {
     expect(s.saveId()).toBeNull();
     expect(s.apply(parsed(metaLine({ gameTime: 4000, date: d(1900, 1, 2) }))).events[0].type).toBe('game-changed');
   });
+
+  it('single-part seq nowszy niż pending wieloczęściowy porzuca stary zestaw', () => {
+    const s = new GameStore();
+    const [, p2, p3] = sectionLines('vehicles', [vehicle({ id: 1 }), vehicle({ id: 2 }), vehicle({ id: 3 })], { seq: 5, gameTime: 4000, parts: 3 });
+    s.apply(parsed(p2));
+    s.apply(parsed(p3));
+    expect(s.snapshot().vehicles).toEqual([]);
+    const single = sectionLines('vehicles', [vehicle({ id: 99 })], { seq: 6, gameTime: 4000, parts: 1 })[0];
+    s.apply(parsed(single));
+    expect(s.snapshot().vehicles.map((v) => v.id)).toEqual([99]);
+    const late = sectionLines('vehicles', [vehicle({ id: 1 })], { seq: 5, gameTime: 4000, parts: 3 })[0];
+    s.apply(parsed(late));
+    expect(s.snapshot().vehicles.map((v) => v.id)).toEqual([99]);
+  });
+
+  it('zmiana sessionId czyści pending niezależnie od seq', () => {
+    const s = new GameStore();
+    const [p1] = sectionLines('vehicles', [vehicle({ id: 1 })], { sessionId: 'sessA', seq: 50, gameTime: 4000, parts: 2 });
+    s.apply(parsed(p1));
+    expect(s.snapshot().vehicles).toEqual([]);
+    const [p1b, p2b] = sectionLines('vehicles', [vehicle({ id: 99 })], { sessionId: 'sessB', seq: 1, gameTime: 4000, parts: 2 });
+    s.apply(parsed(p1b));
+    expect(s.snapshot().vehicles).toEqual([]);
+    s.apply(parsed(p2b));
+    expect(s.snapshot().vehicles.map((v) => v.id)).toEqual([99]);
+  });
 });
