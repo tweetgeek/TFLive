@@ -1,5 +1,5 @@
 import type { AddressInfo } from 'node:net';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import WebSocket from 'ws';
 import { DEFAULT_ALERT_CONFIG } from '../src/config';
 import { HistoryStore } from '../src/history/historyStore';
@@ -65,5 +65,39 @@ describe('HTTP', () => {
     const next = nextMessage(client);
     feed(hub);
     expect((await next).snapshot.vehicles[0].id).toBe(5);
+  });
+
+  it('WS: jeden listener nawet z 12 klientami', async () => {
+    const { hub, ws } = await start();
+    const clients: WebSocket[] = [];
+    for (let i = 0; i < 12; i++) {
+      const client = new WebSocket(ws);
+      clients.push(client);
+      closers.push(async () => client.close());
+      await nextMessage(client);
+    }
+    expect(hub.listenerCount('update')).toBe(1);
+    for (const client of clients) {
+      client.close();
+    }
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    const reconnect = new WebSocket(ws);
+    closers.push(async () => reconnect.close());
+    const msg = await nextMessage(reconnect);
+    expect(msg).toMatchObject({ type: 'state' });
+  });
+
+  it('POST /api/mutes: 500 gdy hub.addMute rzuca innym błędem', async () => {
+    const { hub, base } = await start();
+    feed(hub);
+    vi.spyOn(hub, 'addMute').mockImplementation(() => {
+      throw new Error('db down');
+    });
+    const res = await fetch(`${base}/api/mutes`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ alertType: 'vehicle-no-path', entityId: 5, kind: 'ignore' }),
+    });
+    expect(res.status).toBe(500);
   });
 });
