@@ -93,6 +93,12 @@ Mapa i minimapa, sterowanie grą, dostęp z internetu, multiplayer, wykresy tren
 - Ustawienia modu (parametry mod.json): interwały sekcji.
 - Mod liczy bajty wypisane do logu i raportuje `bytesWritten` w `meta`.
 - Każda linia jest samowystarczalna: nazwy (cargo, modele, encje) są w tej samej linii co dane. Nie ma osobnych słowników „wysyłanych raz”.
+- **Obowiązki modu wobec kontraktu (plan 2):**
+  - w każdej nowej sesji modu pierwsza linia to `meta`, przed innymi sekcjami i przed `backfill` (od tego zależy wykrywanie Cofnięcia);
+  - brakujące wartości są zapisywane jawnie jako `null` (w krotkach i kluczach obiektów), nigdy pominięte;
+  - liczby w nagłówku linii są całkowite (`\d+`);
+  - `lastReceivedTime = null` oznacza „nie wiadomo” (reguła Niedostarczonego surowca wtedy milczy), a nie „nigdy nie dostarczono”;
+  - kolejność pól w krotkach określa tabela formatu w planie 1 (Task 2) z rozszerzeniem `lines` o `operatingResultByMonth` (11. pole: `[[month,value]]`).
 
 ## 4. Model danych
 
@@ -113,6 +119,7 @@ Snapshot {
                operatingResultByMonth: [{ month, value }] /* ostatnie 3 miesiące */ }
   lines:     [{ id, name, mode, color?, stops: stopId[], vehicleIds,
                 firstLedgerTime? /* Początek linii */, operatingResult12m, investments12m?,
+                operatingResultByMonth: [{ month, value }] /* ostatnie 3 miesiące, wartości miesięczne */,
                 departureLoads: [{ stopIndex, load, capacity, time }] /* do Obłożenia linii */ }]
   vehicles:  [{ id, name, lineId | null, mode, state /* IN_DEPOT|EN_ROUTE|AT_TERMINAL|GOING_TO_DEPOT */,
                 userStopped, noPath, daysAtTerminal, daysInDepot,
@@ -146,14 +153,16 @@ Tabele SQLite, każdy wiersz kluczowany przez `(saveId, month)`, gdzie `month` t
 
 | Tabela | Zawartość |
 |---|---|
-| `metrics_global` | saldo, kredyt, Wynik operacyjny, Koszty bieżące, Inwestycje, liczba Pojazdów i Linii |
-| `metrics_line` | `lineId`, Wynik operacyjny, Obłożenie linii, liczba Pojazdów |
+| `metrics_global` | saldo, kredyt, **miesięczny** Wynik operacyjny, Koszty bieżące z Okna kroczącego (`running_costs_12m`), liczba Pojazdów i Linii |
+| `metrics_line` | `lineId`, **miesięczny** Wynik operacyjny, Obłożenie linii, liczba Pojazdów |
 | `metrics_town` | `townId`, populacja |
 | `metrics_industry` | `industryId`, poziom, produkcja |
 | `mutes` | `saveId`, rodzaj alertu, encja, rodzaj Wyciszenia, `untilGameTime?` |
 | `games` | `saveId`, nazwa mapy, ostatnio widziany czas gry |
 
-- Zapis odbywa się raz na miesiąc gry, w jednej transakcji, jako upsert, więc duplikatów nie ma.
+- Wiersz miesiąca M opisuje **stan z końca M**: zapisywany jest przy przejściu do M+1 (oraz wstępnie, gdy w trakcie M dotrą wszystkie sekcje), w jednej transakcji, jako upsert. Każda tabela jest zapisywana tylko z sekcji, które dotarły od ostatniego resetu; brak jednej sekcji nie blokuje pozostałych (przegląd końcowy planu 1: I2, I3).
+- Kolumny Wyniku operacyjnego zawierają zawsze **wartości miesięczne**: z `finance.operatingResultByMonth` / `lines[].operatingResultByMonth` (na żywo) i z sekcji `backfill`. Wartości z Okna kroczącego (12m) nie trafiają do tych kolumn (przegląd końcowy planu 1: C1).
+- **Cofnięcie po restarcie:** przy zmianie Rozgrywki lub nowym logu pierwszy `meta` jest porównywany z `games.last_game_time` tej Rozgrywki; czas mniejszy o więcej niż dzień gry oznacza Cofnięcie (obcięcie Historii po miesiącu z `meta`). `last_game_time` aktualizowany jest przy każdym zapisie miesiąca (przegląd końcowy planu 1: I1).
 - **Uzupełnienie historii:** na początku każdej sesji modu (§3: wykrywanie nowej sesji) mod sam odczytuje z księgi gry miesięczne Wyniki operacyjne firmy i każdej istniejącej Linii, od początku księgi do bieżącego miesiąca. Robi to partiami (np. 12 miesięcy na tick) i wypisuje każdą partię jako jedną linię logu sekcji `backfill`. Serwer robi upsert do `metrics_global` i `metrics_line`. Tak samo obsłużone jest pierwsze zobaczenie Rozgrywki i Cofnięcie, a przepływ danych pozostaje jednokierunkowy. Wolumen to jednorazowo ok. 1–3 MB w logu na wczytanie zapisu. Księga sięga początku gry, a odczyt jest tani (krok 0: #12, #13). Bilans Linii pobieramy z encji Linii; nie sumujemy Linii z jej Pojazdami, bo wpisy liczą się wtedy podwójnie (krok 0: #11). Populacji, produkcji ani liczby Pojazdów z przeszłości nie da się odtworzyć, więc te serie zaczynają się od instalacji.
 
 ## 5. Silnik alertów
