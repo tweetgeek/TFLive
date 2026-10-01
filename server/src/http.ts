@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs';
 import fastifyStatic from '@fastify/static';
 import fastifyWebsocket from '@fastify/websocket';
 import Fastify, { type FastifyInstance } from 'fastify';
+import type { WebSocket } from '@fastify/websocket';
 import type { AlertType, MuteKind } from '@tflive/shared';
 import type { Hub, HubState } from './hub';
 
@@ -20,6 +21,17 @@ export async function buildServer(opts: { hub: Hub; webDir?: string | null }): P
   const app = Fastify({ logger: false });
   await app.register(fastifyWebsocket);
 
+  const sockets = new Set<WebSocket>();
+
+  const broadcastState = (s: HubState) => {
+    const message = JSON.stringify({ type: 'state', ...s });
+    for (const socket of sockets) {
+      socket.send(message);
+    }
+  };
+
+  hub.on('update', broadcastState);
+
   app.get('/api/health', async () => hub.status());
   app.get('/api/state', async () => hub.state());
   app.get('/api/mutes', async () => hub.mutes());
@@ -31,12 +43,11 @@ export async function buildServer(opts: { hub: Hub; webDir?: string | null }): P
     if (!ALERT_TYPES.includes(b.alertType as AlertType) || !KINDS.includes(b.kind as MuteKind) || !validEntity || !validUntil) {
       return reply.code(400).send({ error: 'Niepoprawne dane Wyciszenia' });
     }
-    try {
-      const mute = hub.addMute({ alertType: b.alertType as AlertType, entityId: b.entityId as number | null, kind: b.kind as MuteKind, untilGameTime: (b.untilGameTime as number | null | undefined) ?? null });
-      return reply.code(201).send(mute);
-    } catch (e) {
-      return reply.code(409).send({ error: (e as Error).message });
+    if (hub.status().saveId === null) {
+      return reply.code(409).send({ error: 'Brak aktywnej Rozgrywki' });
     }
+    const mute = hub.addMute({ alertType: b.alertType as AlertType, entityId: b.entityId as number | null, kind: b.kind as MuteKind, untilGameTime: (b.untilGameTime as number | null | undefined) ?? null });
+    return reply.code(201).send(mute);
   });
 
   app.delete<{ Params: { id: string } }>('/api/mutes/:id', async (req, reply) => {
@@ -44,10 +55,9 @@ export async function buildServer(opts: { hub: Hub; webDir?: string | null }): P
   });
 
   app.get('/ws', { websocket: true }, (socket) => {
-    const send = (s: HubState) => socket.send(JSON.stringify({ type: 'state', ...s }));
-    send(hub.state());
-    hub.on('update', send);
-    socket.on('close', () => hub.off('update', send));
+    sockets.add(socket);
+    socket.send(JSON.stringify({ type: 'state', ...hub.state() }));
+    socket.on('close', () => sockets.delete(socket));
   });
 
   if (opts.webDir && existsSync(opts.webDir)) {
