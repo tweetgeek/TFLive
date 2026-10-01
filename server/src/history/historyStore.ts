@@ -107,6 +107,12 @@ export class HistoryStore {
       .run(saveId, mapName, gameTime);
   }
 
+  /** Ostatnio widziany czas gry Rozgrywki (aktualizowany przy każdym zapisie miesiąca) albo null. */
+  lastGameTime(saveId: string): number | null {
+    const row = this.db.prepare('SELECT last_game_time FROM games WHERE save_id = ?').get(saveId) as { last_game_time: number | null } | undefined;
+    return row?.last_game_time ?? null;
+  }
+
   readGlobal(saveId: string): GlobalRow[] {
     return this.db
       .prepare(`SELECT month, balance, loan, operating_result AS operatingResult, running_costs_12m AS runningCosts12m, vehicles, lines
