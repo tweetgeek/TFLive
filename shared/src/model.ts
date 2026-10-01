@@ -40,6 +40,8 @@ export interface Line {
   operatingResult12m: number;
   investments12m: number | null;
   departureLoads: DepartureLoad[];
+  /** Miesięczne Wyniki operacyjne (ostatnie 3 miesiące); 11. pole krotki. */
+  operatingResultByMonth: MonthValue[];
 }
 
 export const VEHICLE_STATES = ['IN_DEPOT', 'EN_ROUTE', 'AT_TERMINAL', 'GOING_TO_DEPOT'] as const;

@@ -13,7 +13,7 @@ export function encodeSection(s: DecodedSection): unknown {
       return { bal: f.balance, loan: f.loan, ops12: f.operatingResult12m, run12: f.runningCosts12m, inv12: f.investments12m, opsM: f.operatingResultByMonth.map((x) => [x.month, x.value]) };
     }
     case 'lines':
-      return s.data.map((l) => [l.id, l.name, l.mode, l.color, l.stopIds, l.vehicleIds, l.firstLedgerTime, l.operatingResult12m, l.investments12m, l.departureLoads.map((d) => [d.stopIndex, d.load, d.capacity, d.time])]);
+      return s.data.map((l) => [l.id, l.name, l.mode, l.color, l.stopIds, l.vehicleIds, l.firstLedgerTime, l.operatingResult12m, l.investments12m, l.departureLoads.map((d) => [d.stopIndex, d.load, d.capacity, d.time]), l.operatingResultByMonth.map((x) => [x.month, x.value])]);
     case 'vehicles':
       return s.data.map((v) => [v.id, v.name, v.lineId, v.mode, v.state, b(v.userStopped), b(v.noPath), v.daysAtTerminal, v.daysInDepot, v.load, v.capacity, v.operatingResult12m, v.parts.map((p) => [p.model, p.purchaseTime, p.lifespanSec, p.maintenanceState])]);
     case 'industries':

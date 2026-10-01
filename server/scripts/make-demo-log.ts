@@ -31,10 +31,11 @@ export function makeDemoLog(): string[] {
       operatingResultByMonth: [{ month: month - 2, value: -9_000 }, { month: month - 1, value: -4_000 }, { month, value: 2_000 }],
     } });
     if (step % 2 !== 0) continue;
+    const opsM = (a: number, b: number, c: number) => [{ month: month - 2, value: a }, { month: month - 1, value: b }, { month, value: c }];
     const lines: Line[] = [
-      { id: 1, name: 'IC Północ', mode: 'RAIL', color: '#1f6feb', stopIds: [101, 102], vehicleIds: [11, 12, 13], firstLedgerTime: 0, operatingResult12m: 850_000, investments12m: -300_000, departureLoads: [{ stopIndex: 0, load: 180, capacity: 200, time: g - DAY }] },
-      { id: 2, name: 'Bus Ełk', mode: 'ROAD', color: '#d29922', stopIds: [103, 104], vehicleIds: [21, 22, 23], firstLedgerTime: 0, operatingResult12m: -35_000, investments12m: null, departureLoads: [{ stopIndex: 0, load: 4, capacity: 40, time: g - DAY }] },
-      { id: 3, name: 'Węgiel – Huta', mode: 'ROAD', color: null, stopIds: [105, 106], vehicleIds: [], firstLedgerTime: 0, operatingResult12m: 0, investments12m: null, departureLoads: [] },
+      { id: 1, name: 'IC Północ', mode: 'RAIL', color: '#1f6feb', stopIds: [101, 102], vehicleIds: [11, 12, 13], firstLedgerTime: 0, operatingResult12m: 850_000, investments12m: -300_000, departureLoads: [{ stopIndex: 0, load: 180, capacity: 200, time: g - DAY }], operatingResultByMonth: opsM(70_000, 72_000, 25_000) },
+      { id: 2, name: 'Bus Ełk', mode: 'ROAD', color: '#d29922', stopIds: [103, 104], vehicleIds: [21, 22, 23], firstLedgerTime: 0, operatingResult12m: -35_000, investments12m: null, departureLoads: [{ stopIndex: 0, load: 4, capacity: 40, time: g - DAY }], operatingResultByMonth: opsM(-3_000, -2_500, -1_000) },
+      { id: 3, name: 'Węgiel – Huta', mode: 'ROAD', color: null, stopIds: [105, 106], vehicleIds: [], firstLedgerTime: 0, operatingResult12m: 0, investments12m: null, departureLoads: [], operatingResultByMonth: opsM(0, 0, 0) },
     ];
     const part = (purchaseDay: number, lifespanYears: number, maint: number) => ({ model: 'demo_model', purchaseTime: purchaseDay * DAY, lifespanSec: (lifespanYears * 365 * DAY) / 1000, maintenanceState: maint });
     const v = (id: number, name: string, lineId: number | null, o: Partial<Vehicle> = {}): Vehicle => ({
