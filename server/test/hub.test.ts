@@ -228,4 +228,22 @@ describe('Hub', () => {
     expect(months(history, 'saveB')).toEqual([1, 2, 3]);
     expect(hub.mutes()).toHaveLength(1);
   });
+
+  it('lastError znika po poprawnie zastosowanej linii TFLIVE', () => {
+    const { hub } = makeHub();
+    hub.ingest(read(['[x]  [TFLIVE] 1 save1 s 1 1 stops 1/1 [[1]]']));
+    expect(hub.status().lastError).toMatch(/stop/);
+    hub.ingest(read([metaLine({ gameTime: 4000, date: d(1900, 1, 2) })]));
+    expect(hub.status().lastError).toBeNull();
+  });
+
+  it('czas ostatniej linii pochodzi z prefiksu logu: stare linie nie są „live”', () => {
+    const wall = Date.UTC(2026, 9, 1, 18, 6, 0);
+    const hub = new Hub({ history: new HistoryStore(':memory:'), config: DEFAULT_ALERT_CONFIG, staleMs: 15_000, logPath: null, now: () => wall });
+    const old = metaLine({ gameTime: 4000, date: d(1900, 1, 2) }).replace('[2026-10-01 18:05:54Z', '[2020-01-01 00:00:00Z');
+    hub.ingest(read([old]));
+    expect(hub.status()).toMatchObject({ live: false, lastLineWallMs: Date.UTC(2020, 0, 1) });
+    hub.ingest(read([metaLine({ seq: 2, gameTime: 8000, date: d(1900, 1, 3) })]));
+    expect(hub.status()).toMatchObject({ live: true, lastLineWallMs: Date.UTC(2026, 9, 1, 18, 5, 54) });
+  });
 });
