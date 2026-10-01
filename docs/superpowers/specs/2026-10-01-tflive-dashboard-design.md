@@ -10,8 +10,8 @@ Dashboard otwierany w przeglądarce (tablet lub komputer w sieci domowej), któr
 
 | Etap | Zawartość |
 |---|---|
-| v1 | (A) podgląd live: kafelki KPI i tabele; (B) alerty w 4 kategoriach; zbieranie historii od pierwszego dnia |
-| później | (C) wykresy trendów na podstawie zebranej historii; opcjonalny RAM-disk |
+| v1 | (A) podgląd live: kafelki KPI i tabele; (B) alerty w 4 kategoriach; zbieranie historii od pierwszego dnia; wymiana danych przez RAM-dysk, gdy dostępny |
+| później | (C) wykresy trendów na podstawie zebranej historii |
 
 ### Kryteria sukcesu
 
@@ -182,7 +182,22 @@ Kanał gra → serwer przechodzi przez pliki, bo Lua w grze najpewniej nie ma do
    - logi tylko przy błędach i zmianach stanu;
    - wyciszenia to pojedyncze zapisy przy kliknięciu;
    - odczyt plików przez polling `stat` co 1 s (same odczyty).
-9. **Opcja na później:** katalog wymiany na RAM-dysku (macOS: `hdiutil`; Windows: narzędzie zewnętrzne), opisana w README.
+9. **Katalog wymiany na RAM-dysku, gdy jest dostępny** (§7a). Wtedy wymiana gra → serwer nie zapisuje nic na SSD. Punkty 1–8 obowiązują nadal: zmniejszają obciążenie CPU i są budżetem w trybie awaryjnym.
+
+### 7a. RAM-dysk dla wymiany
+
+Mod zawsze zapisuje do tego samego katalogu wymiany w katalogu danych użytkownika gry. Mod nie musi znać RAM-dysku: przy starcie serwer podmienia katalog wymiany na dowiązanie do katalogu na RAM-dysku.
+
+| System | Tworzenie RAM-dysku | Dowiązanie |
+|---|---|---|
+| macOS | automatycznie przez serwer, bez sudo: `hdiutil attach -nomount ram://<sektory>` + `diskutil erasevolume APFS TFLive <dev>`; rozmiar domyślny 64 MB | symlink |
+| Windows | brak wbudowanego mechanizmu. Serwer używa RAM-dysku wskazanego w `config.json` (`ramDiskPath`, np. `R:\` z ImDisk/OSFMount, utworzonego przez użytkownika) | junction (`mklink /J`, bez uprawnień administratora) |
+
+- Gdy RAM-dysk jest niedostępny (Windows bez `ramDiskPath`, błąd `hdiutil`, brak miejsca), serwer zostawia zwykły katalog na dysku (tryb awaryjny z budżetem §7), loguje przyczynę i pokazuje w UI tryb: „RAM” albo „dysk: X MB/h”.
+- Dane wymiany są ulotne. Utrata po restarcie systemu jest akceptowalna, bo to tylko bieżący stan, a trwała historia trafia do SQLite. Zrzutów wymiany na dysk nie robimy.
+- Przy zamknięciu serwer usuwa dowiązanie i odtwarza zwykły katalog. RAM-dysk na macOS odmontowuje (`hdiutil detach`) tylko wtedy, gdy sam go utworzył.
+- Jeśli serwer nie działa, a gra tak, mod pisze do zwykłego katalogu (tryb awaryjny). Gdy przy starcie serwera dowiązanie nie może zastąpić katalogu, bo pliki są zablokowane przez grę, serwer ponawia próbę przy następnym cyklu, a do tego czasu czyta zwykły katalog.
+- Krok 0 weryfikuje, że `io.open` w grze poprawnie zapisuje przez symlink (macOS) i junction (Windows).
 
 ## 8. Wieloplatformowość (Windows + macOS)
 
@@ -226,13 +241,14 @@ Kanał gra → serwer przechodzi przez pliki, bo Lua w grze najpewniej nie ma do
    - które pola z §4 są dostępne;
    - czas zbierania danych i zapisany wolumen na dużej mapie;
    - czy hook działa w pauzie;
-   - mechanizm `saveId`.
+   - mechanizm `saveId`;
+   - zapis przez symlink (macOS) i junction (Windows) do RAM-dysku.
 
    Wynik: wybór kanału, lista pól `?`, rzeczywiste interwały. Kod spike'a jest do wyrzucenia.
 1. Monorepo, `shared/` (typy, `SCHEMA_VERSION`), `ReplaySource`, fixture'y.
-2. Serwer: ingest, state, WebSocket, REST, `FileSource`, health.
+2. Serwer: ingest, state, WebSocket, REST, `FileSource`, health, zarządzanie RAM-dyskiem i dowiązaniem (§7a).
 3. Mod: collectors, serializer kompaktowy, emitter, harmonogram, `bytesWritten`.
 4. Silnik alertów i konfiguracja progów.
 5. Historia SQLite i wyciszenia.
 6. Widoki Vue.
-7. `install-mod`, README (instalacja na Windows i macOS, konfiguracja, opcja RAM-dysku).
+7. `install-mod`, README (instalacja na Windows i macOS, konfiguracja, przygotowanie RAM-dysku na Windows przez ImDisk/OSFMount).
