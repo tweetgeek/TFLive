@@ -84,30 +84,61 @@ Mapa i minimapa, sterowanie grą, dostęp z internetu, multiplayer, wykresy tren
 
 Pole oznaczone `?` jest opcjonalne. Krok 0 ustala, czy API je udostępnia. Brakujące pole ma wartość `null`.
 
+Terminologia (Rozgrywka, Wynik operacyjny, Pojazd, Część pojazdu, Przystanek, Obsługiwana fabryka itd.) jest zdefiniowana w `CONTEXT.md` i obowiązuje w kodzie, UI i dokumentach.
+
 ```ts
 Snapshot {
   schemaVersion: 1
-  meta:      { saveId, mapName?, gameTime, date: {y, m, d}, gameSpeed, paused,
+  meta:      { saveId /* = id Rozgrywki */, mapName?, gameTime, date: {y, m, d}, gameSpeed, paused,
                capturedAtMs, bytesWritten, errors: string[] }
-  finance:   { balance, loan, incomeThisYear?, expenseThisYear?,
-               incomeLastYear?, expenseLastYear?, byCategory? }
-  lines:     [{ id, name, mode, color?, stops: stationGroupId[], vehicleIds,
-                profitLastYear?, incomeLastYear?, waitingCargo?, frequencySec? }]
-  vehicles:  [{ id, name, lineId | null, mode, modelName, purchaseDate, lifespanYears?,
-                condition?, state, load, capacity, profitLastYear? }]
+  finance:   { balance, loan,
+               // z księgi gry (calculateBalance, maintenanceIncomeOnly = true), Okno kroczące:
+               operatingResult12m, runningCosts12m, investments12m?,
+               operatingResultByMonth: [{ month, value }] /* ostatnie 3 miesiące */ }
+  lines:     [{ id, name, mode, color?, stops: stopId[], vehicleIds,
+                firstLedgerTime? /* Początek linii */, operatingResult12m, investments12m?,
+                departureLoads: [{ stopIndex, load, capacity, time }] /* do Obłożenia linii */ }]
+  vehicles:  [{ id, name, lineId | null, mode, state /* IN_DEPOT|EN_ROUTE|AT_TERMINAL|GOING_TO_DEPOT */,
+                userStopped, noPath, daysAtTerminal, daysInDepot,
+                load, capacity, operatingResult12m?,
+                parts: [{ model, purchaseTime, lifespan, maintenanceState }] }]
   industries:[{ id, name, type, level, maxLevel, closureTimeStamp?, upgradeProgress,
-                inputs: [{cargo, stock, demand}], outputs: [{cargo, produced, shipped}] }]
+                inputs:  [{ cargo, stock, lastReceivedTime? }],
+                outputs: [{ cargo, stock, capacity }],
+                lastServedTime? /* do Obsługiwanej fabryki */ }]
   towns:     [{ id, name, population, developmentActive, noise, pollution,
-                needs: [{district, cargo, demand, supplied?}] }]
-  stations:  [{ id, name, waiting: [{cargo, count}] }]
+                needs: [{ district, cargo, demand, supplied? }], lastServedTime? }]
+  stops:     [{ id, name, waiting: [{ cargo, count }], longestWaitStartTime? }]
 }
 ```
 
-`state` pojazdu: `EN_ROUTE | AT_TERMINAL | IN_DEPOT | STOPPED | BROKEN`.
+Wartości pochodne liczone przez serwer:
+- Wiek i Stan pojazdu: z `parts`, najstarsza i najgorsza część.
+- Wykorzystanie żywotności: `(gameTime - purchaseTime) / lifespan` dla każdej części.
+- Rezerwa: `balance / (runningCosts12m / 12)`.
+- Obłożenie linii: średnia z `departureLoads` z ostatnich 3 miesięcy, trzymana w buforze serwera.
+- Czas oczekiwania na Przystanku: `gameTime - longestWaitStartTime`, z `getStockSimEntity`.
+
 
 Na dysku dane są w formacie kompaktowym: tablice wartości w ustalonej kolejności pól i słowniki nazw (cargo, modele) wysyłane raz. `server/ingest` rozpakowuje je do powyższego modelu. Format kompaktowy jest wersjonowany razem z `schemaVersion`. Nieznana wersja jest odrzucana, a UI pokazuje czytelny komunikat.
 
 Wartości pochodne liczy serwer: `ageYears`, `loadPct`, wskaźniki obłożenia linii, procent zaspokojenia potrzeb miast.
+
+### 4a. Historia i Uzupełnienie historii
+
+Tabele SQLite, każdy wiersz kluczowany przez `(saveId, month)`, gdzie `month` to miesiąc czasu gry:
+
+| Tabela | Zawartość |
+|---|---|
+| `metrics_global` | saldo, kredyt, Wynik operacyjny, Koszty bieżące, Inwestycje, liczba Pojazdów i Linii |
+| `metrics_line` | `lineId`, Wynik operacyjny, Obłożenie linii, liczba Pojazdów |
+| `metrics_town` | `townId`, populacja |
+| `metrics_industry` | `industryId`, poziom, produkcja |
+| `mutes` | `saveId`, rodzaj alertu, encja, rodzaj Wyciszenia, `untilGameTime?` |
+| `games` | `saveId`, nazwa mapy, ostatnio widziany czas gry |
+
+- Zapis odbywa się raz na miesiąc gry, w jednej transakcji, jako upsert, więc duplikatów nie ma.
+- **Uzupełnienie historii:** po każdym wczytaniu Zapisu gry mod sam odczytuje z księgi gry miesięczne Wyniki operacyjne firmy i każdej istniejącej Linii, od początku księgi do bieżącego miesiąca. Robi to partiami (np. 12 miesięcy na tick) i zapisuje wynik jednorazowo w sekcji `backfill.json`. Serwer robi upsert do `metrics_global` i `metrics_line`. Tak samo obsłużone jest pierwsze zobaczenie Rozgrywki i Cofnięcie, a przepływ danych pozostaje jednokierunkowy. Wolumen to jednorazowo ok. 1–3 MB na wczytanie zapisu. Populacji, produkcji ani liczby Pojazdów z przeszłości nie da się odtworzyć, więc te serie zaczynają się od instalacji.
 
 ## 5. Silnik alertów
 
@@ -120,30 +151,45 @@ Alert { id /* stabilny, np. "line-unprofitable:123" */, category, severity: 'inf
 
 Reguły v1 (progi domyślne w `config/alerts.json`):
 
-| Kategoria | Reguła | Próg domyślny |
-|---|---|---|
-| Linie | Zysk za ostatni rok ujemny | < 0 warn; < −`lineLossCritical` critical |
-| Linie | Niskie obłożenie | średnio < 25% |
-| Linie | Linia bez pojazdów | 0 |
-| Pojazdy | Stary | wiek > `lifespanYears` (lub > 25 lat, jeśli brak) |
-| Pojazdy | Niski stan / niezawodność | < 50% |
-| Pojazdy | Bez linii lub w zajezdni | > 1 miesiąc gry |
-| Pojazdy | Stoi | stan `STOPPED`/`BROKEN` > 10 min gry |
-| Dostawy | Fabryka bez surowców | wszystkie wejścia = 0 przez > 2 miesiące gry |
-| Dostawy | Groźba zamknięcia | `closureTimeStamp` ustawiony |
-| Dostawy | Nieodbierana produkcja | wysłane < 50% wyprodukowanego |
-| Finanse | Saldo spada | 3 kolejne miesiące spadku (z historii) |
-| Finanse | Niskie saldo | < `lowBalance` |
-| Miasta | Niezaspokojony popyt | dostarczone < 50% zapotrzebowania |
-| Stacje | Przepełnienie | oczekujących > 500 |
+Definicje pojęć są w `CONTEXT.md`.
+
+| Kategoria | Reguła (pojęcie z `CONTEXT.md`) | Warunek domyślny | Ważność |
+|---|---|---|---|
+| Finanse | Niska rezerwa | Rezerwa < 3 mies. / < 1 mies. | warn / critical |
+| Finanse | Ujemny Wynik operacyjny | suma z ostatnich 3 miesięcy < 0 | warn |
+| Linie | Nierentowna linia | po Rozruchu (6 mies.), Wynik operacyjny 12 mies. < 0 | warn |
+| Linie | Niskie obłożenie | Obłożenie linii < 25% (3 mies.) | info |
+| Linie | Linia bez pojazdów | 0 Pojazdów | warn |
+| Linie | Przeciążony przystanek | najdłuższe oczekiwanie > 14 dni gry | warn |
+| Pojazdy | Pojazd bez trasy | `noPath` | critical |
+| Pojazdy | Pojazd czekający | `daysAtTerminal` > 30 | warn |
+| Pojazdy | Bezczynny pojazd | brak Linii lub `daysInDepot` > 30 | warn |
+| Pojazdy | Stary pojazd | Wykorzystanie żywotności dowolnej Części ≥ 100% | warn |
+| Pojazdy | Niski stan pojazdu | Stan pojazdu < 50% | warn |
+| Dostawy | Niedostarczony surowiec | Obsługiwana fabryka; surowiec nie wpłynął > 2 mies. (alert dla każdego surowca) | warn |
+| Dostawy | Zalegająca produkcja | Obsługiwana fabryka; magazyn wyjściowy ≥ 80% > 1 mies. | warn |
+| Dostawy | Groźba zamknięcia | Obsługiwana fabryka; `closureTimeStamp` ustawiony | critical |
+| Miasta | Spadek dostaw | Obsługiwane miasto; dostarczany towar < 50% potrzeby lub spadek > 30% w 3 mies. | warn |
+
+Bez alertu, tylko oznaczenia w UI:
+- Pojazd zatrzymany (`userStopped`);
+- Wykorzystanie żywotności ≥ 90% („zbliża się koniec”);
+- Rozruch linii;
+- Niezaspokojona potrzeba miasta („szansa”);
+- Fabryki i miasta nieobsługiwane (domyślnie odfiltrowane).
 
 Zachowanie:
 
 - Reguła, której wymagane pole jest `null`, nie generuje alertu.
 - Alert trwa, dopóki warunek jest spełniony. Serwer pamięta `firstSeenGameTime`.
-- Reguły czasowe korzystają z bufora ostatnich snapshotów w pamięci (`recent`) oraz z historii SQLite.
-- Wyciszenie dotyczy pary encja + reguła, jest zapisywane w SQLite per `saveId` i można je cofnąć.
-- Zmiana `saveId` czyści stan alertów w pamięci.
+- Reguły czasowe korzystają z bufora ostatnich snapshotów w pamięci (`recent`) oraz z Historii w SQLite.
+- Wyciszenie dotyczy pary (rodzaj alertu, encja) w danej Rozgrywce i występuje w dwóch rodzajach:
+  - **Ignorowanie**: bezterminowe, cofane ręcznie.
+  - **Odłożenie**: do wskazanego czasu gry (domyślnie +3 miesiące), potem alert wraca, jeśli warunek trwa.
+
+  Obie zapisywane są w SQLite. Zakładka Alerty ma filtr „pokaż wyciszone”.
+- Zmiana Rozgrywki (`saveId`) czyści stan alertów w pamięci.
+- Cofnięcie (czas gry mniejszy niż ostatnio widziany dla tej samej Rozgrywki) obcina Historię od tego momentu, czyści bufory i uruchamia Uzupełnienie historii dla obciętego okresu. Wyciszenia zostają.
 
 ## 6. UI (Vue 3)
 
@@ -163,13 +209,13 @@ Transport: WebSocket wysyła pełny stan przy połączeniu, a potem aktualizacje
 
 Kanał gra → serwer przechodzi przez pliki, bo Lua w grze najpewniej nie ma dostępu do sieci. Celem jest mały, przewidywalny i zmierzony budżet zapisu.
 
-1. **Plik na sekcję, nadpisywany w miejscu**: `meta.json`, `finance.json`, `vehicles.json`, `lines.json`, `stations.json`, `industries.json`, `towns.json`. Pliki nie rosną i nie powstają nowe.
+1. **Plik na sekcję, nadpisywany w miejscu**: `meta.json`, `finance.json`, `vehicles.json`, `lines.json`, `stops.json`, `industries.json`, `towns.json`. Pliki nie rosną i nie powstają nowe.
 2. **Harmonogram domyślny:**
 
    | Sekcja | Interwał |
    |---|---|
    | `meta`, `finance` | 2 s |
-   | `vehicles`, `lines`, `stations` | 30 s |
+   | `vehicles`, `lines`, `stops` | 30 s |
    | `industries`, `towns` | 60 s |
 
 3. **Brak zapisu w pauzie, w menu i gdy sekcja się nie zmieniła** (porównanie taniego odcisku, np. sumy kontrolnej pól liczbowych).
@@ -242,6 +288,7 @@ Mod zawsze zapisuje do tego samego katalogu wymiany w katalogu danych użytkowni
    - czas zbierania danych i zapisany wolumen na dużej mapie;
    - czy hook działa w pauzie;
    - mechanizm `saveId`;
+   - jak daleko wstecz sięga księga gry (`calculateBalance`) i czy działa dla encji Linii i Pojazdów;
    - zapis przez symlink (macOS) i junction (Windows) do RAM-dysku.
 
    Wynik: wybór kanału, lista pól `?`, rzeczywiste interwały. Kod spike'a jest do wyrzucenia.
@@ -249,6 +296,6 @@ Mod zawsze zapisuje do tego samego katalogu wymiany w katalogu danych użytkowni
 2. Serwer: ingest, state, WebSocket, REST, `FileSource`, health, zarządzanie RAM-dyskiem i dowiązaniem (§7a).
 3. Mod: collectors, serializer kompaktowy, emitter, harmonogram, `bytesWritten`.
 4. Silnik alertów i konfiguracja progów.
-5. Historia SQLite i wyciszenia.
+5. Historia SQLite, Uzupełnienie historii, obsługa Cofnięcia i Wyciszenia.
 6. Widoki Vue.
 7. `install-mod`, README (instalacja na Windows i macOS, konfiguracja, przygotowanie RAM-dysku na Windows przez ImDisk/OSFMount).
