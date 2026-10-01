@@ -1,0 +1,8 @@
+{
+  "port": 8787,
+  "host": "0.0.0.0",
+  "logPath": null,
+  "dataDir": "server/data",
+  "pollMs": 1000,
+  "staleMs": 15000
+}
