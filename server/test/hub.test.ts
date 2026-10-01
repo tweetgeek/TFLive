@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_ALERT_CONFIG } from '../src/config';
 import { HistoryStore } from '../src/history/historyStore';
 import { Hub } from '../src/hub';
-import { DAY, metaLine, sectionLines, vehicle } from './builders';
+import { DAY, finance, metaLine, sectionLines, vehicle } from './builders';
 
 function makeHub() {
   let wall = 1_000_000;
@@ -11,6 +11,13 @@ function makeHub() {
   return { hub, history, tick: (ms: number) => (wall += ms) };
 }
 const read = (lines: string[], reset = false) => ({ lines, reset, missing: false });
+const sections = (seq: number, gameTime: number, balance = 1_000_000) => [
+  ...sectionLines('finance', finance({ balance }), { seq, gameTime }),
+  ...sectionLines('lines', [], { seq, gameTime }),
+  ...sectionLines('vehicles', [], { seq, gameTime }),
+  ...sectionLines('towns', [], { seq, gameTime }),
+  ...sectionLines('industries', [], { seq, gameTime }),
+];
 const d = (y: number, m: number, day = 1) => ({ y, m, d: day });
 
 describe('Hub', () => {
@@ -45,8 +52,8 @@ describe('Hub', () => {
 
   it('zapisuje miesiąc w Historii przy nowym miesiącu', () => {
     const { hub, history } = makeHub();
-    hub.ingest(read([metaLine({ gameTime: 4000, date: d(1900, 1, 2) })]));
-    hub.ingest(read([metaLine({ seq: 2, gameTime: 140_000, date: d(1900, 2, 5) })]));
+    hub.ingest(read([metaLine({ gameTime: 4000, date: d(1900, 1, 2) }), ...sections(1, 4000)]));
+    hub.ingest(read([metaLine({ seq: 2, gameTime: 140_000, date: d(1900, 2, 5) }), ...sections(2, 140_000)]));
     expect(history.readGlobal('save1').map((r) => r.month)).toEqual([1900 * 12, 1900 * 12 + 1]);
   });
 
@@ -65,11 +72,11 @@ describe('Hub', () => {
 
   it('Cofnięcie obcina Historię, zachowuje Wyciszenia', () => {
     const { hub, history } = makeHub();
-    hub.ingest(read([metaLine({ gameTime: 4000, date: d(1900, 1, 2) })]));
-    hub.ingest(read([metaLine({ seq: 2, gameTime: 140_000, date: d(1900, 2, 5) })]));
-    hub.ingest(read([metaLine({ seq: 3, gameTime: 260_000, date: d(1900, 3, 5) })]));
+    hub.ingest(read([metaLine({ gameTime: 4000, date: d(1900, 1, 2) }), ...sections(1, 4000)]));
+    hub.ingest(read([metaLine({ seq: 2, gameTime: 140_000, date: d(1900, 2, 5) }), ...sections(2, 140_000)]));
+    hub.ingest(read([metaLine({ seq: 3, gameTime: 260_000, date: d(1900, 3, 5) }), ...sections(3, 260_000)]));
     hub.addMute({ alertType: 'vehicle-old', entityId: 1, kind: 'ignore' });
-    hub.ingest(read([metaLine({ seq: 4, gameTime: 8000, date: d(1900, 1, 3) })]));
+    hub.ingest(read([metaLine({ seq: 4, gameTime: 8000, date: d(1900, 1, 3) }), ...sections(4, 8000)]));
     expect(history.readGlobal('save1').map((r) => r.month)).toEqual([1900 * 12]);
     expect(hub.mutes()).toHaveLength(1);
   });
@@ -117,5 +124,24 @@ describe('Hub', () => {
     expect(hub.status().logState).toBe('missing');
     hub.ingest(read(['[x]  [TFLIVE] 1 save1 s 1 1 stops 1/1 [[1]]']));
     expect(hub.status().lastError).toMatch(/stop/);
+  });
+
+  it('Cofnięcie nie zeruje wiersza miesiąca; sekcje go aktualizują', () => {
+    const { hub, history } = makeHub();
+    hub.ingest(read([metaLine({ gameTime: 4000, date: d(1900, 1, 2) }), ...sections(1, 4000, 555)]));
+    expect(history.readGlobal('save1')[0].balance).toBe(555);
+    hub.ingest(read([metaLine({ seq: 2, gameTime: 140_000, date: d(1900, 2, 5) }), ...sections(2, 140_000, 600)]));
+    hub.ingest(read([metaLine({ seq: 3, gameTime: 8000, date: d(1900, 1, 3) })]));
+    expect(history.readGlobal('save1')).toMatchObject([{ month: 1900 * 12, balance: 555 }]);
+    hub.ingest(read(sections(4, 8000, 777)));
+    expect(history.readGlobal('save1')[0].balance).toBe(777);
+  });
+
+  it('nie zapisuje miesiąca, dopóki nie dotrą wszystkie sekcje', () => {
+    const { hub, history } = makeHub();
+    hub.ingest(read([metaLine({ gameTime: 4000, date: d(1900, 1, 2) })]));
+    expect(history.readGlobal('save1')).toEqual([]);
+    hub.ingest(read(sections(1, 4000, 321)));
+    expect(history.readGlobal('save1')).toMatchObject([{ month: 1900 * 12, balance: 321 }]);
   });
 });

@@ -41,8 +41,8 @@ export class HistoryStore {
       this.db
         .prepare(`INSERT INTO metrics_global (save_id, month, balance, loan, operating_result, running_costs, vehicles, lines)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-          ON CONFLICT (save_id, month) DO UPDATE SET balance = excluded.balance, loan = excluded.loan,
-            operating_result = excluded.operating_result, running_costs = excluded.running_costs,
+          ON CONFLICT (save_id, month) DO UPDATE SET balance = COALESCE(excluded.balance, metrics_global.balance), loan = COALESCE(excluded.loan, metrics_global.loan),
+            operating_result = COALESCE(excluded.operating_result, metrics_global.operating_result), running_costs = COALESCE(excluded.running_costs, metrics_global.running_costs),
             vehicles = excluded.vehicles, lines = excluded.lines`)
         .run(saveId, month, f?.balance ?? null, f?.loan ?? null, f?.operatingResult12m ?? null, f?.runningCosts12m ?? null, snap.vehicles.length, snap.lines.length);
       const line = this.db.prepare(`INSERT INTO metrics_line (save_id, month, line_id, operating_result, load_ratio, vehicles) VALUES (?, ?, ?, ?, ?, ?)
