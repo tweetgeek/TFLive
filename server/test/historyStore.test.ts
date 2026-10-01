@@ -67,4 +67,11 @@ describe('HistoryStore', () => {
     h.addMute({ saveId: 's', alertType: 'low-reserve', entityId: null, kind: 'ignore', untilGameTime: null });
     expect(h.listMutes('s')[0].entityId).toBeNull();
   });
+
+  it('recordMonth z pustym finance nie kasuje istniejących wartości', () => {
+    const h = new HistoryStore(':memory:');
+    h.applyBackfill('s', { scope: 'global', entityId: null, months: [{ month: 5, value: 33 }] });
+    h.recordMonth('s', 5, snapshot({ finance: null }), () => null);
+    expect(h.readGlobal('s')[0].operatingResult).toBe(33);
+  });
 });

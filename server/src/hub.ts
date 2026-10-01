@@ -1,5 +1,5 @@
 import { EventEmitter } from 'node:events';
-import { monthMs, parseLine, type Alert, type AlertType, type Mute, type MuteKind, type Snapshot } from '@tflive/shared';
+import { monthMs, parseLine, type Alert, type AlertType, type Mute, type MuteKind, type SectionName, type Snapshot } from '@tflive/shared';
 import { RuleBuffers } from './alerts/buffers';
 import { AlertEngine } from './alerts/engine';
 import { ALL_RULES } from './alerts/index';
@@ -33,6 +33,7 @@ export interface MuteInput {
 }
 
 const RATE_MIN_MS = 60_000;
+const MONTH_SECTIONS: SectionName[] = ['finance', 'lines', 'vehicles', 'towns', 'industries'];
 
 export class Hub extends EventEmitter {
   private store = new GameStore();
@@ -43,6 +44,8 @@ export class Hub extends EventEmitter {
   private lastLineWallMs: number | null = null;
   private lastError: string | null = null;
   private rate: { sessionId: string; wall0: number; bytes0: number; mbPerHour: number | null } | null = null;
+  private pendingMonth: { saveId: string; month: number } | null = null;
+  private seen = new Set<SectionName>();
   private readonly now: () => number;
 
   constructor(private readonly deps: { history: HistoryStore; config: AlertConfig; staleMs: number; logPath: string | null; now?: () => number }) {
@@ -59,6 +62,7 @@ export class Hub extends EventEmitter {
       this.buffers.reset();
       this.alerts = [];
       this.rate = null;
+      this.resetPending();
       dirty = true;
     }
     for (const raw of r.lines) {
@@ -71,11 +75,13 @@ export class Hub extends EventEmitter {
       const res = this.store.apply(p.line);
       if (res.error) this.lastError = res.error;
       for (const e of res.events) this.handle(e);
+      for (const c of res.changed) this.seen.add(c);
       if (res.changed.length || res.events.length) dirty = true;
       if (res.changed.includes('meta')) this.updateRate();
     }
     if (dirty) {
       this.buffers.observe(this.store.snapshot());
+      this.flushMonth();
       this.recompute();
       this.emit('update', this.state());
     }
@@ -135,24 +141,38 @@ export class Hub extends EventEmitter {
         this.buffers.reset();
         this.alerts = [];
         this.rate = null;
+        this.resetPending();
         break;
       case 'rewind':
         h.truncateAfter(e.saveId, e.toMonth);
         this.engine.reset();
         this.buffers.reset();
+        this.resetPending();
         break;
-      case 'new-month': {
-        const snap = this.store.snapshot();
-        const meta = snap.meta;
-        const window = meta ? this.deps.config.lowLoadWindowMonths * monthMs(meta.dayMs) : 0;
-        h.recordMonth(e.saveId, e.month, snap, (id) => (meta ? this.buffers.lineLoadAvg(id, meta.gameTime, window) : null));
-        h.touchGame(e.saveId, meta?.mapName ?? null, meta?.gameTime ?? 0);
+      case 'new-month':
+        this.pendingMonth = { saveId: e.saveId, month: e.month };
         break;
-      }
       case 'backfill':
         h.applyBackfill(e.saveId, e.data);
         break;
     }
+  }
+
+  private resetPending(): void {
+    this.pendingMonth = null;
+    this.seen.clear();
+  }
+
+  /** Zapisuje miesiąc dopiero, gdy od resetu dotarły wszystkie sekcje (inaczej nadpisałby Historię pustym stanem). */
+  private flushMonth(): void {
+    const pm = this.pendingMonth;
+    if (!pm || !MONTH_SECTIONS.every((x) => this.seen.has(x))) return;
+    const snap = this.store.snapshot();
+    const meta = snap.meta;
+    const window = meta ? this.deps.config.lowLoadWindowMonths * monthMs(meta.dayMs) : 0;
+    this.deps.history.recordMonth(pm.saveId, pm.month, snap, (id) => (meta ? this.buffers.lineLoadAvg(id, meta.gameTime, window) : null));
+    this.deps.history.touchGame(pm.saveId, meta?.mapName ?? null, meta?.gameTime ?? 0);
+    this.pendingMonth = null;
   }
 
   private recompute(): void {
