@@ -36,6 +36,16 @@ const RATE_MIN_MS = 60_000;
 const MONTH_SECTIONS: SectionName[] = ['finance', 'lines', 'vehicles', 'towns', 'industries'];
 const OBSERVED: ReadonlySet<SectionName> = new Set(['meta', 'lines', 'towns']);
 
+const PREFIX_TIME_RE = /^\[(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})Z/;
+
+/** Czas ścienny linii z prefiksu logu gry `[YYYY-MM-DD HH:MM:SSZ`; bez prefiksu (lub z przyszłości) — `now`. */
+export function lineWallMs(raw: string, now: number): number {
+  const m = PREFIX_TIME_RE.exec(raw);
+  if (!m) return now;
+  const t = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]);
+  return Number.isFinite(t) && t < now ? t : now;
+}
+
 interface PendingMonth {
   saveId: string;
   month: number;
@@ -83,9 +93,10 @@ export class Hub extends EventEmitter {
         if (p.reason !== 'not-tflive') this.lastError = `Linia odrzucona: ${p.reason}${p.version ? ` (wersja ${p.version})` : ''}`;
         continue;
       }
-      this.lastLineWallMs = this.now();
+      this.lastLineWallMs = lineWallMs(raw, this.now());
       const res = this.store.apply(p.line);
       if (res.error) this.lastError = res.error;
+      else if (res.changed.length || res.events.length) this.lastError = null;
       for (const e of res.events) this.handle(e);
       for (const c of res.changed) {
         this.seen.add(c);
@@ -134,7 +145,7 @@ export class Hub extends EventEmitter {
     if (!saveId) throw new Error('Brak aktywnej Rozgrywki');
     const untilGameTime =
       input.kind === 'ignore' ? null : input.untilGameTime ?? (meta ? meta.gameTime + this.deps.config.snoozeMonths * monthMs(meta.dayMs) : null);
-    const m = this.deps.history.addMute({ saveId, alertType: input.alertType, entityId: input.entityId, kind: input.kind, untilGameTime });
+    const m = this.deps.history.addMute({ saveId, alertType: input.alertType, entityId: input.entityId, kind: input.kind, untilGameTime }, meta?.gameTime ?? null);
     this.recompute();
     this.emit('update', this.state());
     return m;

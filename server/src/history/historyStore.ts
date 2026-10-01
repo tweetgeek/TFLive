@@ -140,7 +140,17 @@ export class HistoryStore {
     return rows.map((r) => ({ id: r.id, saveId: r.save_id, alertType: r.alert_type as AlertType, entityId: r.entity_id, kind: r.kind as MuteKind, untilGameTime: r.until_game_time }));
   }
 
-  addMute(m: Omit<Mute, 'id'>): Mute {
+  /**
+   * Dodaje Wyciszenie. Jeśli istnieje już identyczne aktywne (ta sama Rozgrywka, rodzaj alertu, encja i rodzaj Wyciszenia),
+   * zwraca je zamiast tworzyć duplikat. Odłożenie jest aktywne, gdy `untilGameTime` jest puste albo późniejsze niż `nowGameTime`
+   * (bez `nowGameTime` każde istniejące uznaje się za aktywne).
+   */
+  addMute(m: Omit<Mute, 'id'>, nowGameTime: number | null = null): Mute {
+    const existing = this.db
+      .prepare(`SELECT id, until_game_time FROM mutes WHERE save_id = ? AND alert_type = ? AND entity_id IS ? AND kind = ?
+        AND (kind = 'ignore' OR until_game_time IS NULL OR ? IS NULL OR until_game_time > ?) ORDER BY id LIMIT 1`)
+      .get(m.saveId, m.alertType, m.entityId, m.kind, nowGameTime, nowGameTime) as { id: number; until_game_time: number | null } | undefined;
+    if (existing) return { ...m, id: existing.id, untilGameTime: existing.until_game_time };
     const r = this.db
       .prepare('INSERT INTO mutes (save_id, alert_type, entity_id, kind, until_game_time) VALUES (?, ?, ?, ?, ?)')
       .run(m.saveId, m.alertType, m.entityId, m.kind, m.untilGameTime);

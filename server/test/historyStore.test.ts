@@ -120,4 +120,17 @@ describe('HistoryStore', () => {
     expect(h.lastGameTime('s')).toBe(12_345);
     expect(h.lastGameTime('inna')).toBeNull();
   });
+
+  it('addMute zwraca istniejące aktywne identyczne Wyciszenie zamiast duplikatu', () => {
+    const h = new HistoryStore(':memory:');
+    const a = h.addMute({ saveId: 's', alertType: 'low-reserve', entityId: null, kind: 'ignore', untilGameTime: null });
+    expect(h.addMute({ saveId: 's', alertType: 'low-reserve', entityId: null, kind: 'ignore', untilGameTime: null })).toEqual(a);
+    const sn = h.addMute({ saveId: 's', alertType: 'vehicle-old', entityId: 5, kind: 'snooze', untilGameTime: 1000 }, 500);
+    expect(h.addMute({ saveId: 's', alertType: 'vehicle-old', entityId: 5, kind: 'snooze', untilGameTime: 2000 }, 600)).toEqual(sn);
+    expect(h.listMutes('s')).toHaveLength(2);
+    const renewed = h.addMute({ saveId: 's', alertType: 'vehicle-old', entityId: 5, kind: 'snooze', untilGameTime: 3000 }, 1500);
+    expect(renewed.id).not.toBe(sn.id);
+    expect(h.addMute({ saveId: 's', alertType: 'vehicle-old', entityId: 6, kind: 'ignore', untilGameTime: null }).id).not.toBe(a.id);
+    expect(h.listMutes('s')).toHaveLength(4);
+  });
 });

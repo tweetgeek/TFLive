@@ -20,6 +20,8 @@ npm test         # testy
 
 Serwer wypisuje adresy, pod którymi jest dostępny (np. `http://192.168.1.20:8787` dla tabletu).
 
+Serwer nasłuchuje w całej sieci domowej i nie ma hasła — nie wystawiaj go do internetu.
+
 API: `GET /api/health`, `GET /api/state`, `GET/POST /api/mutes`, `DELETE /api/mutes/:id`, WebSocket `/ws`.
 
 ## Konfiguracja

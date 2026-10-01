@@ -1,5 +1,5 @@
 import { networkInterfaces, homedir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadAlertConfig, loadConfig } from './config';
 import { HistoryStore } from './history/historyStore';
@@ -15,7 +15,7 @@ const demo = process.argv.includes('--demo');
 const config = loadConfig(join(root, 'config', 'config.json'));
 const alertConfig = loadAlertConfig(join(root, 'config', 'alerts.json'));
 
-const dataDir = join(root, config.dataDir);
+const dataDir = resolve(root, config.dataDir);
 const history = new HistoryStore(join(dataDir, demo ? 'demo.sqlite' : 'tflive.sqlite'));
 
 const logPath = demo
