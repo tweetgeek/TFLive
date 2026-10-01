@@ -28,7 +28,7 @@ export function vehicle(p: Partial<Vehicle> = {}): Vehicle {
   return { id: 1, name: 'Pojazd 1', lineId: 10, mode: 'ROAD', state: 'EN_ROUTE', userStopped: false, noPath: false, daysAtTerminal: 0, daysInDepot: 0, load: 10, capacity: 40, operatingResult12m: 1000, parts: [{ model: 'bus_a', purchaseTime: 0, lifespanSec: 29220, maintenanceState: 0.9 }], ...p };
 }
 export function line(p: Partial<Line> = {}): Line {
-  return { id: 10, name: 'Linia 10', mode: 'ROAD', color: null, stopIds: [100, 101], vehicleIds: [1], firstLedgerTime: 0, operatingResult12m: 5000, investments12m: null, departureLoads: [], ...p };
+  return { id: 10, name: 'Linia 10', mode: 'ROAD', color: null, stopIds: [100, 101], vehicleIds: [1], firstLedgerTime: 0, operatingResult12m: 5000, investments12m: null, departureLoads: [], operatingResultByMonth: [], ...p };
 }
 export function industry(p: Partial<Industry> = {}): Industry {
   return { id: 20, name: 'Huta', type: 'steel_mill', level: 1, maxLevel: 7, closureTime: null, upgradeProgress: 0, inputs: [{ cargo: 'COAL', stock: 5, lastReceivedTime: null }], outputs: [{ cargo: 'STEEL', stock: 0, capacity: 100 }], lastServedTime: null, ...p };

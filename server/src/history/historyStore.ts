@@ -1,14 +1,14 @@
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
-import type { AlertType, Backfill, Mute, MuteKind, Snapshot } from '@tflive/shared';
+import type { AlertType, Backfill, MonthValue, Mute, MuteKind, Snapshot } from '@tflive/shared';
 
-export interface GlobalRow { month: number; balance: number | null; loan: number | null; operatingResult: number | null; runningCosts: number | null; vehicles: number | null; lines: number | null }
+export interface GlobalRow { month: number; balance: number | null; loan: number | null; operatingResult: number | null; runningCosts12m: number | null; vehicles: number | null; lines: number | null }
 export interface LineRow { month: number; lineId: number; operatingResult: number | null; loadRatio: number | null; vehicles: number | null }
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS games (save_id TEXT PRIMARY KEY, map_name TEXT, last_game_time INTEGER);
-CREATE TABLE IF NOT EXISTS metrics_global (save_id TEXT NOT NULL, month INTEGER NOT NULL, balance INTEGER, loan INTEGER, operating_result INTEGER, running_costs INTEGER, vehicles INTEGER, lines INTEGER, PRIMARY KEY (save_id, month));
+CREATE TABLE IF NOT EXISTS metrics_global (save_id TEXT NOT NULL, month INTEGER NOT NULL, balance INTEGER, loan INTEGER, operating_result INTEGER, running_costs_12m INTEGER, vehicles INTEGER, lines INTEGER, PRIMARY KEY (save_id, month));
 CREATE TABLE IF NOT EXISTS metrics_line (save_id TEXT NOT NULL, month INTEGER NOT NULL, line_id INTEGER NOT NULL, operating_result INTEGER, load_ratio REAL, vehicles INTEGER, PRIMARY KEY (save_id, month, line_id));
 CREATE TABLE IF NOT EXISTS metrics_town (save_id TEXT NOT NULL, month INTEGER NOT NULL, town_id INTEGER NOT NULL, population INTEGER, PRIMARY KEY (save_id, month, town_id));
 CREATE TABLE IF NOT EXISTS metrics_industry (save_id TEXT NOT NULL, month INTEGER NOT NULL, industry_id INTEGER NOT NULL, level INTEGER, PRIMARY KEY (save_id, month, industry_id));
@@ -35,19 +35,27 @@ export class HistoryStore {
     }
   }
 
+  /**
+   * Zapisuje wiersz miesiąca (stan z końca miesiąca). Kolumny Wyniku operacyjnego dostają wyłącznie
+   * wartości miesięczne z `operatingResultByMonth` (firmy i linii), nigdy wartości z Okna kroczącego.
+   */
   recordMonth(saveId: string, month: number, snap: Snapshot, lineLoad: (lineId: number) => number | null): void {
     const f = snap.finance;
     this.tx(() => {
       this.db
-        .prepare(`INSERT INTO metrics_global (save_id, month, balance, loan, operating_result, running_costs, vehicles, lines)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        .prepare(`INSERT INTO metrics_global (save_id, month, balance, loan, running_costs_12m, vehicles, lines)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
           ON CONFLICT (save_id, month) DO UPDATE SET balance = COALESCE(excluded.balance, metrics_global.balance), loan = COALESCE(excluded.loan, metrics_global.loan),
-            operating_result = COALESCE(excluded.operating_result, metrics_global.operating_result), running_costs = COALESCE(excluded.running_costs, metrics_global.running_costs),
-            vehicles = excluded.vehicles, lines = excluded.lines`)
-        .run(saveId, month, f?.balance ?? null, f?.loan ?? null, f?.operatingResult12m ?? null, f?.runningCosts12m ?? null, snap.vehicles.length, snap.lines.length);
-      const line = this.db.prepare(`INSERT INTO metrics_line (save_id, month, line_id, operating_result, load_ratio, vehicles) VALUES (?, ?, ?, ?, ?, ?)
-        ON CONFLICT (save_id, month, line_id) DO UPDATE SET operating_result = excluded.operating_result, load_ratio = excluded.load_ratio, vehicles = excluded.vehicles`);
-      for (const l of snap.lines) line.run(saveId, month, l.id, l.operatingResult12m, lineLoad(l.id), l.vehicleIds.length);
+            running_costs_12m = COALESCE(excluded.running_costs_12m, metrics_global.running_costs_12m),
+            vehicles = COALESCE(excluded.vehicles, metrics_global.vehicles), lines = COALESCE(excluded.lines, metrics_global.lines)`)
+        .run(saveId, month, f?.balance ?? null, f?.loan ?? null, f?.runningCosts12m ?? null, snap.vehicles.length, snap.lines.length);
+      if (f) this.upsertGlobalOps(saveId, f.operatingResultByMonth);
+      const line = this.db.prepare(`INSERT INTO metrics_line (save_id, month, line_id, load_ratio, vehicles) VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT (save_id, month, line_id) DO UPDATE SET load_ratio = COALESCE(excluded.load_ratio, metrics_line.load_ratio), vehicles = excluded.vehicles`);
+      for (const l of snap.lines) {
+        line.run(saveId, month, l.id, lineLoad(l.id), l.vehicleIds.length);
+        this.upsertLineOps(saveId, l.id, l.operatingResultByMonth);
+      }
       const town = this.db.prepare(`INSERT INTO metrics_town (save_id, month, town_id, population) VALUES (?, ?, ?, ?)
         ON CONFLICT (save_id, month, town_id) DO UPDATE SET population = excluded.population`);
       for (const t of snap.towns) town.run(saveId, month, t.id, t.population);
@@ -55,6 +63,18 @@ export class HistoryStore {
         ON CONFLICT (save_id, month, industry_id) DO UPDATE SET level = excluded.level`);
       for (const i of snap.industries) ind.run(saveId, month, i.id, i.level);
     });
+  }
+
+  private upsertGlobalOps(saveId: string, months: MonthValue[]): void {
+    const st = this.db.prepare(`INSERT INTO metrics_global (save_id, month, operating_result) VALUES (?, ?, ?)
+      ON CONFLICT (save_id, month) DO UPDATE SET operating_result = excluded.operating_result`);
+    for (const m of months) st.run(saveId, m.month, m.value);
+  }
+
+  private upsertLineOps(saveId: string, lineId: number, months: MonthValue[]): void {
+    const st = this.db.prepare(`INSERT INTO metrics_line (save_id, month, line_id, operating_result) VALUES (?, ?, ?, ?)
+      ON CONFLICT (save_id, month, line_id) DO UPDATE SET operating_result = excluded.operating_result`);
+    for (const m of months) st.run(saveId, m.month, lineId, m.value);
   }
 
   truncateAfter(saveId: string, month: number): void {
@@ -67,15 +87,8 @@ export class HistoryStore {
 
   applyBackfill(saveId: string, b: Backfill): void {
     this.tx(() => {
-      if (b.scope === 'global') {
-        const st = this.db.prepare(`INSERT INTO metrics_global (save_id, month, operating_result) VALUES (?, ?, ?)
-          ON CONFLICT (save_id, month) DO UPDATE SET operating_result = excluded.operating_result`);
-        for (const m of b.months) st.run(saveId, m.month, m.value);
-      } else if (b.entityId !== null) {
-        const st = this.db.prepare(`INSERT INTO metrics_line (save_id, month, line_id, operating_result) VALUES (?, ?, ?, ?)
-          ON CONFLICT (save_id, month, line_id) DO UPDATE SET operating_result = excluded.operating_result`);
-        for (const m of b.months) st.run(saveId, m.month, b.entityId, m.value);
-      }
+      if (b.scope === 'global') this.upsertGlobalOps(saveId, b.months);
+      else if (b.entityId !== null) this.upsertLineOps(saveId, b.entityId, b.months);
     });
   }
 
@@ -88,7 +101,7 @@ export class HistoryStore {
 
   readGlobal(saveId: string): GlobalRow[] {
     return this.db
-      .prepare(`SELECT month, balance, loan, operating_result AS operatingResult, running_costs AS runningCosts, vehicles, lines
+      .prepare(`SELECT month, balance, loan, operating_result AS operatingResult, running_costs_12m AS runningCosts12m, vehicles, lines
         FROM metrics_global WHERE save_id = ? ORDER BY month`)
       .all(saveId) as unknown as GlobalRow[];
   }

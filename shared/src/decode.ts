@@ -59,7 +59,7 @@ function district(v: unknown): District {
 }
 
 function line(r: unknown): Line {
-  const t = arr(r, 'line', 10);
+  const t = arr(r, 'line', 11);
   return {
     id: num(t[0], 'line.id'),
     name: str(t[1], 'line.name'),
@@ -74,6 +74,7 @@ function line(r: unknown): Line {
       const x = arr(d, 'line.departureLoad', 4);
       return { stopIndex: num(x[0], 'dl.stopIndex'), load: num(x[1], 'dl.load'), capacity: num(x[2], 'dl.capacity'), time: num(x[3], 'dl.time') };
     }),
+    operatingResultByMonth: months(t[10], 'line.opsM'),
   };
 }
 
