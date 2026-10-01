@@ -35,4 +35,25 @@ describe('RuleBuffers', () => {
     expect(b.townSupplyAt(3, 'COMMERCIAL', 'FOOD', 1900 * 12 + 3)).toBe(20);
     expect(b.townSupplyAt(3, 'COMMERCIAL', 'FOOD', 1900 * 12 + 1)).toBeNull();
   });
+
+  it('observe bez meta nie zapisuje pierwszego zobaczenia linii', () => {
+    const b = new RuleBuffers();
+    b.observe(snapshot({ meta: null, lines: [line({ id: 1 })] }));
+    expect(b.lineFirstSeen(1)).toBeNull();
+    b.observe(snapshot({ meta: meta({ gameTime: 50 * DAY }), lines: [line({ id: 1 })] }));
+    expect(b.lineFirstSeen(1)).toBe(50 * DAY);
+  });
+
+  it('usuwa próbki obłożenia starsze niż 13 miesięcy gry i nie dodaje ich ponownie', () => {
+    const b = new RuleBuffers();
+    const old = { stopIndex: 0, load: 0, capacity: 40, time: 1000 };
+    b.observe(snapshot({ meta: meta({ gameTime: 2000 }), lines: [line({ id: 1, departureLoads: [old] })] }));
+    expect(b.lineLoadAvg(1, 2000, 10 ** 9)).toBe(0);
+    const later = 1000 + 13 * 30 * DAY + DAY;
+    const fresh = { stopIndex: 0, load: 40, capacity: 40, time: later };
+    b.observe(snapshot({ meta: meta({ gameTime: later }), lines: [line({ id: 1, departureLoads: [old, fresh] })] }));
+    expect(b.lineLoadAvg(1, later, 10 ** 9)).toBe(1);
+    b.observe(snapshot({ meta: meta({ gameTime: later }), lines: [line({ id: 1, departureLoads: [old, fresh] })] }));
+    expect(b.lineLoadAvg(1, later, 10 ** 9)).toBe(1);
+  });
 });
