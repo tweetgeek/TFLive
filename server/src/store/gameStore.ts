@@ -21,6 +21,7 @@ interface Pending {
 export class GameStore {
   private snap: Snapshot = emptySnapshot();
   private currentSave: string | null = null;
+  private currentSessionId: string | null = null;
   private lastGameTime: number | null = null;
   private lastMonth: number | null = null;
   private pending = new Map<SectionName, Pending>();
@@ -36,6 +37,7 @@ export class GameStore {
   reset(): void {
     this.snap = emptySnapshot();
     this.currentSave = null;
+    this.currentSessionId = null;
     this.lastGameTime = null;
     this.lastMonth = null;
     this.pending.clear();
@@ -48,6 +50,11 @@ export class GameStore {
       this.reset();
       this.currentSave = h.saveId;
       events.push({ type: 'game-changed', saveId: h.saveId });
+    }
+
+    if (this.currentSessionId !== h.sessionId) {
+      this.pending.clear();
+      this.currentSessionId = h.sessionId;
     }
 
     const payload = this.assemble(line);
@@ -91,7 +98,15 @@ export class GameStore {
 
   private assemble(line: ParsedLine): unknown | undefined {
     const h = line.header;
-    if (h.parts === 1) return line.payload;
+    if (h.parts === 1) {
+      const p = this.pending.get(h.section);
+      if (p && p.seq < h.seq) {
+        this.pending.delete(h.section);
+      } else if (p && p.seq > h.seq) {
+        return undefined;
+      }
+      return line.payload;
+    }
     let p = this.pending.get(h.section);
     if (!p || p.seq !== h.seq) {
       if (p && h.seq < p.seq) return undefined;
