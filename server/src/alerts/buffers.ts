@@ -1,28 +1,33 @@
-import { monthIndex, type Snapshot } from '@tflive/shared';
+import { monthIndex, monthMs, type Snapshot } from '@tflive/shared';
 
 interface LoadSample { time: number; ratio: number }
 
+/** Próbki obłożenia i zapamiętane odjazdy starsze niż tyle miesięcy gry są usuwane. */
+const RETAIN_MONTHS = 13;
+
 export class RuleBuffers {
   private loads = new Map<number, LoadSample[]>();
-  private seenDepartures = new Set<string>();
+  private seenDepartures = new Map<string, number>();
   private firstSeen = new Map<number, number>();
   private supply = new Map<string, Map<number, number>>();
 
   observe(snap: Snapshot): void {
-    const gameTime = snap.meta?.gameTime ?? 0;
+    const meta = snap.meta;
+    const cutoff = meta ? meta.gameTime - RETAIN_MONTHS * monthMs(meta.dayMs) : -Infinity;
+    if (meta) this.prune(cutoff);
     for (const l of snap.lines) {
-      if (!this.firstSeen.has(l.id)) this.firstSeen.set(l.id, gameTime);
+      if (meta && !this.firstSeen.has(l.id)) this.firstSeen.set(l.id, meta.gameTime);
       for (const d of l.departureLoads) {
         const key = `${l.id}:${d.stopIndex}:${d.time}`;
-        if (this.seenDepartures.has(key) || d.capacity <= 0) continue;
-        this.seenDepartures.add(key);
+        if (this.seenDepartures.has(key) || d.capacity <= 0 || d.time < cutoff) continue;
+        this.seenDepartures.set(key, d.time);
         const list = this.loads.get(l.id) ?? [];
         list.push({ time: d.time, ratio: d.load / d.capacity });
         this.loads.set(l.id, list);
       }
     }
-    if (snap.meta) {
-      const month = monthIndex(snap.meta.date);
+    if (meta) {
+      const month = monthIndex(meta.date);
       for (const t of snap.towns) {
         for (const n of t.needs) {
           if (n.supplied === null) continue;
@@ -32,6 +37,15 @@ export class RuleBuffers {
           this.supply.set(key, byMonth);
         }
       }
+    }
+  }
+
+  private prune(cutoff: number): void {
+    for (const [key, time] of this.seenDepartures) if (time < cutoff) this.seenDepartures.delete(key);
+    for (const [lineId, list] of this.loads) {
+      const kept = list.filter((s) => s.time >= cutoff);
+      if (kept.length) this.loads.set(lineId, kept);
+      else this.loads.delete(lineId);
     }
   }
 
