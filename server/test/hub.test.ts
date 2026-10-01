@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_ALERT_CONFIG } from '../src/config';
 import { HistoryStore } from '../src/history/historyStore';
 import { Hub } from '../src/hub';
-import { DAY, finance, metaLine, sectionLines, vehicle } from './builders';
+import { DAY, finance, industry, line, metaLine, sectionLines, town, vehicle } from './builders';
 
 function makeHub() {
   let wall = 1_000_000;
@@ -143,5 +143,52 @@ describe('Hub', () => {
     expect(history.readGlobal('save1')).toEqual([]);
     hub.ingest(read(sections(1, 4000, 321)));
     expect(history.readGlobal('save1')).toMatchObject([{ month: 1900 * 12, balance: 321 }]);
+  });
+
+  it('I3: jedna partia z 5 miesiącami daje 5 wierszy Historii', () => {
+    const { hub, history } = makeHub();
+    const batch: string[] = [];
+    for (let i = 0; i < 5; i++) {
+      const gt = 4000 + i * 30 * DAY;
+      batch.push(metaLine({ seq: i * 10 + 1, gameTime: gt, date: d(1900, i + 1, 2) }), ...sections(i * 10 + 2, gt, 1000 + i));
+    }
+    hub.ingest(read(batch));
+    expect(history.readGlobal('save1').map((r) => [r.month, r.balance])).toEqual([0, 1, 2, 3, 4].map((i) => [1900 * 12 + i, 1000 + i]));
+  });
+
+  it('I2: brak sekcji towns nie blokuje zapisu metrics_global i metrics_line', () => {
+    const { hub, history } = makeHub();
+    const noTowns = (seq: number, gt: number) => [
+      ...sectionLines('finance', finance({ balance: seq }), { seq, gameTime: gt }),
+      ...sectionLines('lines', [line({ id: 10 })], { seq, gameTime: gt }),
+      ...sectionLines('vehicles', [vehicle()], { seq, gameTime: gt }),
+      ...sectionLines('industries', [industry()], { seq, gameTime: gt }),
+    ];
+    hub.ingest(read([metaLine({ seq: 1, gameTime: 4000, date: d(1900, 1, 2) }), ...noTowns(2, 4000)]));
+    hub.ingest(read([metaLine({ seq: 3, gameTime: 4000 + 30 * DAY, date: d(1900, 2, 2) }), ...noTowns(4, 4000 + 30 * DAY)]));
+    hub.ingest(read([metaLine({ seq: 5, gameTime: 4000 + 60 * DAY, date: d(1900, 3, 2) })]));
+    expect(history.readGlobal('save1').map((r) => [r.month, r.balance, r.vehicles, r.lines])).toEqual([[1900 * 12, 2, 1, 1], [1900 * 12 + 1, 4, 1, 1]]);
+    expect(history.readLines('save1', 10).map((r) => r.month)).toEqual([1900 * 12, 1900 * 12 + 1]);
+    expect(history.readTowns('save1')).toEqual([]);
+  });
+
+  it('I2: tabela miast zapisywana, gdy towns dotarły, nawet bez finance', () => {
+    const { hub, history } = makeHub();
+    hub.ingest(read([metaLine({ seq: 1, gameTime: 4000, date: d(1900, 1, 2) }), ...sectionLines('towns', [town({ id: 30, population: 700 })], { seq: 2, gameTime: 4000 })]));
+    hub.ingest(read([metaLine({ seq: 3, gameTime: 4000 + 30 * DAY, date: d(1900, 2, 2) })]));
+    expect(history.readTowns('save1')).toEqual([{ month: 1900 * 12, townId: 30, population: 700 }]);
+    expect(history.readGlobal('save1')).toEqual([]);
+  });
+
+  it('bufory obserwują każdą zastosowaną linię, nie raz na partię (Obłożenie w Historii)', () => {
+    const { hub, history } = makeHub();
+    const dep = (load: number, time: number) => [line({ id: 10, departureLoads: [{ stopIndex: 0, load, capacity: 40, time }] })];
+    hub.ingest(read([
+      metaLine({ seq: 1, gameTime: 4000, date: d(1900, 1, 2) }),
+      ...sectionLines('lines', dep(10, 1000), { seq: 2, gameTime: 4000 }),
+      ...sectionLines('lines', dep(30, 2000), { seq: 3, gameTime: 4000 }),
+      metaLine({ seq: 4, gameTime: 4000 + 30 * DAY, date: d(1900, 2, 2) }),
+    ]));
+    expect(history.readLines('save1', 10)).toMatchObject([{ month: 1900 * 12, loadRatio: 0.5 }]);
   });
 });

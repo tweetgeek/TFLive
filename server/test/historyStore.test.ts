@@ -101,4 +101,15 @@ describe('HistoryStore', () => {
       { month: 2, lineId: 10, operatingResult: 5, loadRatio: 0.5, vehicles: 1 },
     ]);
   });
+
+  it('I2: zapisuje tylko tabele z sekcji, które dotarły; liczniki bez sekcji zostają', () => {
+    const h = new HistoryStore(':memory:');
+    h.recordMonth('s', 100, snap(), () => null);
+    h.recordMonth('s', 100, snapshot({ finance: finance({ balance: 1 }), towns: [town({ id: 30, population: 5 })] }), () => null, new Set(['finance']));
+    expect(h.readGlobal('s').find((r) => r.month === 100)).toMatchObject({ balance: 1, vehicles: 2, lines: 1 });
+    expect(h.readTowns('s')).toEqual([{ month: 100, townId: 30, population: 1200 }]);
+    h.recordMonth('s', 101, snapshot({ towns: [town({ id: 30, population: 1300 })] }), () => null, new Set(['towns']));
+    expect(h.readGlobal('s').map((r) => r.month)).toEqual([99, 100]);
+    expect(h.readTowns('s').map((r) => r.month)).toEqual([100, 101]);
+  });
 });
