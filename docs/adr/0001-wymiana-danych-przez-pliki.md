@@ -1,3 +1,7 @@
+---
+status: superseded by ADR-0003
+---
+
 # Wymiana danych gra → serwer przez pliki, z RAM-dyskiem, gdy jest dostępny
 
 Skrypty Lua w Transport Fever 3 nie mają dostępu do sieci, więc mod przekazuje dane serwerowi, nadpisując w miejscu małe pliki sekcji w katalogu wymiany. Serwer odczytuje je pollingiem `stat`. Żeby nie zużywać SSD, serwer podmienia katalog wymiany na dowiązanie (symlink na macOS, junction na Windows) do RAM-dysku: na macOS tworzy go sam przez `hdiutil`, na Windows używa RAM-dysku wskazanego w konfiguracji. Gdy RAM-dysk jest niedostępny, zostaje zwykły katalog z ograniczonym budżetem zapisu. Przepływ jest jednokierunkowy: serwer nigdy nie zapisuje niczego, co czyta gra.

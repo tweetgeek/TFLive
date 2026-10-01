@@ -1,6 +1,6 @@
 # TFLive — dashboard live dla Transport Fever 3
 
-Data: 2026-10-01 · Status: projekt do przeglądu
+Data: 2026-10-01 · Status: zaktualizowany po kroku 0 (wyniki: `docs/superpowers/spikes/2026-10-01-krok0-wyniki.md`)
 
 ## 1. Cel
 
@@ -10,7 +10,7 @@ Dashboard otwierany w przeglądarce (tablet lub komputer w sieci domowej), któr
 
 | Etap | Zawartość |
 |---|---|
-| v1 | (A) podgląd live: kafelki KPI i tabele; (B) alerty w 4 kategoriach; zbieranie historii od pierwszego dnia; wymiana danych przez RAM-dysk, gdy dostępny |
+| v1 | (A) podgląd live: kafelki KPI i tabele; (B) alerty w 4 kategoriach; zbieranie historii od pierwszego dnia |
 | później | (C) wykresy trendów na podstawie zebranej historii |
 
 ### Kryteria sukcesu
@@ -38,11 +38,11 @@ Mapa i minimapa, sterowanie grą, dostęp z internetu, multiplayer, wykresy tren
 │ mod "tflive" (Lua, game script)           │
 │  collectors → dane z api.engine           │
 │  serializer → kompaktowy JSON             │
-│  emitter    → pliki sekcji | log (zapas)  │
+│  emitter    → debugPrint: linie [TFLIVE]  │
 └───────────────┬───────────────────────────┘
-                │ pliki nadpisywane w miejscu
+                │ log gry crash_dump/stdout.txt
 ┌───────────────▼──────── Node (server/) ───┐
-│ source/   FileSource | LogSource | Replay │
+│ source/   LogSource | ReplaySource        │
 │ ingest    walidacja + rozpakowanie        │
 │ state     bieżący snapshot + bufor        │
 │ alerts    czyste reguły → Alert[]         │
@@ -67,22 +67,27 @@ Mapa i minimapa, sterowanie grą, dostęp z internetu, multiplayer, wykresy tren
 
 ### Granice odpowiedzialności
 
-- **Mod** tylko zbiera surowe dane i je zapisuje. Nie liczy alertów ani wartości pochodnych.
+- **Mod** tylko zbiera surowe dane i wypisuje je do logu gry. Nie liczy alertów ani wartości pochodnych.
 - **Serwer** waliduje dane, liczy wartości pochodne (wiek w latach, obłożenie %, zysk/km), wykrywa alerty, zapisuje historię i rozsyła stan.
 - **Web** tylko prezentuje dane. Jedyny zapis inicjowany z przeglądarki to wyciszenie alertu.
 
 ## 3. Mod gry
 
-- Hook `update` (lub `guiUpdate`, zależnie od wyniku kroku 0) w skrypcie gry. Harmonogram jest per sekcja (§7).
+- Hook `update` w skrypcie gry (`*.gs.lua` → `*.script.tl`, język Teal). Harmonogram jest per sekcja (§7). (krok 0: #3, #18)
+- `update` wywoływany jest z puli wątków symulacji, każdy z osobnym stanem Lua. **Cały stan modu** (znaczniki „raz”, czasy ostatniego wysłania sekcji, odciski sekcji, postęp partii, `saveId`) żyje w `GameScriptState`, a nie w zmiennych modułu. Odstępy czasu liczone są zegarem ściennym `os.time()`. (krok 0: dodatkowe ustalenia)
+- Mod nigdy nie wypisuje do logu całych tabel (`debugPrint(tabela)`). Każda sekcja to jedna linia tekstu. (krok 0: dodatkowe ustalenia)
+- Ścieżki API: `api.engine.util.finance.*`, `api.engine.util.vehicle.*`, `api.engine.util.line.*`, `api.engine.util.industry.*`, `api.engine.system.transportVehicleSystem.getLineVehicles`. (krok 0: dodatkowe ustalenia)
 - Każdy collector działa w `pcall`. Błąd jednej sekcji nie blokuje pozostałych i trafia do `errors[]` w `meta`.
 - Duże kolekcje (pojazdy) można zbierać partiami w kolejnych tickach (rotacyjnie), żeby uniknąć przycięć. Pełny zestaw partii tworzy jeden zapis sekcji.
-- `saveId`: identyfikator rozgrywki. Losowy identyfikator jest generowany przy pierwszym uruchomieniu modu w danym zapisie i trzymany w stanie skryptu gry, który jest zapisywany razem z savegame. Jeśli to niemożliwe, używamy nazwy mapy lub savegame.
-- Ustawienia modu (parametry mod.json): interwały sekcji, włączenie kanału.
-- Mod liczy zapisane bajty i raportuje `bytesWritten` w `meta`.
+- `saveId`: identyfikator rozgrywki. Losowy identyfikator jest generowany przy pierwszym uruchomieniu modu w danym zapisie i trzymany w `GameScriptState`, który przetrwa zapis i wczytanie. (krok 0: #17)
+- Ustawienia modu (parametry mod.json): interwały sekcji.
+- Mod liczy bajty wypisane do logu i raportuje `bytesWritten` w `meta`.
 
 ## 4. Model danych
 
-Pole oznaczone `?` jest opcjonalne. Krok 0 ustala, czy API je udostępnia. Brakujące pole ma wartość `null`.
+Pole oznaczone `?` jest opcjonalne (np. brak danych dla nowej encji). Krok 0 potwierdził, że wszystkie pola mają źródło w API (krok 0: #11–#16). Brakujące pole ma wartość `null`.
+
+Jednostki czasu: `gameTime`, `purchaseTime`, `closureTimeStamp`, `startTime` w **ms czasu gry**; 1 dzień gry = 4000 ms; datę wyznacza `GameTime.dates`. `lifespan` modelu jest w **sekundach** czasu gry (×1000 → ms). (krok 0: #10, #15)
 
 Terminologia (Rozgrywka, Wynik operacyjny, Pojazd, Część pojazdu, Przystanek, Obsługiwana fabryka itd.) jest zdefiniowana w `CONTEXT.md` i obowiązuje w kodzie, UI i dokumentach.
 
@@ -114,13 +119,13 @@ Snapshot {
 
 Wartości pochodne liczone przez serwer:
 - Wiek i Stan pojazdu: z `parts`, najstarsza i najgorsza część.
-- Wykorzystanie żywotności: `(gameTime - purchaseTime) / lifespan` dla każdej części.
+- Wykorzystanie żywotności: `(gameTime - purchaseTime) / (lifespan * 1000)` dla każdej części.
 - Rezerwa: `balance / (runningCosts12m / 12)`.
 - Obłożenie linii: średnia z `departureLoads` z ostatnich 3 miesięcy, trzymana w buforze serwera.
 - Czas oczekiwania na Przystanku: `gameTime - longestWaitStartTime`, z `getStockSimEntity`.
 
 
-Na dysku dane są w formacie kompaktowym: tablice wartości w ustalonej kolejności pól i słowniki nazw (cargo, modele) wysyłane raz. `server/ingest` rozpakowuje je do powyższego modelu. Format kompaktowy jest wersjonowany razem z `schemaVersion`. Nieznana wersja jest odrzucana, a UI pokazuje czytelny komunikat.
+W logu dane są w formacie kompaktowym: tablice wartości w ustalonej kolejności pól i słowniki nazw (cargo, modele) wysyłane raz. `server/ingest` rozpakowuje je do powyższego modelu. Format kompaktowy jest wersjonowany razem z `schemaVersion`. Nieznana wersja jest odrzucana, a UI pokazuje czytelny komunikat.
 
 Wartości pochodne liczy serwer: `ageYears`, `loadPct`, wskaźniki obłożenia linii, procent zaspokojenia potrzeb miast.
 
@@ -138,7 +143,7 @@ Tabele SQLite, każdy wiersz kluczowany przez `(saveId, month)`, gdzie `month` t
 | `games` | `saveId`, nazwa mapy, ostatnio widziany czas gry |
 
 - Zapis odbywa się raz na miesiąc gry, w jednej transakcji, jako upsert, więc duplikatów nie ma.
-- **Uzupełnienie historii:** po każdym wczytaniu Zapisu gry mod sam odczytuje z księgi gry miesięczne Wyniki operacyjne firmy i każdej istniejącej Linii, od początku księgi do bieżącego miesiąca. Robi to partiami (np. 12 miesięcy na tick) i zapisuje wynik jednorazowo w sekcji `backfill.json`. Serwer robi upsert do `metrics_global` i `metrics_line`. Tak samo obsłużone jest pierwsze zobaczenie Rozgrywki i Cofnięcie, a przepływ danych pozostaje jednokierunkowy. Wolumen to jednorazowo ok. 1–3 MB na wczytanie zapisu. Populacji, produkcji ani liczby Pojazdów z przeszłości nie da się odtworzyć, więc te serie zaczynają się od instalacji.
+- **Uzupełnienie historii:** po każdym wczytaniu Zapisu gry mod sam odczytuje z księgi gry miesięczne Wyniki operacyjne firmy i każdej istniejącej Linii, od początku księgi do bieżącego miesiąca. Robi to partiami (np. 12 miesięcy na tick) i wypisuje każdą partię jako jedną linię logu sekcji `backfill`. Serwer robi upsert do `metrics_global` i `metrics_line`. Tak samo obsłużone jest pierwsze zobaczenie Rozgrywki i Cofnięcie, a przepływ danych pozostaje jednokierunkowy. Wolumen to jednorazowo ok. 1–3 MB w logu na wczytanie zapisu. Księga sięga początku gry, a odczyt jest tani (krok 0: #12, #13). Bilans Linii pobieramy z encji Linii; nie sumujemy Linii z jej Pojazdami, bo wpisy liczą się wtedy podwójnie (krok 0: #11). Populacji, produkcji ani liczby Pojazdów z przeszłości nie da się odtworzyć, więc te serie zaczynają się od instalacji.
 
 ## 5. Silnik alertów
 
@@ -205,52 +210,35 @@ Zachowanie:
 
 Transport: WebSocket wysyła pełny stan przy połączeniu, a potem aktualizacje per sekcja. Klient ma reconnect z backoffem. REST służy do: stanu początkowego, listy i zmiany wyciszeń, diagnostyki (`/api/health`).
 
-## 7. Zapis na dysk (ochrona SSD)
+## 7. Kanał wymiany i zapis na dysk (ochrona SSD)
 
-Kanał gra → serwer przechodzi przez pliki, bo Lua w grze najpewniej nie ma dostępu do sieci. Celem jest mały, przewidywalny i zmierzony budżet zapisu.
+Skrypty gry nie mają `io` ani natywnych modułów, więc jedynym kanałem gra → serwer jest log gry: mod wypisuje dane przez `debugPrint`, a gra dopisuje je do `<dane użytkownika>/crash_dump/stdout.txt`. Log leży na SSD (RAM-dysk odrzucony przez użytkownika). Celem jest mały, przewidywalny i zmierzony budżet zapisu. Zob. ADR 0003. (krok 0: #3, #7)
 
-1. **Plik na sekcję, nadpisywany w miejscu**: `meta.json`, `finance.json`, `vehicles.json`, `lines.json`, `stops.json`, `industries.json`, `towns.json`. Pliki nie rosną i nie powstają nowe.
-2. **Harmonogram domyślny:**
+1. **Format linii:** `[TFLIVE] <sekcja> <schemaVersion> <json-kompaktowy>`, jedna linia na sekcję lub partię. Gra dodaje prefiks ok. 90 znaków (czas, poziom, wątek). Linia 100 KB trafia do logu kompletna, a `debugPrint` kosztuje ok. 0,8 ms. (krok 0: #6)
+2. **Harmonogram domyślny (czas rzeczywisty, `os.time()`):**
 
    | Sekcja | Interwał |
    |---|---|
-   | `meta`, `finance` | 2 s |
-   | `vehicles`, `lines`, `stops` | 30 s |
-   | `industries`, `towns` | 60 s |
+   | `meta`, `finance` | 10 s |
+   | `vehicles`, `lines`, `stops` | 60 s |
+   | `industries`, `towns` | 120 s |
 
-3. **Brak zapisu w pauzie, w menu i gdy sekcja się nie zmieniła** (porównanie taniego odcisku, np. sumy kontrolnej pól liczbowych).
+3. **Brak wpisu w pauzie (`dt == 0`), w menu i gdy sekcja się nie zmieniła** (porównanie taniego odcisku przechowywanego w `GameScriptState`). (krok 0: #18)
 4. **Format kompaktowy** (§4), ok. 2–3× mniej bajtów niż obiekty z kluczami.
-5. **Szacunek:** 25–70 MB/h przy ok. 2000 pojazdów, czyli ok. 40–100 GB/rok przy 4 h gry dziennie (~0,01–0,03% TBW typowego SSD). Wartość rzeczywista jest mierzona (`bytesWritten`) i pokazywana w UI.
-6. **Spójność bez dodatkowych zapisów:** pojedynczy zapis z `\n` na końcu jako znacznik kompletności. Serwer ignoruje plik bez znacznika lub z niepoprawnym JSON i zachowuje ostatnią dobrą wersję. Rename przez plik tymczasowy tylko wtedy, gdy krok 0 wykaże, że czytanie niepełnych plików jest realnym problemem.
-7. **Kanał zapasowy (log gry):** log rośnie i nie kontrolujemy go, więc ten kanał wysyła tylko `meta` i `finance` co 30 s. Pełne dane wymagają kanału plikowego.
-8. **Serwer:**
+5. **Szacunek:** < 10 MB/h przy ok. 2000 pojazdów. Log jest nadpisywany przy każdym starcie gry, więc nie rośnie między sesjami. Wartość rzeczywista jest mierzona (`bytesWritten`) i pokazywana w UI.
+6. **Odczyt przez serwer (`LogSource`):** polling `stat` co 1 s, odczyt przyrostowy od zapamiętanego offsetu, tylko linie zawierające `[TFLIVE] `. Ostatnia niepełna linia (bez `\n`) czeka na kolejny odczyt. Plik mniejszy niż offset oznacza restart gry, więc serwer czyta od początku. Linia z niepoprawnym JSON jest pomijana i zostaje ostatnia dobra wersja sekcji.
+7. **Serwer:**
    - SQLite zapisuje metryki raz na miesiąc gry w jednej transakcji;
-   - logi tylko przy błędach i zmianach stanu;
-   - wyciszenia to pojedyncze zapisy przy kliknięciu;
-   - odczyt plików przez polling `stat` co 1 s (same odczyty).
-9. **Katalog wymiany na RAM-dysku, gdy jest dostępny** (§7a). Wtedy wymiana gra → serwer nie zapisuje nic na SSD. Punkty 1–8 obowiązują nadal: zmniejszają obciążenie CPU i są budżetem w trybie awaryjnym.
-
-### 7a. RAM-dysk dla wymiany
-
-Mod zawsze zapisuje do tego samego katalogu wymiany w katalogu danych użytkownika gry. Mod nie musi znać RAM-dysku: przy starcie serwer podmienia katalog wymiany na dowiązanie do katalogu na RAM-dysku.
-
-| System | Tworzenie RAM-dysku | Dowiązanie |
-|---|---|---|
-| macOS | automatycznie przez serwer, bez sudo: `hdiutil attach -nomount ram://<sektory>` + `diskutil erasevolume APFS TFLive <dev>`; rozmiar domyślny 64 MB | symlink |
-| Windows | brak wbudowanego mechanizmu. Serwer używa RAM-dysku wskazanego w `config.json` (`ramDiskPath`, np. `R:\` z ImDisk/OSFMount, utworzonego przez użytkownika) | junction (`mklink /J`, bez uprawnień administratora) |
-
-- Gdy RAM-dysk jest niedostępny (Windows bez `ramDiskPath`, błąd `hdiutil`, brak miejsca), serwer zostawia zwykły katalog na dysku (tryb awaryjny z budżetem §7), loguje przyczynę i pokazuje w UI tryb: „RAM” albo „dysk: X MB/h”.
-- Dane wymiany są ulotne. Utrata po restarcie systemu jest akceptowalna, bo to tylko bieżący stan, a trwała historia trafia do SQLite. Zrzutów wymiany na dysk nie robimy.
-- Przy zamknięciu serwer usuwa dowiązanie i odtwarza zwykły katalog. RAM-dysk na macOS odmontowuje (`hdiutil detach`) tylko wtedy, gdy sam go utworzył.
-- Jeśli serwer nie działa, a gra tak, mod pisze do zwykłego katalogu (tryb awaryjny). Gdy przy starcie serwera dowiązanie nie może zastąpić katalogu, bo pliki są zablokowane przez grę, serwer ponawia próbę przy następnym cyklu, a do tego czasu czyta zwykły katalog.
-- Krok 0 weryfikuje, że `io.open` w grze poprawnie zapisuje przez symlink (macOS) i junction (Windows).
+   - logi serwera tylko przy błędach i zmianach stanu;
+   - wyciszenia to pojedyncze zapisy przy kliknięciu.
 
 ## 8. Wieloplatformowość (Windows + macOS)
 
 - Autodetekcja katalogu gry i katalogu danych użytkownika per system (Steam) oraz nadpisanie w `config/config.json`. Wszystkie ścieżki budowane przez `path.join`.
-- Katalog wymiany plików leży w katalogu danych użytkownika gry, nie w katalogu instalacji (na Windows `Program Files` może nie być zapisywalny). Dokładną lokalizację, czyli dokąd trafia ścieżka względna `io.open` na każdym systemie, ustala krok 0.
+- Log gry: `<Steam>/userdata/<steamId>/3493540/local/crash_dump/stdout.txt`; mody użytkownika: `<Steam>/userdata/<steamId>/3493540/local/mods/`. (krok 0: #1)
+- Windows: odczyt `stdout.txt` przez serwer podczas działania gry (tryb współdzielenia pliku) musi zostać potwierdzony testem z `spike/WINDOWS-CHECKLIST.md` przed ukończeniem planu 2. (krok 0: Windows oczekuje)
 - `npm run install-mod` **kopiuje** mod (bez symlinków, które na Windows wymagają uprawnień).
-- Obserwacja plików przez polling `stat` zamiast `fs.watch`.
+- Obserwacja logu przez polling `stat` zamiast `fs.watch`.
 - Parser odporny na `\r\n`.
 - Natywna zależność SQLite: `better-sqlite3` z prebuildami dla Windows i macOS (x64/arm64). Alternatywą jest wbudowany `node:sqlite`, jeśli wymagana wersja Node na to pozwala. Wybór zapada w planie implementacji.
 - Wymagany Node LTS (≥ 22).
@@ -260,12 +248,12 @@ Mod zawsze zapisuje do tego samego katalogu wymiany w katalogu danych użytkowni
 | Sytuacja | Zachowanie |
 |---|---|
 | Błąd collectora w modzie | sekcja pominięta, wpis w `meta.errors`, ostrzeżenie diagnostyczne w UI |
-| Niepoprawny lub niepełny plik | pominięty, zachowana ostatnia dobra wersja, log raz na serię błędów |
+| Niepoprawna lub niepełna linia `[TFLIVE]` | pominięta, zachowana ostatnia dobra wersja sekcji, log raz na serię błędów |
 | Brak nowych danych > 15 s | status „gra nie odpowiada / pauza / menu”, baner w UI |
 | Nieznana `schemaVersion` | dane odrzucone, komunikat „zaktualizuj mod lub serwer” |
 | Zmiana `saveId` | reset stanu w pamięci i buforów alertów; historia per `saveId` |
 | Zerwanie WebSocket | reconnect z backoffem, baner w UI |
-| Brak katalogu gry lub wymiany | serwer startuje, `/api/health` i UI wskazują, co skonfigurować |
+| Brak katalogu gry lub logu | serwer startuje, `/api/health` i UI wskazują, co skonfigurować |
 
 ## 10. Testy
 
@@ -273,8 +261,7 @@ Mod zawsze zapisuje do tego samego katalogu wymiany w katalogu danych użytkowni
   - reguły alertów na fixture'ach,
   - ingest (rozpakowanie formatu kompaktowego, walidacja, pola `null`),
   - historia (jeden zapis na miesiąc gry, brak duplikatów, rozdział per `saveId`),
-  - `FileSource` (pliki niepełne, `\r\n`, brak pliku),
-  - `LogSource`,
+  - `LogSource` (odczyt przyrostowy, niepełna ostatnia linia, `\r\n`, skrócenie pliku po restarcie gry, brak pliku, obce linie),
   - ścieżki per system.
 - **Integracyjny:** `ReplaySource` z nagranych snapshotów → WebSocket → weryfikacja stanu klienta.
 - **Tryb demo/replay:** `npm run demo` uruchamia serwer z nagranymi danymi, bez gry.
@@ -282,20 +269,11 @@ Mod zawsze zapisuje do tego samego katalogu wymiany w katalogu danych użytkowni
 
 ## 11. Kolejność prac
 
-0. **Test modu w grze (spike):**
-   - czy `io.open` działa w `update`/`guiUpdate` i dokąd zapisuje (macOS, Windows);
-   - które pola z §4 są dostępne;
-   - czas zbierania danych i zapisany wolumen na dużej mapie;
-   - czy hook działa w pauzie;
-   - mechanizm `saveId`;
-   - jak daleko wstecz sięga księga gry (`calculateBalance`) i czy działa dla encji Linii i Pojazdów;
-   - zapis przez symlink (macOS) i junction (Windows) do RAM-dysku.
-
-   Wynik: wybór kanału, lista pól `?`, rzeczywiste interwały. Kod spike'a jest do wyrzucenia.
+0. **Test modu w grze (spike):** wykonany na macOS (wyniki: `docs/superpowers/spikes/2026-10-01-krok0-wyniki.md`). Windows oczekuje.
 1. Monorepo, `shared/` (typy, `SCHEMA_VERSION`), `ReplaySource`, fixture'y.
-2. Serwer: ingest, state, WebSocket, REST, `FileSource`, health, zarządzanie RAM-dyskiem i dowiązaniem (§7a).
-3. Mod: collectors, serializer kompaktowy, emitter, harmonogram, `bytesWritten`.
+2. Serwer: ingest, state, WebSocket, REST, `LogSource`, health.
+3. Mod: collectors, serializer kompaktowy, emitter `debugPrint`, harmonogram w `GameScriptState`, `bytesWritten`, zbieranie pojazdów partiami. Warunki ukończenia: pomiar na mapie z setkami pojazdów i test Windows (`spike/WINDOWS-CHECKLIST.md`).
 4. Silnik alertów i konfiguracja progów.
 5. Historia SQLite, Uzupełnienie historii, obsługa Cofnięcia i Wyciszenia.
 6. Widoki Vue.
-7. `install-mod`, README (instalacja na Windows i macOS, konfiguracja, przygotowanie RAM-dysku na Windows przez ImDisk/OSFMount).
+7. `install-mod`, README (instalacja na Windows i macOS, konfiguracja).
