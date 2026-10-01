@@ -399,7 +399,7 @@ Format przewodowy (kontrakt dla planu 2; kolejność pól w krotkach jest wiąż
 |---|---|
 | `meta` | obiekt `{"date":[y,m,d],"dayMs":n,"paused":0\|1,"speed":n\|null,"map":s\|null,"bytes":n,"errors":[s]}` |
 | `finance` | obiekt `{"bal":n,"loan":n,"ops12":n,"run12":n,"inv12":n\|null,"opsM":[[month,value]]}` (`run12` ≥ 0 to wielkość kosztów) |
-| `lines` | tablica wierszy `[id,name,mode,color\|null,[stopId],[vehicleId],firstLedger\|null,ops12,inv12\|null,[[stopIndex,load,cap,time]]]` |
+| `lines` | tablica wierszy `[id,name,mode,color\|null,[stopId],[vehicleId],firstLedger\|null,ops12,inv12\|null,[[stopIndex,load,cap,time]],[[month,value]]]` (11. pole `opsM` — miesięczne Wyniki operacyjne, ostatnie 3 miesiące; dodane w przeglądzie końcowym, zob. spec §3) |
 | `vehicles` | `[id,name,lineId\|null,mode,state,userStopped01,noPath01,daysAtTerminal,daysInDepot,load,cap,ops12\|null,[[model,purchaseTime,lifespanSec,maint]]]` |
 | `industries` | `[id,name,type,level,maxLevel,closure\|null,upgrade,[[cargo,stock,lastRecv\|null]],[[cargo,stock,cap]],lastServed\|null]` |
 | `towns` | `[id,name,pop,dev01,noise,pollution,[[district,cargo,demand,supplied\|null]],lastServed\|null]` |
