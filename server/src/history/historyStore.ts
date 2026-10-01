@@ -1,10 +1,12 @@
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
-import type { AlertType, Backfill, MonthValue, Mute, MuteKind, Snapshot } from '@tflive/shared';
+import { SECTIONS, type AlertType, type Backfill, type MonthValue, type Mute, type MuteKind, type SectionName, type Snapshot } from '@tflive/shared';
 
 export interface GlobalRow { month: number; balance: number | null; loan: number | null; operatingResult: number | null; runningCosts12m: number | null; vehicles: number | null; lines: number | null }
 export interface LineRow { month: number; lineId: number; operatingResult: number | null; loadRatio: number | null; vehicles: number | null }
+
+const ALL_SECTIONS: ReadonlySet<SectionName> = new Set(SECTIONS);
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS games (save_id TEXT PRIMARY KEY, map_name TEXT, last_game_time INTEGER);
@@ -38,30 +40,36 @@ export class HistoryStore {
   /**
    * Zapisuje wiersz miesiąca (stan z końca miesiąca). Kolumny Wyniku operacyjnego dostają wyłącznie
    * wartości miesięczne z `operatingResultByMonth` (firmy i linii), nigdy wartości z Okna kroczącego.
+   * Każda tabela jest zapisywana tylko z sekcji obecnych w `seen` (dotarły od ostatniego resetu);
+   * liczniki Pojazdów/Linii bez swojej sekcji zostawiają istniejącą wartość.
    */
-  recordMonth(saveId: string, month: number, snap: Snapshot, lineLoad: (lineId: number) => number | null): void {
-    const f = snap.finance;
+  recordMonth(saveId: string, month: number, snap: Snapshot, lineLoad: (lineId: number) => number | null, seen: ReadonlySet<SectionName> = ALL_SECTIONS): void {
+    const f = seen.has('finance') ? snap.finance : null;
     this.tx(() => {
-      this.db
-        .prepare(`INSERT INTO metrics_global (save_id, month, balance, loan, running_costs_12m, vehicles, lines)
+      if (f) {
+        this.db
+          .prepare(`INSERT INTO metrics_global (save_id, month, balance, loan, running_costs_12m, vehicles, lines)
           VALUES (?, ?, ?, ?, ?, ?, ?)
           ON CONFLICT (save_id, month) DO UPDATE SET balance = COALESCE(excluded.balance, metrics_global.balance), loan = COALESCE(excluded.loan, metrics_global.loan),
             running_costs_12m = COALESCE(excluded.running_costs_12m, metrics_global.running_costs_12m),
             vehicles = COALESCE(excluded.vehicles, metrics_global.vehicles), lines = COALESCE(excluded.lines, metrics_global.lines)`)
-        .run(saveId, month, f?.balance ?? null, f?.loan ?? null, f?.runningCosts12m ?? null, snap.vehicles.length, snap.lines.length);
-      if (f) this.upsertGlobalOps(saveId, f.operatingResultByMonth);
+          .run(saveId, month, f.balance, f.loan, f.runningCosts12m, seen.has('vehicles') ? snap.vehicles.length : null, seen.has('lines') ? snap.lines.length : null);
+        this.upsertGlobalOps(saveId, f.operatingResultByMonth);
+      }
       const line = this.db.prepare(`INSERT INTO metrics_line (save_id, month, line_id, load_ratio, vehicles) VALUES (?, ?, ?, ?, ?)
         ON CONFLICT (save_id, month, line_id) DO UPDATE SET load_ratio = COALESCE(excluded.load_ratio, metrics_line.load_ratio), vehicles = excluded.vehicles`);
-      for (const l of snap.lines) {
-        line.run(saveId, month, l.id, lineLoad(l.id), l.vehicleIds.length);
-        this.upsertLineOps(saveId, l.id, l.operatingResultByMonth);
+      if (seen.has('lines')) {
+        for (const l of snap.lines) {
+          line.run(saveId, month, l.id, lineLoad(l.id), l.vehicleIds.length);
+          this.upsertLineOps(saveId, l.id, l.operatingResultByMonth);
+        }
       }
       const town = this.db.prepare(`INSERT INTO metrics_town (save_id, month, town_id, population) VALUES (?, ?, ?, ?)
         ON CONFLICT (save_id, month, town_id) DO UPDATE SET population = excluded.population`);
-      for (const t of snap.towns) town.run(saveId, month, t.id, t.population);
+      if (seen.has('towns')) for (const t of snap.towns) town.run(saveId, month, t.id, t.population);
       const ind = this.db.prepare(`INSERT INTO metrics_industry (save_id, month, industry_id, level) VALUES (?, ?, ?, ?)
         ON CONFLICT (save_id, month, industry_id) DO UPDATE SET level = excluded.level`);
-      for (const i of snap.industries) ind.run(saveId, month, i.id, i.level);
+      if (seen.has('industries')) for (const i of snap.industries) ind.run(saveId, month, i.id, i.level);
     });
   }
 

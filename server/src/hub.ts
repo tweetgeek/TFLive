@@ -34,6 +34,13 @@ export interface MuteInput {
 
 const RATE_MIN_MS = 60_000;
 const MONTH_SECTIONS: SectionName[] = ['finance', 'lines', 'vehicles', 'towns', 'industries'];
+const OBSERVED: ReadonlySet<SectionName> = new Set(['meta', 'lines', 'towns']);
+
+interface PendingMonth {
+  saveId: string;
+  month: number;
+  provisional: boolean;
+}
 
 export class Hub extends EventEmitter {
   private store = new GameStore();
@@ -44,8 +51,11 @@ export class Hub extends EventEmitter {
   private lastLineWallMs: number | null = null;
   private lastError: string | null = null;
   private rate: { sessionId: string; wall0: number; bytes0: number; mbPerHour: number | null } | null = null;
-  private pendingMonth: { saveId: string; month: number } | null = null;
+  private pendingMonth: PendingMonth | null = null;
+  /** Sekcje, które dotarły od ostatniego resetu (bramkowanie tabel Historii). */
   private seen = new Set<SectionName>();
+  /** Sekcje, które dotarły w bieżącym miesiącu (zapis wstępny). */
+  private seenThisMonth = new Set<SectionName>();
   private readonly now: () => number;
 
   constructor(private readonly deps: { history: HistoryStore; config: AlertConfig; staleMs: number; logPath: string | null; now?: () => number }) {
@@ -75,13 +85,16 @@ export class Hub extends EventEmitter {
       const res = this.store.apply(p.line);
       if (res.error) this.lastError = res.error;
       for (const e of res.events) this.handle(e);
-      for (const c of res.changed) this.seen.add(c);
+      for (const c of res.changed) {
+        this.seen.add(c);
+        this.seenThisMonth.add(c);
+      }
       if (res.changed.length || res.events.length) dirty = true;
       if (res.changed.includes('meta')) this.updateRate();
+      if (res.changed.some((c) => OBSERVED.has(c))) this.buffers.observe(this.store.snapshot());
+      this.writeProvisional();
     }
     if (dirty) {
-      this.buffers.observe(this.store.snapshot());
-      this.flushMonth();
       this.recompute();
       this.emit('update', this.state());
     }
@@ -150,7 +163,10 @@ export class Hub extends EventEmitter {
         this.resetPending();
         break;
       case 'new-month':
-        this.pendingMonth = { saveId: e.saveId, month: e.month };
+        // Wiersz miesiąca M opisuje stan z końca M: przy przejściu do M+1 zapisujemy M z bieżącego stanu.
+        if (this.pendingMonth && this.pendingMonth.saveId === e.saveId && this.pendingMonth.month !== e.month) this.writeMonth(this.pendingMonth);
+        this.pendingMonth = { saveId: e.saveId, month: e.month, provisional: false };
+        this.seenThisMonth.clear();
         break;
       case 'backfill':
         h.applyBackfill(e.saveId, e.data);
@@ -161,18 +177,24 @@ export class Hub extends EventEmitter {
   private resetPending(): void {
     this.pendingMonth = null;
     this.seen.clear();
+    this.seenThisMonth.clear();
   }
 
-  /** Zapisuje miesiąc dopiero, gdy od resetu dotarły wszystkie sekcje (inaczej nadpisałby Historię pustym stanem). */
-  private flushMonth(): void {
+  /** Wstępny zapis bieżącego miesiąca, gdy w trakcie miesiąca dotarły wszystkie sekcje (nadpisywany na końcu miesiąca). */
+  private writeProvisional(): void {
     const pm = this.pendingMonth;
-    if (!pm || !MONTH_SECTIONS.every((x) => this.seen.has(x))) return;
+    if (!pm || pm.provisional || !MONTH_SECTIONS.every((x) => this.seenThisMonth.has(x))) return;
+    this.writeMonth(pm);
+    pm.provisional = true;
+  }
+
+  /** Zapisuje miesiąc z bieżącego stanu; każda tabela tylko z sekcji, które dotarły od ostatniego resetu. */
+  private writeMonth(pm: PendingMonth): void {
     const snap = this.store.snapshot();
     const meta = snap.meta;
     const window = meta ? this.deps.config.lowLoadWindowMonths * monthMs(meta.dayMs) : 0;
-    this.deps.history.recordMonth(pm.saveId, pm.month, snap, (id) => (meta ? this.buffers.lineLoadAvg(id, meta.gameTime, window) : null));
+    this.deps.history.recordMonth(pm.saveId, pm.month, snap, (id) => (meta ? this.buffers.lineLoadAvg(id, meta.gameTime, window) : null), this.seen);
     this.deps.history.touchGame(pm.saveId, meta?.mapName ?? null, meta?.gameTime ?? 0);
-    this.pendingMonth = null;
   }
 
   private recompute(): void {
