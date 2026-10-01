@@ -1,4 +1,6 @@
--- KOD DO WYRZUCENIA (spike, plan 0). Nie kopiować do mod/tflive.
+-- KOD DO WYRZUCENIA (spike, plan 0, runda 2). Nie kopiować do mod/tflive.
+-- Wnioski z rundy 1: skrypt działa w puli wątków symulacji (osobne stany Lua),
+-- więc znaczniki "raz" trzymamy w stanie skryptu gry, a nie w zmiennych modułu.
 
 local P <const> = "[TFLIVE-PROBE] "
 
@@ -27,262 +29,143 @@ local function gameTimeNow() : integer
 	return gt.gameTime
 end
 
--- P1: środowisko Lua
-local function p1()
-	plog("P1", "version=" .. tostring(_VERSION)
-		.. " io=" .. type(io)
-		.. " io.open=" .. type(io and io.open)
-		.. " os=" .. type(os)
-		.. " os.getenv=" .. type(os and os.getenv)
-		.. " os.rename=" .. type(os and os.rename)
-		.. " os.remove=" .. type(os and os.remove)
-		.. " require=" .. type(require))
-	if os and os.getenv then
-		plog("P1", "HOME=" .. tostring(os.getenv("HOME"))
-			.. " APPDATA=" .. tostring(os.getenv("APPDATA"))
-			.. " LOCALAPPDATA=" .. tostring(os.getenv("LOCALAPPDATA"))
-			.. " USERPROFILE=" .. tostring(os.getenv("USERPROFILE")))
+-- Środowisko Lua: wspólne dla P11 (symulacja) i P12 (GUI)
+local function envReport(id : string)
+	local g = _G as {string : any}
+	local pkg = g["package"] as {string : any}
+	plog(id, "io=" .. type(g["io"])
+		.. " package=" .. type(pkg)
+		.. " loadlib=" .. type(pkg and pkg["loadlib"])
+		.. " load=" .. type(g["load"]) .. " loadstring=" .. type(g["loadstring"])
+		.. " dofile=" .. type(g["dofile"]) .. " debug=" .. type(g["debug"])
+		.. " collectgarbage=" .. type(g["collectgarbage"]))
+	if pkg then
+		plog(id, "cpath=" .. tostring(pkg["cpath"]))
+		plog(id, "path=" .. tostring(pkg["path"]))
 	end
+	local req = g["require"] as function(string) : any
+	local okSock, sockErr = pcall(function() : any return req("socket") end)
+	plog(id, "require(socket) ok=" .. tostring(okSock) .. " res=" .. tostring(sockErr))
 end
 
--- P2 + P10: próba zapisu
-local function tryWrite(label : string, path : string) : boolean
-	local ok, res = pcall(function() : boolean
-		local f = io.open(path, "w")
-		if not f then return false end
-		f:write("tflive probe " .. label .. "\n")
-		f:close()
-		return true
-	end)
-	plog("P2", "label=" .. label .. " path=" .. path .. " ok=" .. tostring(ok and res) .. (ok and "" or (" err=" .. tostring(res))))
-	return ok and res
-end
-
-local function p2()
-	if not io or not io.open then
-		plog("P2", "SKIP io.open niedostępne")
+-- P12: zapis pliku z GUI
+local function guiWrite()
+	local g = _G as {string : any}
+	local ioLib = g["io"] as {string : any}
+	if not ioLib then
+		plog("P12", "io=nil w GUI")
 		return
 	end
-	tryWrite("relative", "tflive_probe_relative.txt")
-	tryWrite("relative_exchange", "tflive_exchange/probe.txt")
-	local home = os and os.getenv and os.getenv("HOME")
-	if home then
-		tryWrite("home", home .. "/tflive_probe_home.txt")
-		tryWrite("home_exchange", home .. "/tflive_exchange/probe.txt")
-	end
-	local profile = os and os.getenv and os.getenv("USERPROFILE")
-	if profile then
-		tryWrite("userprofile", profile .. "\\tflive_probe_home.txt")
-		tryWrite("userprofile_exchange", profile .. "\\tflive_exchange\\probe.txt")
+	local openFn = ioLib["open"] as function(string, string) : any
+	local home = os.getenv("HOME") or os.getenv("USERPROFILE")
+	for _, path in ipairs({ "tflive_probe_gui_relative.txt", (home or ".") .. "/tflive_exchange/probe_gui.txt" }) do
+		local ok, res = pcall(function() : any
+			local f = openFn(path, "w") as {string : function(any, string)}
+			if not f then return false end
+			f["write"](f, "tflive gui probe\n")
+			(f["close"] as function(any))(f)
+			return true
+		end)
+		plog("P12", "write path=" .. path .. " ok=" .. tostring(ok) .. " res=" .. tostring(res))
 	end
 end
 
--- P3: koszt zapisu 300 KB x10 do ścieżki względnej
-local function p3()
-	if not io or not io.open then
-		plog("P3", "SKIP")
-		return
-	end
-	local chunk = string.rep("x", 300 * 1024)
-	local t0 = nowClock()
-	for _ = 1, 10 do
-		local f = io.open("tflive_probe_bulk.txt", "w")
-		if f then
-			f:write(chunk)
-			f:write("\n")
-			f:close()
-		end
-	end
-	plog("P3", "writes=10 sizeKB=300 totalSec=" .. string.format("%.4f", nowClock() - t0))
-end
-
--- P4: liczby encji i koszt zebrania pojazdów
-local function p4()
-	local player = api.engine.util.getPlayer()
-	local t0 = nowClock()
-	local lines = api.engine.system.lineSystem.getLinesForPlayer(player)
-	local vehicles = api.engine.util.vehicle.getVehicles()
-	local industries = api.engine.getEntitiesWithComponent(api.type.ComponentType.INDUSTRY)
-	local towns = api.engine.getEntitiesWithComponent(api.type.ComponentType.TOWN)
-	local stationGroups = api.engine.getEntitiesWithComponent(api.type.ComponentType.STATION_GROUP)
-	local t1 = nowClock()
-	local loaded = 0
-	local sink = 0
-	for _, v in ipairs(vehicles) do
-		local tv = api.engine.getComponent(v, api.type.ComponentType.TRANSPORT_VEHICLE) as Engine.Component.TransportVehicle
-		if tv then
-			loaded = loaded + 1
-			if tv.noPath then sink = sink + 1 end
-			sink = sink + tv.daysAtTerminal
-		end
-		local n = api.engine.util.getEntityName(v)
-		if n then sink = sink + #n end
-	end
-	local t2 = nowClock()
-	plog("P4", "lines=" .. #lines .. " vehicles=" .. #vehicles .. " industries=" .. #industries
-		.. " towns=" .. #towns .. " stationGroups=" .. #stationGroups
-		.. " listSec=" .. string.format("%.4f", t1 - t0)
-		.. " vehicleDetailSec=" .. string.format("%.4f", t2 - t1)
-		.. " vehiclesRead=" .. loaded .. " sink=" .. sink)
-end
-
--- P5: księga finansowa
-local function p5()
+-- P13: przychody linii przez pojazdy
+local function p13()
 	local fin = api.engine.util.finance
 	local player = api.engine.util.getPlayer()
 	local now = gameTimeNow()
-	local gt = api.engine.getComponent(api.engine.util.getWorld(), api.type.ComponentType.GAME_TIME) as Engine.Component.GameTime
-	plog("P5", "gameTime=" .. tostring(now) .. " gameTime0=" .. tostring(gt.gameTime0) .. " timeOfDaySec=" .. tostring(gt.timeOfDaySec))
-	debugPrint(gt.dates)
-	local first = fin.getFirstIncomeTime(player)
-	plog("P5", "balance=" .. tostring(fin.getPlayersBalance(player))
-		.. " firstIncomeTime=" .. tostring(first)
-		.. " lastIncomeTime=" .. tostring(fin.getLastIncomeTime(player)))
-	local acc = api.engine.getComponent(player, api.type.ComponentType.ACCOUNT) as Engine.Component.Account
-	plog("P5", "playerAccount balance=" .. tostring(acc and acc.balance) .. " loan=" .. tostring(acc and acc.loan))
-	plog("P5", "playerAll(first..now)=" .. tostring(fin.calculateBalance({player}, first, now, false))
-		.. " playerOps(first..now)=" .. tostring(fin.calculateBalance({player}, first, now, true)))
 	local lines = api.engine.system.lineSystem.getLinesForPlayer(player)
-	if #lines == 0 then
-		plog("P5", "lines=0 SKIP line ledger")
-		return
-	end
-	local line = lines[1]
-	local lineAcc = api.engine.getComponent(line, api.type.ComponentType.ACCOUNT) as Engine.Component.Account
-	plog("P5", "line=" .. tostring(line) .. " name=" .. tostring(api.engine.util.getEntityName(line))
-		.. " hasAccount=" .. tostring(lineAcc ~= nil)
-		.. " lineAll(first..now)=" .. tostring(fin.calculateBalance({line}, first, now, false))
-		.. " lineOps(first..now)=" .. tostring(fin.calculateBalance({line}, first, now, true)))
-	-- 12 odcinków: bilans operacyjny linii w równych przedziałach od first do now
-	local step = math.floor((now - first) / 12)
-	if step > 0 then
-		local parts : {string} = {}
-		for i = 0, 11 do
-			local a = first + i * step
-			table.insert(parts, tostring(fin.calculateBalance({line}, a, a + step, true)))
+	local shown = 0
+	for _, line in ipairs(lines) do
+		if shown >= 3 then break end
+		local vehicles = api.engine.system.transportVehicleSystem.getLineVehicles(line)
+		if #vehicles > 0 then
+			shown = shown + 1
+			plog("P13", "line=" .. tostring(line) .. " vehicles=" .. #vehicles
+				.. " lineOps=" .. tostring(fin.calculateBalance({line}, 0, now, true))
+				.. " vehiclesAll=" .. tostring(fin.calculateBalance(vehicles, 0, now, false))
+				.. " vehiclesOps=" .. tostring(fin.calculateBalance(vehicles, 0, now, true))
+				.. " lineAndVehiclesOps=" .. tostring(fin.calculateBalance({line, table.unpack(vehicles)}, 0, now, true))
+				.. " v1Ops=" .. tostring(fin.calculateBalance({vehicles[1]}, 0, now, true)))
 		end
-		plog("P5", "lineOpsBuckets=" .. table.concat(parts, ","))
 	end
-	local t0 = nowClock()
-	for _, l in ipairs(lines) do
-		fin.calculateBalance({l}, first, now, true)
-	end
-	plog("P5", "allLinesLedgerSec=" .. string.format("%.4f", nowClock() - t0) .. " lines=" .. #lines)
 end
 
--- P6: najdłużej czekający towar
-local function p6()
-	local now = gameTimeNow()
-	local industries = api.engine.getEntitiesWithComponent(api.type.ComponentType.INDUSTRY)
-	if #industries == 0 then
-		plog("P6", "industries=0 SKIP")
-		return
-	end
-	local ind = industries[1]
-	local indComp = api.engine.getComponent(ind, api.type.ComponentType.INDUSTRY) as Engine.Component.Industry
-	plog("P6", "industry=" .. tostring(ind) .. " name=" .. tostring(api.engine.util.getEntityName(ind))
-		.. " level=" .. tostring(indComp.level) .. " maxLevel=" .. tostring(indComp.maxLevel)
-		.. " closureTimeStamp=" .. tostring(indComp.closureTimeStamp)
-		.. " stockList=" .. tostring(indComp.stockList))
-	local sl = api.engine.getComponent(indComp.stockList, api.type.ComponentType.STOCK_LIST) as Engine.Component.StockList
-	debugPrint(sl)
-	local stockSys = api.engine.system.simEntityAtStockSystem
-	for stockId = 0, 3 do
-		local ok, cnt = pcall(function() : integer
-			return stockSys.getStockCount(indComp.stockList, stockId)
-		end)
-		local ok2, longest = pcall(function() : Engine.Entity
-			return stockSys.getStockSimEntity(indComp.stockList, stockId)
-		end)
-		local startTime = "nil"
-		if ok2 and longest and longest > 0 then
-			local sc = api.engine.getComponent(longest, api.type.ComponentType.SIM_CARGO) as Engine.Component.SimCargo
-			startTime = sc and tostring(sc.startTime) or "noSimCargo"
+-- P14: gameTime -> data, jednostka lifespan
+local function p14()
+	local gt = api.engine.getComponent(api.engine.util.getWorld(), api.type.ComponentType.GAME_TIME) as Engine.Component.GameTime
+	local dates = gt.dates
+	plog("P14", "datesCount=" .. #dates .. " gameTime=" .. tostring(gt.gameTime))
+	local function show(label : string, e : {integer, Date})
+		if e then
+			local d = e[2]
+			plog("P14", label .. " t=" .. tostring(e[1]) .. " date=" .. tostring(d.year) .. "-" .. tostring(d.month) .. "-" .. tostring(d.day))
 		end
-		plog("P6", "stock=" .. stockId .. " count=" .. tostring(ok and cnt) .. " longest=" .. tostring(ok2 and longest)
-			.. " startTime=" .. startTime .. " now=" .. tostring(now))
 	end
-	debugPrint(api.engine.util.industry.getIndustryProductivityInfo(ind))
-end
-
--- P7: części pojazdu
-local function p7()
+	show("first", dates[1])
+	show("second", dates[2])
+	show("last", dates[#dates])
+	local today = Date.now()
+	plog("P14", "Date.now=" .. tostring(today.year) .. "-" .. tostring(today.month) .. "-" .. tostring(today.day))
 	local vehicles = api.engine.util.vehicle.getVehicles()
-	if #vehicles == 0 then
-		plog("P7", "vehicles=0 SKIP")
-		return
+	if #vehicles > 0 then
+		local tv = api.engine.getComponent(vehicles[1], api.type.ComponentType.TRANSPORT_VEHICLE) as Engine.Component.TransportVehicle
+		local part = tv.transportVehicleConfig.vehicles[1]
+		local model = api.res.modelRep.get(part.part.modelId)
+		local md = model.metadata as {string : {string : any}}
+		local av = md["availability"]
+		plog("P14", "purchaseTime=" .. tostring(part.purchaseTime) .. " lifespan=" .. tostring(md["maintenance"] and md["maintenance"]["lifespan"])
+			.. " yearFrom=" .. tostring(av and av["yearFrom"]) .. " yearTo=" .. tostring(av and av["yearTo"])
+			.. " formatAge=" .. tostring(api.engine.util.formatAge(part.purchaseTime, gt.gameTime)))
 	end
-	local v = vehicles[1]
-	local tv = api.engine.getComponent(v, api.type.ComponentType.TRANSPORT_VEHICLE) as Engine.Component.TransportVehicle
-	plog("P7", "vehicle=" .. tostring(v) .. " state=" .. tostring(tv.state) .. " line=" .. tostring(tv.line)
-		.. " userStopped=" .. tostring(tv.userStopped) .. " noPath=" .. tostring(tv.noPath)
-		.. " daysAtTerminal=" .. tostring(tv.daysAtTerminal) .. " daysInDepot=" .. tostring(tv.daysInDepot)
-		.. " parts=" .. #tv.transportVehicleConfig.vehicles
-		.. " maintenanceStateUtil=" .. tostring(api.engine.util.vehicle.getVehicleMaintenanceState(v)))
-	local part = tv.transportVehicleConfig.vehicles[1]
-	plog("P7", "part1 purchaseTime=" .. tostring(part.purchaseTime) .. " maintenanceState=" .. tostring(part.maintenanceState)
-		.. " modelId=" .. tostring(part.part.modelId))
-	local model = api.res.modelRep.get(part.part.modelId)
-	local md = model and model.metadata as {string : {string : any}}
-	local maint = md and md.maintenance
-	plog("P7", "lifespan=" .. tostring(maint and maint.lifespan))
-	debugPrint(maint)
-	debugPrint(api.engine.util.vehicle.getVehicleProblems())
-	debugPrint(api.engine.util.line.getLinesIssues(api.engine.util.getPlayer(), true))
 end
 
--- P8: stan skryptu gry (saveId)
+-- P15: koszt i integralność kanału przez log
+local function p15()
+	for _, kb in ipairs({ 10, 100 }) do
+		local body = string.rep("0123456789", kb * 102)
+		local t0 = nowClock()
+		plog("P15", "BEGIN kb=" .. kb .. " len=" .. #body .. " " .. body .. " END")
+		plog("P15", "kb=" .. kb .. " sec=" .. string.format("%.5f", nowClock() - t0))
+	end
+end
+
 local record ProbeState
 	saveId : string
 	lastSeenGameTime : integer
+	round2Done : boolean
+	lastPeriodicWall : integer
 end
 
-local function p8(state : GameScriptState<ProbeState>)
-	local s = state:get()
-	if s and s.saveId then
-		plog("P8", "existing saveId=" .. tostring(s.saveId) .. " lastSeenGameTime=" .. tostring(s.lastSeenGameTime))
-	else
-		math.randomseed(math.floor(nowClock() * 1000000) + gameTimeNow())
-		local id = string.format("%08x%08x", math.random(0, 0x7fffffff), math.random(0, 0x7fffffff))
-		state:set({ saveId = id, lastSeenGameTime = gameTimeNow() })
-		plog("P8", "new saveId=" .. id)
-	end
-end
+local guiDone = false
 
--- P9: pauza
-local function p9(dt : number)
-	local speed = api.engine.getComponent(api.engine.util.getWorld(), api.type.ComponentType.GAME_SPEED) as Engine.Component.GameSpeed
-	plog("P9", "dt=" .. tostring(dt) .. " gameTime=" .. tostring(gameTimeNow()) .. " clock=" .. string.format("%.2f", nowClock()))
-	debugPrint(speed)
-end
-
-local onceDone = false
-local lastPeriodic = -1000.0
-
-local ret : GameScript<ProbeState> = {
+local ret : GameScriptWithGui<ProbeState, table> = {
 	update = function(_userParams : table, state : GameScriptState<ProbeState>, dt : number) : any
-		if not onceDone then
-			onceDone = true
-			plog("P0", "hello")
-			probe("P1", p1)
-			probe("P2", p2)
-			probe("P3", p3)
-			probe("P5", p5)
-			probe("P6", p6)
-			probe("P7", p7)
-			probe("P8", function() p8(state) end)
+		local s = state:get() or {}
+		if not s.round2Done then
+			s.round2Done = true
+			state:set(s)
+			plog("P0", "round2 hello")
+			probe("P11", function() envReport("P11") end)
+			probe("P13", p13)
+			probe("P14", p14)
+			probe("P15", p15)
 		end
-		local c = nowClock()
-		if c - lastPeriodic >= 10.0 then
-			lastPeriodic = c
-			probe("P4", p4)
-			probe("P9", function() p9(dt) end)
-			probe("P8", function()
-				local s = state:get()
-				if s and s.saveId then
-					state:set({ saveId = s.saveId, lastSeenGameTime = gameTimeNow() })
-				end
-			end)
+		local wall = os.time()
+		if not s.lastPeriodicWall or wall - s.lastPeriodicWall >= 10 then
+			s.lastPeriodicWall = wall
+			s.lastSeenGameTime = gameTimeNow()
+			state:set(s)
+			plog("P9", "dt=" .. tostring(dt) .. " gameTime=" .. tostring(s.lastSeenGameTime) .. " wall=" .. tostring(wall))
+		end
+	end,
+	guiUpdate = function(_userParams : table, _state : GameScriptStateReadOnly<ProbeState>, _guiState : GameScriptState<table>)
+		if not guiDone then
+			guiDone = true
+			plog("P12", "gui hello")
+			probe("P12", function() envReport("P12") end)
+			probe("P12", guiWrite)
 		end
 	end,
 }
