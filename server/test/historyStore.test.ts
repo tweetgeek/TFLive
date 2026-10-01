@@ -112,4 +112,12 @@ describe('HistoryStore', () => {
     expect(h.readGlobal('s').map((r) => r.month)).toEqual([99, 100]);
     expect(h.readTowns('s').map((r) => r.month)).toEqual([100, 101]);
   });
+
+  it('I1: lastGameTime zwraca ostatnio widziany czas gry Rozgrywki', () => {
+    const h = new HistoryStore(':memory:');
+    expect(h.lastGameTime('s')).toBeNull();
+    h.touchGame('s', 'Mapa', 12_345);
+    expect(h.lastGameTime('s')).toBe(12_345);
+    expect(h.lastGameTime('inna')).toBeNull();
+  });
 });

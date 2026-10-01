@@ -1,5 +1,5 @@
 import { EventEmitter } from 'node:events';
-import { monthMs, parseLine, type Alert, type AlertType, type Mute, type MuteKind, type SectionName, type Snapshot } from '@tflive/shared';
+import { monthIndex, monthMs, parseLine, type Alert, type AlertType, type Mute, type MuteKind, type SectionName, type Snapshot } from '@tflive/shared';
 import { RuleBuffers } from './alerts/buffers';
 import { AlertEngine } from './alerts/engine';
 import { ALL_RULES } from './alerts/index';
@@ -56,6 +56,8 @@ export class Hub extends EventEmitter {
   private seen = new Set<SectionName>();
   /** Sekcje, które dotarły w bieżącym miesiącu (zapis wstępny). */
   private seenThisMonth = new Set<SectionName>();
+  /** Po zmianie Rozgrywki / nowym logu pierwszy meta porównujemy z Historią (Cofnięcie po restarcie). */
+  private restartCheck = false;
   private readonly now: () => number;
 
   constructor(private readonly deps: { history: HistoryStore; config: AlertConfig; staleMs: number; logPath: string | null; now?: () => number }) {
@@ -90,7 +92,10 @@ export class Hub extends EventEmitter {
         this.seenThisMonth.add(c);
       }
       if (res.changed.length || res.events.length) dirty = true;
-      if (res.changed.includes('meta')) this.updateRate();
+      if (res.changed.includes('meta')) {
+        this.updateRate();
+        if (this.restartCheck) this.checkRestartRewind();
+      }
       if (res.changed.some((c) => OBSERVED.has(c))) this.buffers.observe(this.store.snapshot());
       this.writeProvisional();
     }
@@ -150,6 +155,7 @@ export class Hub extends EventEmitter {
     const h = this.deps.history;
     switch (e.type) {
       case 'game-changed':
+        this.restartCheck = true;
         this.engine.reset();
         this.buffers.reset();
         this.alerts = [];
@@ -172,6 +178,17 @@ export class Hub extends EventEmitter {
         h.applyBackfill(e.saveId, e.data);
         break;
     }
+  }
+
+  /** Cofnięcie po restarcie: pierwszy meta Rozgrywki wcześniejszy niż ostatnio widziany czas gry o ponad dzień. */
+  private checkRestartRewind(): void {
+    this.restartCheck = false;
+    const meta = this.store.snapshot().meta;
+    if (!meta) return;
+    const last = this.deps.history.lastGameTime(meta.saveId);
+    if (last === null || meta.gameTime >= last - meta.dayMs) return;
+    this.deps.history.truncateAfter(meta.saveId, monthIndex(meta.date));
+    this.deps.history.touchGame(meta.saveId, meta.mapName, meta.gameTime);
   }
 
   private resetPending(): void {

@@ -191,4 +191,41 @@ describe('Hub', () => {
     ]));
     expect(history.readLines('save1', 10)).toMatchObject([{ month: 1900 * 12, loadRatio: 0.5 }]);
   });
+
+  const playMonths = (hub: Hub, saveId: string, from: number, to: number, sessionId = 'sess1') => {
+    for (let m = from; m <= to; m++) {
+      const gt = 4000 + (m - 1) * 30 * DAY;
+      hub.ingest(read([
+        metaLine({ saveId, sessionId, seq: m * 10, gameTime: gt, date: d(1900, m, 2) }),
+        ...sections(m * 10 + 1, gt).map((l) => l.replace(' save1 ', ` ${saveId} `).replace(' sess1 ', ` ${sessionId} `)),
+      ]));
+    }
+  };
+  const months = (history: HistoryStore, saveId: string) => history.readGlobal(saveId).map((r) => r.month - 1900 * 12 + 1);
+
+  it('I1: Cofnięcie po restarcie gry (nowy log) obcina Historię', () => {
+    const { hub, history } = makeHub();
+    playMonths(hub, 'save1', 1, 5);
+    expect(months(history, 'save1')).toEqual([1, 2, 3, 4, 5]);
+    hub.ingest(read([metaLine({ sessionId: 'sess2', seq: 1, gameTime: 4000 + 30 * DAY, date: d(1900, 2, 2) })], true));
+    expect(months(history, 'save1')).toEqual([1, 2]);
+  });
+
+  it('I1: restart bez cofnięcia czasu nie obcina Historii', () => {
+    const { hub, history } = makeHub();
+    playMonths(hub, 'save1', 1, 3);
+    hub.ingest(read([metaLine({ sessionId: 'sess2', seq: 1, gameTime: 4000 + 60 * DAY, date: d(1900, 3, 2) })], true));
+    expect(months(history, 'save1')).toEqual([1, 2, 3]);
+  });
+
+  it('I1: A → B → starszy zapis A obcina Historię A, B nietknięta, Wyciszenia zostają', () => {
+    const { hub, history } = makeHub();
+    playMonths(hub, 'saveA', 1, 4, 'sA');
+    hub.addMute({ alertType: 'vehicle-old', entityId: 1, kind: 'ignore' });
+    playMonths(hub, 'saveB', 1, 3, 'sB');
+    hub.ingest(read([metaLine({ saveId: 'saveA', sessionId: 'sA2', seq: 1, gameTime: 4000, date: d(1900, 1, 2) })]));
+    expect(months(history, 'saveA')).toEqual([1]);
+    expect(months(history, 'saveB')).toEqual([1, 2, 3]);
+    expect(hub.mutes()).toHaveLength(1);
+  });
 });
