@@ -23,7 +23,8 @@ local record Collect
 	isPaused : function(number) : boolean
 	meta : function(number, integer, {string}) : {string : any}
 	finance : function() : {string : any}
-	backfill : function(integer, integer, integer) : {string : any}, integer
+	backfillWindow : function(integer) : {{integer}}
+	backfill : function(integer, integer, integer, {{integer}}) : {string : any}, integer
 	lines : function({string : integer}) : {any}
 	vehicles : function() : {any}
 	stops : function() : {any}
@@ -53,13 +54,29 @@ local record ModState
 	sections : {string : SectionState}
 	backfillIndex : integer
 	backfillOffset : integer
+	backfillMonths : {{integer}}   -- okno miesięcy bieżącej encji (zwykłe dane)
 	departures : {string : integer}
 	errors : {string}
+	errLogged : {string : integer} -- komunikat -> czas (wall) ostatniego wpisu [TFLIVE-ERR]
 end
 
+local ERR_LOG_EVERY <const> = 60
+local ERR_LOG_KEEP <const> = 600
+
 local function addError(s : ModState, msg : string)
+	s.errors = s.errors or {}
+	s.errLogged = s.errLogged or {}
 	table.insert(s.errors, msg)
 	while #s.errors > MAX_ERRORS do table.remove(s.errors, 1) end
+	local wall = os.time()
+	local last = s.errLogged[msg]
+	if last == nil or wall - last >= ERR_LOG_EVERY then
+		for k, t in pairs(s.errLogged) do
+			if wall - t > ERR_LOG_KEEP then s.errLogged[k] = nil end
+		end
+		s.errLogged[msg] = wall
+		debugPrint('[TFLIVE-ERR] ' .. msg)
+	end
 end
 
 local function emit(s : ModState, section : string, gameTime : integer, parts : {string})
@@ -134,7 +151,10 @@ local function emitBackfill(s : ModState, gameTime : integer)
 	local nextOffset : integer = nil
 	local part : string = nil
 	local ok = xpcall(function()
-		data, nextOffset = collect.backfill(s.backfillIndex, s.backfillOffset, schedule.BACKFILL_MONTHS_PER_TICK)
+		if s.backfillOffset == 0 or not s.backfillMonths then
+			s.backfillMonths = collect.backfillWindow(s.backfillIndex)
+		end
+		data, nextOffset = collect.backfill(s.backfillIndex, s.backfillOffset, schedule.BACKFILL_MONTHS_PER_TICK, s.backfillMonths)
 		if data ~= nil then
 			local m = data['months'] as {any}
 			if m and #m > 0 then part = json.encode(data) end
@@ -147,11 +167,13 @@ local function emitBackfill(s : ModState, gameTime : integer)
 		addError(s, 'backfill: ' .. tostring(errMsg))
 		s.backfillIndex = s.backfillIndex + 1
 		s.backfillOffset = 0
+		s.backfillMonths = nil
 		return
 	end
 	if data == nil then
 		s.backfillIndex = 0
 		s.backfillOffset = 0
+		s.backfillMonths = nil
 		return
 	end
 	if part then emit(s, 'backfill', gameTime, { part }) end
@@ -160,6 +182,7 @@ local function emitBackfill(s : ModState, gameTime : integer)
 	else
 		s.backfillIndex = s.backfillIndex + 1
 		s.backfillOffset = 0
+		s.backfillMonths = nil
 	end
 end
 
@@ -170,12 +193,18 @@ local function startSession(s : ModState, wall : integer)
 	s.sections = {}
 	s.backfillIndex = 1
 	s.backfillOffset = 0
+	s.backfillMonths = nil
 	s.departures = {}
 	s.errors = {}
+	s.errLogged = {}
 end
 
 local function run(s : ModState, dt : number)
 	local wall = os.time()
+	s.sections = s.sections or {}
+	s.errors = s.errors or {}
+	s.departures = s.departures or {}
+	s.errLogged = s.errLogged or {}
 	if not s.saveId then s.saveId = schedule.newId(os.clock() + wall) end
 	if schedule.isNewSession(s.lastEmitWall, wall) or not s.sessionId then startSession(s, wall) end
 	local paused = collect.isPaused(dt)
@@ -210,7 +239,6 @@ local ret : GameScript<ModState> = {
 			return e
 		end)
 		if not ok then
-			if not s.errors then s.errors = {} end
 			addError(s, 'update: ' .. tostring(err))
 		end
 		state:set(s)

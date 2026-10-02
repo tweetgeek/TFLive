@@ -19,7 +19,8 @@ local record Collect
 	meta : function(number, integer, {string}) : {string : any}
 	finance : function() : {string : any}
 	backfillCount : function() : integer
-	backfill : function(integer, integer, integer) : {string : any}, integer
+	backfillWindow : function(integer) : {{integer}}
+	backfill : function(integer, integer, integer, {{integer}}) : {string : any}, integer
 	lines : function({string : integer}) : {any}
 	vehicles : function() : {any}
 	stops : function() : {any}
@@ -121,12 +122,27 @@ collect.backfillCount = function() : integer
 	return #backfillEntities()
 end
 
-collect.backfill = function(index : integer, offset : integer, maxMonths : integer) : {string : any}, integer
+-- Okno miesięcy encji (raz na encję na przebieg backfillu); dla linii od miesiąca pierwszego przychodu.
+collect.backfillWindow = function(index : integer) : {{integer}}
+	local list = backfillEntities()
+	if index < 1 or index > #list then return nil end
+	local now = collect.gameTime()
+	local all = months.lastMonths(now, dayMs(), months.MONTH_CAP, cal)
+	if index == 1 then return all end
+	local okFirst, first = pcall(function() : integer return api.engine.util.finance.getFirstIncomeTime(list[index]) end)
+	if not (okFirst and first ~= nil and first > 0) then return all end
+	local out : {{integer}} = {}
+	for _, mm in ipairs(all) do
+		if mm[3] > first then out[#out + 1] = mm end
+	end
+	return out
+end
+
+collect.backfill = function(index : integer, offset : integer, maxMonths : integer, window : {{integer}}) : {string : any}, integer
 	local list = backfillEntities()
 	if index < 1 or index > #list then return nil, nil end
 	local e = list[index]
-	local now = collect.gameTime()
-	local all = months.lastMonths(now, dayMs(), months.MONTH_CAP, cal)
+	local all = window or collect.backfillWindow(index)
 	local slice : {{integer}} = {}
 	for i = offset + 1, math.min(offset + maxMonths, #all) do table.insert(slice, all[i]) end
 	local nextOffset : integer = nil
@@ -248,16 +264,27 @@ collect.lines = function(departures : {string : integer}) : {any}
 	return rows
 end
 
+-- Cache danych modeli (nazwa, żywotność) — niezmienne w czasie życia stanu Lua.
+local modelInfo : {integer : {string, number}} = {}
+
+local function modelData(modelId : integer) : string, number
+	local c = modelInfo[modelId]
+	if c then return c[1], c[2] end
+	local resName = api.res.modelRep.getName(modelId) or tostring(modelId)
+	local model = api.res.modelRep.get(modelId)
+	local md = model and (model.metadata as {string : {string : any}})
+	local maint = md and md['maintenance']
+	local lifespan = (maint and (maint['lifespan'] as number)) or 0
+	local short = resName:match('([^/]+)%.mdl$') or resName
+	modelInfo[modelId] = { short, lifespan }
+	return short, lifespan
+end
+
 local function partRows(tv : Engine.Component.TransportVehicle) : {any}
 	local parts : {any} = {}
 	for _, p in ipairs(tv.transportVehicleConfig.vehicles) do
-		local modelId = p.part.modelId
-		local resName = api.res.modelRep.getName(modelId) or tostring(modelId)
-		local model = api.res.modelRep.get(modelId)
-		local md = model and (model.metadata as {string : {string : any}})
-		local maint = md and md['maintenance']
-		local lifespan = (maint and (maint['lifespan'] as number)) or 0
-		table.insert(parts, { resName:match('([^/]+)%.mdl$') or resName, p.purchaseTime, lifespan, p.maintenanceState })
+		local short, lifespan = modelData(p.part.modelId)
+		table.insert(parts, { short, p.purchaseTime or 0, lifespan, p.maintenanceState or 0 })
 	end
 	return parts
 end
@@ -312,19 +339,22 @@ local function allCargoIds() : {integer}
 	return ids
 end
 
--- Czas ostatniego wpisu w dzienniku encji (LOG_BOOK) dla nazwy lub prefiksu nazwy.
-local function lastLogTime(entity : Engine.Entity, name : string, prefix : boolean) : integer
+-- Jeden odczyt LOG_BOOK na encję; zwraca funkcję (nazwa lub prefiks) -> czas ostatniego wpisu.
+local function logTimes(entity : Engine.Entity) : function(string, boolean) : integer
 	local lb = api.engine.getComponent(entity, api.type.ComponentType.LOG_BOOK) as Engine.Component.LogBook
-	if not lb or not lb.name2log then return nil end
-	local best : integer = nil
-	for k, log in pairs(lb.name2log) do
-		local match = (prefix and k:sub(1, #name) == name) or (not prefix and k == name)
-		if match and log.times and #log.times > 0 then
-			local t = log.times[#log.times]
-			if best == nil or t > best then best = t end
+	local n2l = lb and lb.name2log
+	return function(name : string, prefix : boolean) : integer
+		if not n2l then return nil end
+		local best : integer = nil
+		for k, log in pairs(n2l) do
+			local match = (prefix and k:sub(1, #name) == name) or (not prefix and k == name)
+			if match and log.times and #log.times > 0 then
+				local t = log.times[#log.times]
+				if best == nil or t > best then best = t end
+			end
 		end
+		return best
 	end
-	return best
 end
 
 collect.stops = function() : {any}
@@ -367,6 +397,7 @@ collect.industries = function() : {any}
 		if ind then
 			local sle = ind.stockList
 			local sl = api.engine.getComponent(sle, api.type.ComponentType.STOCK_LIST) as Engine.Component.StockList
+			local logs = logTimes(sle)
 			local inputs : {any} = {}
 			local outputs : {any} = {}
 			if sl and sl.stocks then
@@ -375,7 +406,7 @@ collect.industries = function() : {any}
 					local count = api.engine.system.simEntityAtStockSystem.getStockCount(sle, sid)
 					local cid = s.cargoType as integer
 					if s.type == E.InputStock then
-						table.insert(inputs, { cargoName(cid), count, orNull(lastLogTime(sle, 'itemsConsumed' .. tostring(cid), false)) })
+						table.insert(inputs, { cargoName(cid), count, orNull(logs('itemsConsumed' .. tostring(cid), false)) })
 					elseif s.type == E.OutputStock then
 						table.insert(outputs, { cargoName(cid), count, s.capacity or 0 })
 					end
@@ -396,7 +427,7 @@ collect.industries = function() : {any}
 				ind.upgradeProgress or 0,
 				inputs,
 				outputs,
-				orNull(lastLogTime(sle, 'itemsLoaded', false)),
+				orNull(logs('itemsLoaded', false)),
 			})
 		end
 	end
@@ -412,6 +443,7 @@ collect.towns = function() : {any}
 	for _, t in ipairs(api.engine.getEntitiesWithComponent(api.type.ComponentType.TOWN)) do
 		local town = api.engine.getComponent(t, api.type.ComponentType.TOWN) as Engine.Component.Town
 		if town then
+			local logs = logTimes(t)
 			local usage = api.engine.util.town.getTownCapacityUsage(t)
 			local res = usage and usage[resIdx]
 			local em = api.engine.util.town.getTownEmissionDB(t)
@@ -433,7 +465,7 @@ collect.towns = function() : {any}
 				em and em.noise or 0,
 				em and em.pollution or 0,
 				needs,
-				orNull(lastLogTime(t, 'itemsAtDestination', true)),
+				orNull(logs('itemsAtDestination', true)),
 			})
 		end
 	end

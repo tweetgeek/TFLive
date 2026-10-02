@@ -20,13 +20,15 @@ months.lastMonths = function(now : integer, dayMs : integer, n : integer, cal : 
 	local to = now
 	while #out < n do
 		if from < 0 then from = 0 end
-		table.insert(out, 1, { months.index(y, m), from, to })
+		out[#out + 1] = { months.index(y, m), from, to }
 		if from <= 0 then break end
 		to = from
 		local py, pm, pd = cal(from - 1)
 		y, m = py, pm
 		from = math.floor((from - 1) / dayMs) * dayMs - (pd - 1) * dayMs
 	end
+	local n2 = #out
+	for i = 1, math.floor(n2 / 2) do out[i], out[n2 - i + 1] = out[n2 - i + 1], out[i] end
 	return out
 end
 
