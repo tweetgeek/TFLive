@@ -53,7 +53,7 @@ async function act(a: Alert, fn: () => Promise<void>) {
       <SeverityBadge :severity="a.severity" />
       <div class="body">
         <div class="title"><span v-if="a.muted" class="tag tag-neutral">🔕 wyciszony</span> {{ alertEmoji(a.type) }} {{ a.title }}</div>
-        <div class="sub"><span class="num">{{ a.detail }}</span> · od {{ dateOf(a.firstSeenGameTime) }}<template v-if="a.muted"> · {{ mutedText(a) }}</template></div>
+        <div class="sub"><span>{{ a.detail }}</span> · od {{ dateOf(a.firstSeenGameTime) }}<template v-if="a.muted"> · {{ mutedText(a) }}</template></div>
       </div>
       <template v-if="!a.muted">
         <button class="btn" type="button" aria-label="Odłóż 3 mies." title="Odłóż 3 mies." :disabled="busy === a.id" @click="act(a, () => store.mute(a, 'snooze'))">⏰<template v-if="!dense"> Odłóż 3 mies.</template></button>

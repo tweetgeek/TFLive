@@ -23,7 +23,7 @@ const top = computed(() => active.value.slice(0, 5));
         <div v-if="!top.length" class="muted ok">✅ Brak aktywnych alertów.</div>
         <div v-for="a in top" :key="a.id" class="alert" data-test="top-alert">
           <SeverityBadge :severity="a.severity" />
-          <div><div class="title">{{ alertEmoji(a.type) }} {{ a.title }}</div><div class="num muted detail">{{ a.detail }}</div></div>
+          <div><div class="title">{{ alertEmoji(a.type) }} {{ a.title }}</div><div class="muted detail">{{ a.detail }}</div></div>
         </div>
       </div>
       <div class="card months">

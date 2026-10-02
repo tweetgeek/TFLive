@@ -48,7 +48,7 @@ const activeAlerts = computed(() => state.alerts.filter((a) => !a.muted).length)
 </template>
 
 <style scoped>
-.cc { height: 100%; min-height: 0; display: flex; flex-direction: column; gap: 8px; font-size: clamp(13px, calc(1px + 0.625vw), 15px); }
+.cc { height: 100%; min-height: 0; display: flex; flex-direction: column; gap: 8px; font-size: clamp(14px, calc(2px + 0.625vw), 16px); }
 .cols { flex: 1; min-height: 0; display: grid; grid-template-columns: 25fr 45fr 30fr; gap: 8px; }
 .col { display: flex; flex-direction: column; gap: 8px; min-height: 0; min-width: 0; }
 .p-fill { flex: 1 1 0; }

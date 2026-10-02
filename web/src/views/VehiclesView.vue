@@ -95,7 +95,7 @@ function stateText(v: Vehicle): { dot: string; text: string } {
 
 <style scoped>
 .linesel { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #b7c3cc; }
-.linesel select { min-height: var(--ctl-h); padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--text); font: 500 15px 'Barlow Semi Condensed', sans-serif; max-width: 320px; }
+.linesel select { min-height: var(--ctl-h); padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--text); font: 500 15px var(--font-ui); max-width: 320px; }
 .model { font-size: 14px; }
 .soft { color: var(--soft); }
 .st { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; white-space: nowrap; }
