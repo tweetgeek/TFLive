@@ -78,6 +78,10 @@ describe('overloadedStop', () => {
     expect(overloadedStop(ctx({ stops: [stop({ waiting: [...w(70, 20), { cargo: 'coal', count: 30, bad: 5 }] })] }))).toHaveLength(1);
     expect(overloadedStop(ctx({ stops: [stop({ waiting: w(100, 24) })] }))).toEqual([]);
   });
+  it('mała liczba oczekujących (2/2) — brak alertu, 20/10 — alert', () => {
+    expect(overloadedStop(ctx({ stops: [stop({ waiting: w(2, 2) })] }))).toEqual([]);
+    expect(overloadedStop(ctx({ stops: [stop({ waiting: w(20, 10) })] }))).toHaveLength(1);
+  });
   it('brak oczekujących — brak alertu', () => {
     expect(overloadedStop(ctx({ stops: [stop()] }))).toEqual([]);
   });
