@@ -5,6 +5,7 @@ import type { Component } from 'vue';
 import KpiStrip from '../src/components/KpiStrip.vue';
 import MonthsChart from '../src/components/MonthsChart.vue';
 import AlertsView from '../src/views/AlertsView.vue';
+import LinesView from '../src/views/LinesView.vue';
 import VehiclesView from '../src/views/VehiclesView.vue';
 import { createStore, STORE_KEY, type Store } from '../src/state/store';
 import { fixtureState } from './fixture';
@@ -59,5 +60,28 @@ describe('Pojazdy dense', () => {
     expect(w.find('.view').classes()).toContain('dense');
     expect(w.findAll('tbody tr')).toHaveLength(3);
     expect(w.text()).not.toContain('mogul_2_6_0');
+  });
+});
+
+describe('Linie dense', () => {
+  it('bez panelu bocznego, z mini-wykresem; wiersz rozwija i zwija szczegóły', async () => {
+    const { w } = mountDense(LinesView);
+    expect(w.find('[data-test="detail"]').exists()).toBe(false);
+    expect(w.findAll('[data-test="spark"]')).toHaveLength(3);
+    expect(w.find('[data-test="expand"]').exists()).toBe(false);
+    const row = w.findAll('tbody tr').find((r) => r.text().includes('TC - Drewno,Deski'))!;
+    await row.trigger('click');
+    const exp = w.find('[data-test="expand"]');
+    expect(exp.text()).toContain('Dworzec Uxbridge Południe');
+    expect(exp.text()).toContain('Pociąg 2');
+    expect(row.attributes('aria-expanded')).toBe('true');
+    await row.trigger('click');
+    expect(w.find('[data-test="expand"]').exists()).toBe(false);
+  });
+  it('Enter rozwija szczegóły', async () => {
+    const { w } = mountDense(LinesView);
+    const row = w.findAll('tbody tr').find((r) => r.text().includes('Bus - Pasażerski - Eccles LO'))!;
+    await row.trigger('keydown.enter');
+    expect(w.find('[data-test="expand"]').text()).toContain('Kings Road');
   });
 });
