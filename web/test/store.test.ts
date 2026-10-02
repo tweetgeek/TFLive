@@ -87,4 +87,61 @@ describe('store', () => {
     await store.unmute(alert);
     expect(fetchImpl).toHaveBeenCalledWith('/api/mutes/7', expect.objectContaining({ method: 'DELETE' }));
   });
+
+  it('close() potem connect() nie tworzy dwóch socketów — timer nie odpalany', () => {
+    const { store } = setup();
+    store.connect();
+    expect(FakeWS.all).toHaveLength(1);
+    FakeWS.all[0].onclose?.();
+    store.close();
+    store.connect();
+    expect(FakeWS.all).toHaveLength(2);
+    vi.advanceTimersByTime(60_000);
+    expect(FakeWS.all).toHaveLength(2);
+  });
+
+  it('POST 409 zwraca actionError, nie rzuca', async () => {
+    const fetchImpl = vi.fn(async (input: string, init?: RequestInit) =>
+      new Response('{}', { status: init?.method === 'POST' ? 409 : 200 }));
+    const { store } = setup(fetchImpl);
+    const alert = fixtureState().alerts.find((a) => a.type === 'low-line-load')!;
+    expect(store.state.actionError).toBe(null);
+    await store.mute(alert, 'ignore');
+    expect(store.state.actionError).toContain('409');
+  });
+
+  it('fetch reject zwraca actionError o braku połączenia, nie rzuca', async () => {
+    const fetchImpl = vi.fn(async () => { throw new Error('network'); });
+    const { store } = setup(fetchImpl);
+    const alert = fixtureState().alerts.find((a) => a.type === 'low-line-load')!;
+    await store.mute(alert, 'ignore');
+    expect(store.state.actionError).toContain('Brak połączenia');
+  });
+
+  it('isWire odrzuca snapshot:null', () => {
+    const { store } = setup();
+    store.connect();
+    FakeWS.all[0].onmessage?.({ data: JSON.stringify({ type: 'state', snapshot: null, alerts: [], status: {} }) });
+    expect(store.state.received).toBe(false);
+  });
+
+  it('refreshMutes rejekt nie rzuca, mutes niezmienione', async () => {
+    const fetchImpl = vi.fn(async () => { throw new Error('network'); });
+    const { store } = setup(fetchImpl);
+    store.state.mutes = [{ id: 1, saveId: 's', alertType: 'low-line-load', entityId: 56357, kind: 'ignore', untilGameTime: null }];
+    await store.refreshMutes();
+    expect(store.state.mutes).toHaveLength(1);
+  });
+
+  it('onopen odświeża mutes', async () => {
+    const mutes = [{ id: 1, saveId: 's', alertType: 'low-line-load', entityId: 56357, kind: 'ignore', untilGameTime: null }];
+    const fetchImpl = vi.fn(async (input: string, init?: RequestInit) =>
+      new Response(JSON.stringify(mutes), { status: 200 }));
+    const { store } = setup(fetchImpl);
+    expect(store.state.mutes).toHaveLength(0);
+    store.connect();
+    FakeWS.all[0].onopen?.();
+    await vi.runAllTimersAsync();
+    expect(store.state.mutes).toHaveLength(1);
+  });
 });
