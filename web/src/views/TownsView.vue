@@ -3,7 +3,7 @@ import type { Town } from '@tflive/shared';
 import { computed, ref } from 'vue';
 import { alertsFor, isServed } from '../lib/derive';
 import { cargoEmoji, DISTRICT } from '../lib/emoji';
-import { fmtDecimal, fmtInt, fmtPct } from '../lib/format';
+import { fmtDecimal, fmtInt, fmtPct, plSzansa } from '../lib/format';
 import { useStore } from '../state/store';
 
 const { state } = useStore();
@@ -15,7 +15,6 @@ const list = computed(() => sn.value.towns.filter((t) => showAll.value || served
 const hidden = computed(() => sn.value.towns.length - sn.value.towns.filter(served).length);
 const opportunities = (t: Town) => t.needs.filter((n) => !n.supplied).length;
 const hasDrop = (t: Town) => alertsFor(state.alerts, 'town', t.id).some((a) => a.type === 'supply-drop' && !a.muted);
-const plural = (n: number) => (n === 1 ? 'szansa' : n < 5 ? 'szanse' : 'szans');
 </script>
 
 <template>
@@ -32,7 +31,7 @@ const plural = (n: number) => (n === 1 ? 'szansa' : n < 5 ? 'szanse' : 'szans');
           <div><h2>🏙️ {{ t.name }}</h2><div class="muted sub">{{ served(t) ? '✅ obsługiwane' : 'nieobsługiwane' }} · 👥 ludność <span class="num txt">{{ fmtInt(t.population) }}</span></div></div>
           <div class="tags">
             <span v-if="hasDrop(t)" class="tag tag-warn">📉 spadek dostaw</span>
-            <span v-if="opportunities(t)" class="tag tag-info">💡 {{ opportunities(t) }} {{ plural(opportunities(t)) }}</span>
+            <span v-if="opportunities(t)" class="tag tag-info">💡 {{ opportunities(t) }} {{ plSzansa(opportunities(t)) }}</span>
           </div>
         </div>
         <div class="lbl">Potrzeby</div>
@@ -40,10 +39,11 @@ const plural = (n: number) => (n === 1 ? 'szansa' : n < 5 ? 'szanse' : 'szans');
         <div v-for="n in t.needs" :key="`${n.district}:${n.cargo}`">
           <div class="li">
             <span>{{ DISTRICT[n.district].emoji }} {{ DISTRICT[n.district].label }} · {{ cargoEmoji(n.cargo) }} {{ n.cargo }}</span>
-            <span v-if="n.supplied" class="num">{{ fmtPct(n.supplied / n.demand) }}</span>
+            <span v-if="n.supplied && n.demand > 0" class="num">{{ fmtPct(n.supplied / n.demand) }}</span>
+            <span v-else-if="n.supplied && n.demand <= 0" class="num">—</span>
             <span v-else class="opp">szansa · <span class="num">0/{{ fmtInt(n.demand) }}</span></span>
           </div>
-          <div v-if="n.supplied" class="bar"><span :class="{ warn: n.supplied / n.demand < 0.5 }" :style="{ width: fmtPct(Math.min(1, n.supplied / n.demand)) }"></span></div>
+          <div v-if="n.supplied && n.demand > 0" class="bar"><span :class="{ warn: n.supplied / n.demand < 0.5 }" :style="{ width: fmtPct(Math.min(1, n.supplied / n.demand)) }"></span></div>
           <div v-else class="bar dashed"></div>
         </div>
         <div class="grid em">

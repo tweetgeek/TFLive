@@ -11,6 +11,7 @@ const sn = computed(() => state.snapshot);
 const filter = ref<'served' | 'all' | 'alerts'>('served');
 const meta = computed(() => sn.value.meta);
 const served = (i: Industry) => !!meta.value && isServed(i.lastServedTime, meta.value.gameTime, meta.value.dayMs);
+const threatened = (i: Industry) => served(i) && i.closureTime !== null && i.closureTime > 0;
 const alertsOf = (i: Industry) => alertsFor(state.alerts, 'industry', i.id).filter((a) => !a.muted);
 const counts = computed(() => ({
   served: sn.value.industries.filter(served).length,
@@ -22,12 +23,12 @@ const list = computed(() =>
 );
 const threats = computed(() =>
   sn.value.industries
-    .filter((i) => served(i) && i.closureTime !== null && meta.value)
+    .filter((i) => threatened(i) && meta.value)
     .map((i) => ({ i, days: Math.max(0, Math.floor(((i.closureTime ?? 0) - (meta.value?.gameTime ?? 0)) / (meta.value?.dayMs ?? 1))) })),
 );
 const date = (t: number | null) => (t !== null && meta.value ? fmtGameDate(gameDateAt(t, meta.value)) : null);
 function tag(i: Industry) {
-  if (served(i) && i.closureTime !== null) return { cls: 'tag-warn', text: '🚨 zamknięcie' };
+  if (threatened(i)) return { cls: 'tag-warn', text: '🚨 zamknięcie' };
   if (i.outputs.some((o) => o.capacity > 0 && o.stock / o.capacity >= 0.8)) return { cls: 'tag-warn', text: '📦 zalega' };
   return { cls: 'tag-ok', text: '✅ w normie' };
 }
