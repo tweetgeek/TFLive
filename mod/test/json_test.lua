@@ -1,0 +1,28 @@
+local json = M.load("json")
+
+test("json: skalary", function()
+	eq(json.encode(true), "true")
+	eq(json.encode(false), "false")
+	eq(json.encode(json.NULL), "null")
+	eq(json.encode(nil), "null")
+	eq(json.encode(42), "42")
+	eq(json.encode(-7), "-7")
+	eq(json.encode(10107800), "10107800")
+	eq(json.encode(0.57302629947662), "0.573026")
+	eq(json.encode(0/0), "null")
+	eq(json.encode(math.huge), "null")
+end)
+
+test("json: teksty z ucieczkami i polskimi znakami", function()
+	eq(json.encode('a"b\\c'), '"a\\"b\\\\c"')
+	eq(json.encode("ł\n\t"), '"ł\\n\\t"')
+	eq(json.encode("\1"), '"\\u0001"')
+end)
+
+test("json: tablice zachowują null w środku", function()
+	eq(json.encode({ 1, json.NULL, "x", {} }), '[1,null,"x",[]]')
+end)
+
+test("json: obiekty z posortowanymi kluczami", function()
+	eq(json.encode({ b = 1, a = { 2, 3 }, c = json.NULL }), '{"a":[2,3],"b":1,"c":null}')
+end)

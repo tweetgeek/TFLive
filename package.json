@@ -9,7 +9,9 @@
     "typecheck": "tsc -p tsconfig.json",
     "start": "tsx server/src/main.ts",
     "demo": "tsx server/src/main.ts --demo",
-    "demo:log": "tsx server/scripts/make-demo-log.ts"
+    "demo:log": "tsx server/scripts/make-demo-log.ts",
+    "mod:check": "bash mod/scripts/tl.sh check",
+    "mod:test": "bash mod/scripts/tl.sh gen && luajit mod/test/run.lua"
   },
   "devDependencies": {
     "@types/node": "^24.19.0",
