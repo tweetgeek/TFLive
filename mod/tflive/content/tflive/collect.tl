@@ -290,4 +290,149 @@ collect.vehicles = function() : {any}
 	return rows
 end
 
+local cargoNames : {integer : string} = {}
+local function cargoName(id : integer) : string
+	local c = cargoNames[id]
+	if c then return c end
+	local full = api.res.cargoTypeRep.getName(id as CargoTypeId) or tostring(id)
+	c = full:match('([^/]+)%.cargo$') or full
+	cargoNames[id] = c
+	return c
+end
+
+local function allCargoIds() : {integer}
+	local ids : {integer} = {}
+	for id, _ in pairs(api.res.cargoTypeRep.getAll() as {integer : any}) do table.insert(ids, id) end
+	table.sort(ids)
+	return ids
+end
+
+-- Czas ostatniego wpisu w dzienniku encji (LOG_BOOK) dla nazwy lub prefiksu nazwy.
+local function lastLogTime(entity : Engine.Entity, name : string, prefix : boolean) : integer
+	local lb = api.engine.getComponent(entity, api.type.ComponentType.LOG_BOOK) as Engine.Component.LogBook
+	if not lb or not lb.name2log then return nil end
+	local best : integer = nil
+	for k, log in pairs(lb.name2log) do
+		local match = (prefix and k:sub(1, #name) == name) or (not prefix and k == name)
+		if match and log.times and #log.times > 0 then
+			local t = log.times[#log.times]
+			if best == nil or t > best then best = t end
+		end
+	end
+	return best
+end
+
+collect.stops = function() : {any}
+	local player = api.engine.util.getPlayer()
+	local seen : {integer : boolean} = {}
+	local groups : {integer} = {}
+	for _, line in ipairs(api.engine.system.lineSystem.getLinesForPlayer(player)) do
+		local lc = api.engine.getComponent(line, api.type.ComponentType.LINE) as Engine.Component.Line
+		if lc then
+			for _, st in ipairs(lc.stops) do
+				if not seen[st.stationGroup] then
+					seen[st.stationGroup] = true
+					table.insert(groups, st.stationGroup)
+				end
+			end
+		end
+	end
+	local cargoIds = allCargoIds()
+	local rows : {any} = {}
+	for _, sg in ipairs(groups) do
+		local waiting : {any} = {}
+		local veryBad = false
+		for _, cid in ipairs(cargoIds) do
+			local q = api.engine.util.cargo.getCargoQualityDataAtStationGroup(sg, cid as CargoTypeId)
+			if q and q.countTotal and q.countTotal > 0 then
+				table.insert(waiting, { cargoName(cid), q.countTotal, q.countBad or 0 })
+				if q.isVeryBad then veryBad = true end
+			end
+		end
+		table.insert(rows, { sg, api.engine.util.getEntityName(sg) or tostring(sg), waiting, veryBad and 1 or 0 })
+	end
+	return rows
+end
+
+collect.industries = function() : {any}
+	local E = api.type["enum"].StockListType
+	local rows : {any} = {}
+	for _, e in ipairs(api.engine.getEntitiesWithComponent(api.type.ComponentType.INDUSTRY)) do
+		local ind = api.engine.getComponent(e, api.type.ComponentType.INDUSTRY) as Engine.Component.Industry
+		if ind then
+			local sle = ind.stockList
+			local sl = api.engine.getComponent(sle, api.type.ComponentType.STOCK_LIST) as Engine.Component.StockList
+			local inputs : {any} = {}
+			local outputs : {any} = {}
+			if sl and sl.stocks then
+				for i, s in ipairs(sl.stocks) do
+					local sid = (i - 1) as StockId
+					local count = api.engine.system.simEntityAtStockSystem.getStockCount(sle, sid)
+					local cid = s.cargoType as integer
+					if s.type == E.InputStock then
+						table.insert(inputs, { cargoName(cid), count, orNull(lastLogTime(sle, 'itemsConsumed' .. tostring(cid), false)) })
+					elseif s.type == E.OutputStock then
+						table.insert(outputs, { cargoName(cid), count, s.capacity or 0 })
+					end
+				end
+			end
+			local typeName = 'industry'
+			local con = api.engine.getComponent(ind.construction, api.type.ComponentType.CONSTRUCTION) as Engine.Component.Construction
+			if con and con.fileName then typeName = con.fileName:match('([^/]+)%.con$') or con.fileName end
+			local closure : any = NULL
+			if ind.closureTimeStamp and ind.closureTimeStamp > 0 then closure = ind.closureTimeStamp end
+			table.insert(rows, {
+				e,
+				api.engine.util.getEntityName(e) or tostring(e),
+				typeName,
+				ind.level or 0,
+				ind.maxLevel or 0,
+				closure,
+				ind.upgradeProgress or 0,
+				inputs,
+				outputs,
+				orNull(lastLogTime(sle, 'itemsLoaded', false)),
+			})
+		end
+	end
+	return rows
+end
+
+local DISTRICTS : {string} = { 'RESIDENTIAL', 'COMMERCIAL', 'INDUSTRIAL' }
+
+collect.towns = function() : {any}
+	local LU = api.type["enum"].LandUseType as {string : any}
+	local resIdx = (LU['RESIDENTIAL'] as integer) + 1
+	local rows : {any} = {}
+	for _, t in ipairs(api.engine.getEntitiesWithComponent(api.type.ComponentType.TOWN)) do
+		local town = api.engine.getComponent(t, api.type.ComponentType.TOWN) as Engine.Component.Town
+		if town then
+			local usage = api.engine.util.town.getTownCapacityUsage(t)
+			local res = usage and usage[resIdx]
+			local em = api.engine.util.town.getTownEmissionDB(t)
+			local needs : {any} = {}
+			for _, dname in ipairs(DISTRICTS) do
+				local lu = LU[dname] as LandUseType
+				for cid, sl in pairs(api.engine.system.townBuildingSystem.getCargoSupplyAndLimit(t, lu) as {integer : {number}}) do
+					local demand = math.floor(sl[2] or 0)
+					if demand > 0 then
+						table.insert(needs, { dname, cargoName(cid), demand, math.min(math.ceil(sl[1] or 0), demand) })
+					end
+				end
+			end
+			table.insert(rows, {
+				t,
+				api.engine.util.getEntityName(t) or tostring(t),
+				res and res.capacity or 0,
+				town.developmentActive and 1 or 0,
+				em and em.noise or 0,
+				em and em.pollution or 0,
+				needs,
+				orNull(lastLogTime(t, 'itemsAtDestination', true)),
+			})
+		end
+	end
+	return rows
+end
+
 return collect
