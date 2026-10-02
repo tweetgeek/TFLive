@@ -26,3 +26,8 @@ test("schedule: newId — 16 znaków hex, każde wywołanie zwraca inny id", fun
 	ok(a:match("^%x+$") and #a == 16, "format: " .. a)
 	ok(a ~= b, "kolejne wywołania zwracają różne identyfikatory")
 end)
+
+test("schedule: stałe odświeżania i backfillu", function()
+	ok(schedule.FORCE_REFRESH_SEC == 300, "FORCE_REFRESH_SEC")
+	ok(schedule.BACKFILL_MONTHS_PER_TICK == 60, "BACKFILL_MONTHS_PER_TICK")
+end)

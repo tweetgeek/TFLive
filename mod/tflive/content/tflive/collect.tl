@@ -19,7 +19,7 @@ local record Collect
 	meta : function(number, integer, {string}) : {string : any}
 	finance : function() : {string : any}
 	backfillCount : function() : integer
-	backfill : function(integer) : {string : any}
+	backfill : function(integer, integer, integer) : {string : any}, integer
 	lines : function({string : integer}) : {any}
 	vehicles : function() : {any}
 	stops : function() : {any}
@@ -121,17 +121,22 @@ collect.backfillCount = function() : integer
 	return #backfillEntities()
 end
 
-collect.backfill = function(index : integer) : {string : any}
+collect.backfill = function(index : integer, offset : integer, maxMonths : integer) : {string : any}, integer
 	local list = backfillEntities()
-	if index < 1 or index > #list then return nil end
+	if index < 1 or index > #list then return nil, nil end
 	local e = list[index]
 	local now = collect.gameTime()
+	local all = months.lastMonths(now, dayMs(), months.MONTH_CAP, cal)
+	local slice : {{integer}} = {}
+	for i = offset + 1, math.min(offset + maxMonths, #all) do table.insert(slice, all[i]) end
+	local nextOffset : integer = nil
+	if offset + maxMonths < #all then nextOffset = offset + maxMonths end
 	local b : {string : any} = {
 		scope = index == 1 and 'global' or 'line',
 		id = index == 1 and NULL or e,
-		months = monthlyOps({ e }, months.lastMonths(now, dayMs(), months.MONTH_CAP, cal)),
+		months = monthlyOps({ e }, slice),
 	}
-	return b
+	return b, nextOffset
 end
 
 local VEHICLE_STATES : {string} = { 'IN_DEPOT', 'EN_ROUTE', 'AT_TERMINAL', 'GOING_TO_DEPOT' }
