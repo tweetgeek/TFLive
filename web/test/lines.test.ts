@@ -64,4 +64,27 @@ describe('Linie', () => {
   it('pusty stan', () => {
     expect(mountWith(emptyState()).text()).toContain('Czekam na dane z gry');
   });
+  it('sortowanie po obłożeniu: rosnąco, null zawsze na końcu', async () => {
+    const w = mountWith();
+    const btn = () => w.find('th button[data-sort="load"]');
+    await btn().trigger('click');
+    expect(w.find('th[aria-sort]').attributes('aria-sort')).toBe('ascending');
+    let n = names(w);
+    expect(n[0]).toContain('Bus - Pasażerski - Eccles LO');
+    expect(n[1]).toContain('TC - Drewno,Deski');
+    expect(n[2]).toContain('WP - Pasażerski');
+    await btn().trigger('click');
+    expect(w.find('th[aria-sort]').attributes('aria-sort')).toBe('descending');
+    n = names(w);
+    expect(n[0]).toContain('TC - Drewno,Deski');
+    expect(n[1]).toContain('Bus - Pasażerski - Eccles LO');
+    expect(n[2]).toContain('WP - Pasażerski');
+  });
+  it('towary na przystankach z czytelną etykietą', async () => {
+    const s = fixtureState();
+    s.snapshot.stops[0].waiting = [{ cargo: 'IRON_ORE', count: 5, bad: 0 }];
+    const w = mountWith(s);
+    await w.findAll('tbody tr')[0].trigger('click');
+    expect(w.find('[data-test="detail"]').text()).toContain('iron ore');
+  });
 });

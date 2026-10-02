@@ -17,6 +17,8 @@ export interface StoreDeps {
   wsFactory: (url: string) => WebSocketLike;
   fetch: (input: string, init?: RequestInit) => Promise<Response>;
   setTimeout?: (fn: () => void, ms: number) => unknown;
+  clearTimeout?: (handle: unknown) => void;
+  now?: () => number;
 }
 
 export interface AppState extends HubState {
@@ -35,6 +37,8 @@ export interface Store {
   unmute(alert: Alert): Promise<void>;
 }
 
+export const WATCHDOG_MS = 15000;
+const WATCHDOG_TICK_MS = 5000;
 export const BACKOFF_MS = [1000, 2000, 5000, 10000, 30000] as const;
 export const STORE_KEY: InjectionKey<Store> = Symbol('tflive-store');
 
@@ -61,11 +65,34 @@ function isWire(x: unknown): x is WireMessage {
 
 export function createStore(deps: StoreDeps): Store {
   const schedule = deps.setTimeout ?? ((fn: () => void, ms: number) => setTimeout(fn, ms));
+  const cancel = deps.clearTimeout ?? ((h: unknown) => clearTimeout(h as ReturnType<typeof setTimeout>));
+  const now = deps.now ?? Date.now;
   const state = reactive<AppState>({ snapshot: emptySnapshot(), alerts: [], status: emptyStatus(), conn: 'closed', mutes: [], received: false, actionError: null });
   let ws: WebSocketLike | null = null;
   let attempt = 0;
   let stopped = false;
   let generation = 0;
+  let lastMessageAt = 0;
+  let watchdog: unknown = null;
+
+  const stopWatchdog = () => {
+    if (watchdog !== null) cancel(watchdog);
+    watchdog = null;
+  };
+  const startWatchdog = (sock: WebSocketLike) => {
+    stopWatchdog();
+    const gen = generation;
+    const tick = () => {
+      watchdog = null;
+      if (stopped || gen !== generation || ws !== sock) return;
+      if (now() - lastMessageAt >= WATCHDOG_MS) {
+        sock.close();
+        return;
+      }
+      watchdog = schedule(tick, WATCHDOG_TICK_MS);
+    };
+    watchdog = schedule(tick, WATCHDOG_TICK_MS);
+  };
 
   const open = () => {
     state.conn = 'connecting';
@@ -74,6 +101,8 @@ export function createStore(deps: StoreDeps): Store {
     sock.onopen = () => {
       attempt = 0;
       state.conn = 'open';
+      lastMessageAt = now();
+      startWatchdog(sock);
       void refreshMutes();
     };
     sock.onmessage = (ev) => {
@@ -84,14 +113,18 @@ export function createStore(deps: StoreDeps): Store {
         return;
       }
       if (!isWire(msg)) return;
+      lastMessageAt = now();
+      const prevSave = state.status.saveId;
       state.snapshot = msg.snapshot;
       state.alerts = msg.alerts;
       state.status = msg.status;
       state.received = true;
+      if (prevSave !== null && msg.status.saveId !== prevSave) void refreshMutes();
     };
     sock.onerror = () => {};
     sock.onclose = () => {
       if (ws !== sock) return;
+      stopWatchdog();
       state.conn = 'closed';
       ws = null;
       if (stopped) return;
@@ -117,12 +150,15 @@ export function createStore(deps: StoreDeps): Store {
     state,
     connect() {
       stopped = false;
-      generation += 1;
-      if (!ws) open();
+      if (!ws) {
+        generation += 1;
+        open();
+      }
     },
     close() {
       stopped = true;
       generation += 1;
+      stopWatchdog();
       ws?.close();
     },
     refreshMutes,
@@ -144,8 +180,16 @@ export function createStore(deps: StoreDeps): Store {
       await refreshMutes();
     },
     async unmute(alert) {
-      const m = state.mutes.find((x) => x.alertType === alert.type && x.entityId === alert.entityId);
-      if (!m) return;
+      const find = () => state.mutes.find((x) => x.alertType === alert.type && x.entityId === alert.entityId);
+      let m = find();
+      if (!m) {
+        await refreshMutes();
+        m = find();
+      }
+      if (!m) {
+        state.actionError = 'Nie znaleziono wyciszenia do usunięcia — odśwież stronę';
+        return;
+      }
       try {
         const res = await deps.fetch(`/api/mutes/${m.id}`, { method: 'DELETE' });
         if (!res.ok) {

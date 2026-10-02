@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { BACKOFF_MS, browserWebSocket, createStore, wsUrl, type StoreDeps, type WebSocketLike } from '../src/state/store';
+import { BACKOFF_MS, WATCHDOG_MS, browserWebSocket, createStore, wsUrl, type StoreDeps, type WebSocketLike } from '../src/state/store';
 import { fixtureState } from './fixture';
 
 class FakeWS implements WebSocketLike {
@@ -213,5 +213,87 @@ describe('store', () => {
     FakeWS.all[0].onopen?.();
     await vi.runAllTimersAsync();
     expect(store.state.mutes).toHaveLength(1);
+  });
+
+  it('watchdog: brak wiadomości przez 15 s zamyka socket i planuje ponowne łączenie', () => {
+    const { store } = setup();
+    store.connect();
+    const ws = FakeWS.all[0];
+    ws.onopen?.();
+    ws.onmessage?.({ data: JSON.stringify({ type: 'state', ...fixtureState() }) });
+    vi.advanceTimersByTime(WATCHDOG_MS - 1000);
+    expect(ws.closed).toBe(false);
+    vi.advanceTimersByTime(1000);
+    expect(ws.closed).toBe(true);
+    expect(store.state.conn).toBe('closed');
+    expect(FakeWS.all).toHaveLength(1);
+    vi.advanceTimersByTime(BACKOFF_MS[0]);
+    expect(FakeWS.all).toHaveLength(2);
+  });
+
+  it('watchdog: wiadomości co 5 s nie zamykają socketu', () => {
+    const { store } = setup();
+    store.connect();
+    const ws = FakeWS.all[0];
+    ws.onopen?.();
+    for (let i = 0; i < 10; i++) {
+      vi.advanceTimersByTime(5000);
+      ws.onmessage?.({ data: JSON.stringify({ type: 'state', ...fixtureState() }) });
+    }
+    expect(ws.closed).toBe(false);
+    expect(store.state.conn).toBe('open');
+  });
+
+  it('watchdog: close() nie zostawia timerów, stary watchdog nie zamyka nowego socketu', () => {
+    const { store } = setup();
+    store.connect();
+    FakeWS.all[0].onopen?.();
+    store.close();
+    expect(vi.getTimerCount()).toBe(0);
+    store.connect();
+    const ws2 = FakeWS.all[1];
+    ws2.onopen?.();
+    vi.advanceTimersByTime(WATCHDOG_MS - 1000);
+    ws2.onmessage?.({ data: JSON.stringify({ type: 'state', ...fixtureState() }) });
+    vi.advanceTimersByTime(WATCHDOG_MS - 1000);
+    expect(ws2.closed).toBe(false);
+    expect(FakeWS.all).toHaveLength(2);
+  });
+
+  it('unmute bez pasującego Wyciszenia odświeża listę i znajduje je', async () => {
+    const mutes = [{ id: 9, saveId: 's', alertType: 'low-line-load', entityId: 56357, kind: 'ignore', untilGameTime: null }];
+    const fetchImpl = vi.fn(async (_i: string, init?: RequestInit) => new Response(init?.method === 'DELETE' ? '{}' : JSON.stringify(mutes), { status: 200 }));
+    const { store } = setup(fetchImpl);
+    const alert = fixtureState().alerts.find((a) => a.type === 'low-line-load')!;
+    await store.unmute(alert);
+    expect(fetchImpl).toHaveBeenCalledWith('/api/mutes/9', expect.objectContaining({ method: 'DELETE' }));
+  });
+
+  it('unmute bez Wyciszenia nawet po odświeżeniu ustawia actionError', async () => {
+    const { store } = setup();
+    const alert = fixtureState().alerts.find((a) => a.type === 'low-line-load')!;
+    await store.unmute(alert);
+    expect(store.state.actionError).toBe('Nie znaleziono wyciszenia do usunięcia — odśwież stronę');
+  });
+
+  it('zmiana saveId (poprzednie nie-null) odświeża mutes', async () => {
+    const fetchImpl = vi.fn(async () => new Response('[]', { status: 200 }));
+    const { store } = setup(fetchImpl);
+    store.connect();
+    const ws = FakeWS.all[0];
+    const send = (saveId: string | null) => {
+      const s = fixtureState();
+      s.status = { ...s.status, saveId };
+      ws.onmessage?.({ data: JSON.stringify({ type: 'state', ...s }) });
+    };
+    send('a');
+    await vi.runAllTimersAsync();
+    fetchImpl.mockClear();
+    send('a');
+    await vi.runAllTimersAsync();
+    expect(fetchImpl).not.toHaveBeenCalled();
+    send('b');
+    await vi.runAllTimersAsync();
+    expect(fetchImpl).toHaveBeenCalledWith('/api/mutes');
   });
 });

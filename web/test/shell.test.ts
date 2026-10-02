@@ -6,9 +6,9 @@ import { createStore, STORE_KEY, type Store } from '../src/state/store';
 import { route, viewFromHash } from '../src/state/route';
 import { emptyState, fixtureState } from './fixture';
 
-function storeWith(s: ReturnType<typeof fixtureState>, conn: 'open' | 'closed' = 'open'): Store {
+function storeWith(s: ReturnType<typeof fixtureState>, conn: 'open' | 'closed' = 'open', received = true): Store {
   const store = createStore({ url: 'ws://x/ws', wsFactory: () => ({ onopen: null, onmessage: null, onclose: null, onerror: null, close() {} }), fetch: async () => new Response('[]') });
-  Object.assign(store.state, s, { conn, received: true });
+  Object.assign(store.state, s, { conn, received });
   return store;
 }
 const mountApp = (store: Store) => mount(App, { global: { provide: { [STORE_KEY as symbol]: store } } });
@@ -57,5 +57,37 @@ describe('szkielet', () => {
     await w.vm.$nextTick();
     expect(w.find('nav a[aria-current="page"]').attributes('href')).toBe('#/linie');
     route.view = 'przeglad';
+  });
+
+  it('baner: błąd linii przy !live pokazuje lastError z podpowiedzią o wersji', () => {
+    const s = fixtureState();
+    s.status = { ...s.status, live: false, paused: false, lastError: 'Linia odrzucona: unsupported-version (wersja 2)' };
+    const t = mountApp(storeWith(s)).find('[role="status"]').text();
+    expect(t).toContain('⚠️ Linia odrzucona: unsupported-version (wersja 2)');
+    expect(t).toContain('zaktualizuj mod lub serwer');
+    expect(t).not.toContain('Brak nowych danych');
+  });
+
+  it('baner: błąd linii przy live nadal widoczny', () => {
+    const s = fixtureState();
+    s.status = { ...s.status, lastError: 'Linia odrzucona: bad-json (wersja 1)' };
+    const t = mountApp(storeWith(s)).find('[role="status"]').text();
+    expect(t).toContain('Linia odrzucona: bad-json');
+    expect(t).not.toContain('zaktualizuj');
+  });
+
+  it('baner: błędy kolektora moda', () => {
+    const s = fixtureState();
+    s.snapshot.meta!.errors = ['industries: boom'];
+    expect(mountApp(storeWith(s)).find('[role="status"]').text()).toContain('⚠️ Mod zgłosił błędy: industries: boom');
+    s.snapshot.meta!.errors = ['a', 'b', 'c'];
+    expect(mountApp(storeWith(s)).find('[role="status"]').text()).toContain('Mod zgłosił błędy: a (+2)');
+  });
+
+  it('baner: przed pierwszą wiadomością „Łączę z serwerem…" zamiast braku logu', () => {
+    const w = mountApp(storeWith(emptyState(), 'open', false));
+    const t = w.find('[role="status"]').text();
+    expect(t).toContain('⏳ Łączę z serwerem…');
+    expect(t).not.toContain('Nie znaleziono logu');
   });
 });

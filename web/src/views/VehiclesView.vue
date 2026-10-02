@@ -29,7 +29,14 @@ const list = computed(() =>
       if (lineFilter.value && String(v.lineId) !== lineFilter.value) return false;
       return true;
     })
-    .sort((a, b) => (b.operatingResult12m ?? -Infinity) - (a.operatingResult12m ?? -Infinity)),
+    .sort((a, b) => {
+      const x = a.operatingResult12m;
+      const y = b.operatingResult12m;
+      if (x === null && y === null) return 0;
+      if (x === null) return 1;
+      if (y === null) return -1;
+      return y - x;
+    }),
 );
 
 function stateText(v: Vehicle): { dot: string; text: string } {

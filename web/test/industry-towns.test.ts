@@ -21,7 +21,7 @@ describe('Przemysł', () => {
     expect(w.text()).toContain('🚨');
     expect(w.text()).toContain('45 dni');
     expect(w.text()).toContain('📦 zalega');
-    expect(w.text()).toContain('🛢️ crude_oil');
+    expect(w.text()).toContain('🛢️ crude oil');
     expect(w.text()).toContain('168/400');
     expect(w.text()).toContain('brak danych o dostawie');
   });
@@ -55,7 +55,7 @@ describe('Miasta', () => {
     expect(t).toContain('szansa · 0/99');
     expect(t).toContain('18%');
     expect(t).toContain('64 dB');
-    expect(t).toContain('Pozostałe 1 miast nieobsługiwanych');
+    expect(t).toContain('Pozostałe: 1 miasto nieobsługiwane — ukryte.');
   });
   it('Pokaż wszystkie', async () => {
     const w = mountWith(TownsView);

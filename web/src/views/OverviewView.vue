@@ -28,7 +28,7 @@ const months = computed(() => {
       <div class="card"><div class="lbl">💰 Saldo</div><div class="num kpi">{{ fmtInt(fin?.balance) }}</div></div>
       <div class="card"><div class="lbl">🏦 Kredyt</div><div class="num kpi soft">{{ fmtInt(fin?.loan) }}</div></div>
       <div class="card"><div class="lbl">📈 Wynik operacyjny · 12 mies.</div><div class="num kpi" :class="(fin?.operatingResult12m ?? 0) >= 0 ? 'pos' : 'neg'">{{ fmtSigned(fin?.operatingResult12m) }}</div></div>
-      <div class="card"><div class="lbl">🛟 Rezerwa</div><div class="num kpi">{{ fmtDecimal(reserve) }} <span class="unit">mies.</span></div></div>
+      <div class="card"><div class="lbl">🛟 Rezerwa</div><div class="num kpi">{{ fmtDecimal(reserve) }}<span v-if="reserve !== null" class="unit"> mies.</span></div></div>
       <div class="card"><div class="lbl">🚆 Pojazdy · 🛤️ Linie</div><div class="num kpi">{{ sn.vehicles.length }} · {{ sn.lines.length }}</div></div>
       <div class="card"><div class="lbl">👥 Ludność miast</div><div class="num kpi">{{ fmtInt(populationTotal(sn.towns)) }}</div></div>
     </section>
@@ -52,7 +52,7 @@ const months = computed(() => {
         </div>
         <div class="facts">
           <div><span class="muted">🔧 Koszty bieżące · 12 mies.</span><span class="num">{{ fmtInt(fin?.runningCosts12m) }}</span></div>
-          <div v-if="best"><span class="muted">🏆 Najlepszy pojazd</span><span>{{ best.name }} · <span class="num pos">{{ fmtSigned(best.operatingResult12m) }}</span></span></div>
+          <div v-if="best"><span class="muted">🏆 Najlepszy pojazd</span><span>{{ best.name }} · <span class="num" :class="(best.operatingResult12m ?? 0) > 0 ? 'pos' : (best.operatingResult12m ?? 0) < 0 ? 'neg' : 'muted'">{{ fmtSigned(best.operatingResult12m) }}</span></span></div>
         </div>
       </div>
     </section>

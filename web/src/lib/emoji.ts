@@ -56,7 +56,11 @@ const CARGO: Record<string, string> = {
   coal: '⛏️', iron_ore: '⛏️', stone: '🪨', steel: '🔩', goods: '📦', construction_materials: '🧱', plastic: '🧴',
   marble: '🪨', silver: '🥈', gold: '🥇', paper: '📄', cotton: '🧶', textiles: '🧵',
 };
-export const cargoEmoji = (cargo: string) => CARGO[cargo] ?? '📦';
+export const cargoEmoji = (cargo: string) => {
+  const k = cargo.toLowerCase();
+  return Object.hasOwn(CARGO, k) ? CARGO[k] : '📦';
+};
+export const cargoLabel = (cargo: string) => cargo.toLowerCase().replaceAll('_', ' ');
 
 const INDUSTRY: [RegExp, string][] = [
   [/oil|refin/, '🛢️'], [/forest|saw|wood|lumber/, '🪓'], [/fish/, '🎣'], [/farm|crop|grain/, '🌾'],

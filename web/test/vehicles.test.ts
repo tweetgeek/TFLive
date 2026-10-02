@@ -42,4 +42,11 @@ describe('Pojazdy', () => {
   it('pusty stan', () => {
     expect(mountWith(emptyState()).text()).toContain('Czekam na dane z gry');
   });
+  it('wiele pojazdów bez wyniku nie psuje sortowania (null na końcu)', () => {
+    const s = fixtureState();
+    s.snapshot.vehicles[1].operatingResult12m = null;
+    const w = mountWith(s);
+    expect(rows(w)[0].text()).toContain('Pociąg 2');
+    expect(rows(w)).toHaveLength(3);
+  });
 });

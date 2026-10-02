@@ -2,8 +2,8 @@
 import type { Town } from '@tflive/shared';
 import { computed, ref } from 'vue';
 import { alertsFor, isServed } from '../lib/derive';
-import { cargoEmoji, DISTRICT } from '../lib/emoji';
-import { fmtDecimal, fmtInt, fmtPct, plSzansa } from '../lib/format';
+import { cargoEmoji, cargoLabel, DISTRICT } from '../lib/emoji';
+import { fmtDecimal, fmtInt, fmtPct, plMiasto, plSzansa } from '../lib/format';
 import { useStore } from '../state/store';
 
 const { state } = useStore();
@@ -38,7 +38,7 @@ const hasDrop = (t: Town) => alertsFor(state.alerts, 'town', t.id).some((a) => a
         <div v-if="!t.needs.length" class="muted">—</div>
         <div v-for="n in t.needs" :key="`${n.district}:${n.cargo}`">
           <div class="li">
-            <span>{{ DISTRICT[n.district].emoji }} {{ DISTRICT[n.district].label }} · {{ cargoEmoji(n.cargo) }} {{ n.cargo }}</span>
+            <span>{{ DISTRICT[n.district].emoji }} {{ DISTRICT[n.district].label }} · {{ cargoEmoji(n.cargo) }} {{ cargoLabel(n.cargo) }}</span>
             <span v-if="n.supplied && n.demand > 0" class="num">{{ fmtPct(n.supplied / n.demand) }}</span>
             <span v-else-if="n.supplied && n.demand <= 0" class="num">—</span>
             <span v-else class="opp">szansa · <span class="num">0/{{ fmtInt(n.demand) }}</span></span>
@@ -52,7 +52,7 @@ const hasDrop = (t: Town) => alertsFor(state.alerts, 'town', t.id).some((a) => a
         </div>
       </article>
     </section>
-    <div v-if="!showAll && hidden > 0" class="muted hiddeninfo">Pozostałe {{ hidden }} miast nieobsługiwanych — ukryte. <button class="btn" type="button" data-test="show-all" @click="showAll = true">Pokaż wszystkie</button></div>
+    <div v-if="!showAll && hidden > 0" class="muted hiddeninfo">Pozostałe: {{ hidden }} {{ plMiasto(hidden) }} — ukryte. <button class="btn" type="button" data-test="show-all" @click="showAll = true">Pokaż wszystkie</button></div>
   </template>
 </template>
 
