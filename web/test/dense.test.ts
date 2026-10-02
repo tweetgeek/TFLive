@@ -5,6 +5,8 @@ import type { Component } from 'vue';
 import KpiStrip from '../src/components/KpiStrip.vue';
 import MonthsChart from '../src/components/MonthsChart.vue';
 import AlertsView from '../src/views/AlertsView.vue';
+import IndustryView from '../src/views/IndustryView.vue';
+import TownsView from '../src/views/TownsView.vue';
 import LinesView from '../src/views/LinesView.vue';
 import VehiclesView from '../src/views/VehiclesView.vue';
 import { createStore, STORE_KEY, type Store } from '../src/state/store';
@@ -83,5 +85,27 @@ describe('Linie dense', () => {
     const row = w.findAll('tbody tr').find((r) => r.text().includes('Bus - Pasażerski - Eccles LO'))!;
     await row.trigger('keydown.enter');
     expect(w.find('[data-test="expand"]').text()).toContain('Kings Road');
+  });
+});
+
+describe('Przemysł i Miasta dense', () => {
+  it('Przemysł: wiersze zamiast kart, groźba zamknięcia, produkcja z %', () => {
+    const { w } = mountDense(IndustryView);
+    expect(w.find('.view').classes()).toContain('dense');
+    expect(w.find('.card').exists()).toBe(false);
+    expect(w.findAll('[data-test="industry"]')).toHaveLength(2);
+    expect(w.text()).toContain('45 dni');
+    expect(w.text()).toContain('42%');
+    expect(w.text()).toContain('📦 zalega');
+  });
+  it('Miasta: wiersze z potrzebami i szansami', () => {
+    const { w } = mountDense(TownsView);
+    expect(w.find('.card').exists()).toBe(false);
+    const rows = w.findAll('[data-test="town"]');
+    expect(rows).toHaveLength(2);
+    const t = w.text().replace(/\s/g, ' ');
+    expect(t).toContain('💡 2');
+    expect(t).toContain('0/99');
+    expect(t).toContain('18%');
   });
 });

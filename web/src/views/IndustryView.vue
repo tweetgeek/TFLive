@@ -6,6 +6,8 @@ import { alertEmoji, cargoEmoji, cargoLabel, industryEmoji } from '../lib/emoji'
 import { fmtGameDate, fmtInt, fmtPct } from '../lib/format';
 import { useStore } from '../state/store';
 
+defineProps<{ dense?: boolean }>();
+
 const { state } = useStore();
 const sn = computed(() => state.snapshot);
 const filter = ref<'served' | 'all' | 'alerts'>('served');
@@ -36,7 +38,7 @@ function tag(i: Industry) {
 
 <template>
   <section v-if="!meta" class="empty">⏳ Czekam na dane z gry…</section>
-  <template v-else>
+  <div v-else class="view" :class="{ dense }">
     <div class="toolbar">
       <button class="chip" type="button" :aria-pressed="filter === 'served'" @click="filter = 'served'">✅ Obsługiwane · {{ counts.served }}</button>
       <button class="chip" type="button" :aria-pressed="filter === 'all'" @click="filter = 'all'">🏭 Wszystkie · {{ counts.all }}</button>
@@ -44,7 +46,7 @@ function tag(i: Industry) {
     </div>
     <div v-for="t in threats" :key="t.i.id" class="threat"><span class="tag crit">🚨 GROŹBA ZAMKNIĘCIA</span> {{ industryEmoji(t.i.type) }} <b>{{ t.i.name }}</b> — do zamknięcia zostało <span class="num">{{ t.days }} dni</span></div>
     <div v-if="!list.length" class="empty">Brak fabryk dla tego filtra.</div>
-    <section class="grid cards">
+    <section v-if="!dense" class="grid cards">
       <article v-for="i in list" :key="i.id" class="card ind" data-test="industry">
         <div class="top">
           <div><h2>{{ industryEmoji(i.type) }} {{ i.name }}</h2><div class="muted sub">{{ i.type }} · poziom <span class="num">{{ i.level }}/{{ i.maxLevel }}</span></div></div>
@@ -68,7 +70,16 @@ function tag(i: Industry) {
         <div class="muted foot">Ostatnio obsłużona: <span class="num txt">{{ date(i.lastServedTime) ?? '—' }}</span></div>
       </article>
     </section>
-  </template>
+    <div v-else class="rows">
+      <div v-for="i in list" :key="i.id" class="irow" data-test="industry">
+        <span class="nm" :title="i.name">{{ industryEmoji(i.type) }} {{ i.name }} <span class="muted num">{{ i.level }}/{{ i.maxLevel }}</span></span>
+        <span class="outs">
+          <span v-for="o in i.outputs" :key="o.cargo" class="out" :title="`${cargoLabel(o.cargo)}: ${fmtInt(o.stock)}/${fmtInt(o.capacity)}`">{{ cargoEmoji(o.cargo) }} <span class="bar"><span :class="{ warn: o.capacity > 0 && o.stock / o.capacity >= 0.8 }" :style="{ width: fmtPct(o.capacity > 0 ? Math.min(1, o.stock / o.capacity) : 0) }"></span></span> <span class="num">{{ fmtPct(o.capacity > 0 ? o.stock / o.capacity : null) }}</span></span>
+        </span>
+        <span class="tag" :class="tag(i).cls">{{ tag(i).text }}</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -84,4 +95,15 @@ h2 { margin: 0; font-size: 19px; }
 .alert { padding: 6px 10px; }
 .threat { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; gap: 10px; font-size: 16px; flex-wrap: wrap; }
 .crit { background: var(--neg-fill); color: #1a0d08; font-size: 13px; padding: 4px 10px; }
+.view { display: flex; flex-direction: column; gap: 18px; }
+.view.dense { gap: 6px; }
+.dense .threat { padding: 4px 8px; font-size: .92em; border-radius: 6px; gap: 6px; }
+.dense .crit { font-size: 10px; padding: 2px 6px; }
+.rows { display: flex; flex-direction: column; }
+.irow { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 4px 0; border-top: 1px solid var(--line); }
+.irow:first-child { border-top: none; }
+.nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.outs { display: flex; gap: 10px; }
+.out { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.out .bar { width: 44px; height: 6px; margin-top: 0; }
 </style>
