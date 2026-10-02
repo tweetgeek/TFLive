@@ -1,6 +1,8 @@
 -- Sesja modu, terminy sekcji, identyfikatory. Czysty moduł.
 local record Schedule
 	SESSION_GAP_SEC : integer
+	FORCE_REFRESH_SEC : integer
+	BACKFILL_MONTHS_PER_TICK : integer
 	ORDER : {string}
 	INTERVALS : {string : integer}
 	isNewSession : function(integer, integer) : boolean
@@ -10,6 +12,8 @@ end
 
 local schedule : Schedule = {
 	SESSION_GAP_SEC = 30,
+	FORCE_REFRESH_SEC = 300,
+	BACKFILL_MONTHS_PER_TICK = 60,
 	ORDER = { 'meta', 'finance', 'lines', 'vehicles', 'stops', 'industries', 'towns' },
 	INTERVALS = { meta = 10, finance = 10, lines = 60, vehicles = 60, stops = 60, industries = 120, towns = 120 },
 }

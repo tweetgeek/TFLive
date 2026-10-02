@@ -10,6 +10,8 @@ local record Wire
 	fingerprint : function(string) : string
 end
 local record Schedule
+	FORCE_REFRESH_SEC : integer
+	BACKFILL_MONTHS_PER_TICK : integer
 	ORDER : {string}
 	INTERVALS : {string : integer}
 	isNewSession : function(integer, integer) : boolean
@@ -21,7 +23,7 @@ local record Collect
 	isPaused : function(number) : boolean
 	meta : function(number, integer, {string}) : {string : any}
 	finance : function() : {string : any}
-	backfill : function(integer) : {string : any}
+	backfill : function(integer, integer, integer) : {string : any}, integer
 	lines : function({string : integer}) : {any}
 	vehicles : function() : {any}
 	stops : function() : {any}
@@ -39,6 +41,7 @@ local MAX_ERRORS <const> = 5
 local record SectionState
 	lastWall : integer
 	fp : string
+	lastSent : integer
 end
 
 local record ModState
@@ -49,6 +52,7 @@ local record ModState
 	bytes : integer
 	sections : {string : SectionState}
 	backfillIndex : integer
+	backfillOffset : integer
 	departures : {string : integer}
 	errors : {string}
 end
@@ -80,31 +84,46 @@ end
 
 local function emitSection(s : ModState, name : string, dt : number, gameTime : integer, wall : integer)
 	local errMsg : string = nil
-	local data : any = nil
-	local ok = xpcall(function() data = collectSection(s, name, dt) end, function(e : any) : any
+	local parts : {string} = nil
+	local skip = false
+	local deps : {string : integer} = nil
+	local sec = s.sections[name] or {}
+	s.sections[name] = sec
+	sec.lastWall = wall
+	local ok = xpcall(function()
+		local data : any
+		if name == 'lines' then
+			deps = {}
+			for k, v in pairs(s.departures) do deps[k] = v end
+			data = collect.lines(deps)
+		else
+			data = collectSection(s, name, dt)
+		end
+		if name == 'meta' or name == 'finance' then
+			parts = { json.encode(data) }
+		else
+			local rowsJson : {string} = {}
+			for i, r in ipairs(data as {any}) do rowsJson[i] = json.encode(r) end
+			parts = wire.chunkRows(rowsJson, wire.MAX_LINE_BYTES)
+		end
+		if name ~= 'meta' and #parts == 1 then
+			local fp = wire.fingerprint(parts[1])
+			if sec.fp == fp and sec.lastSent ~= nil and wall - sec.lastSent < schedule.FORCE_REFRESH_SEC then
+				skip = true
+			end
+			sec.fp = fp
+		end
+	end, function(e : any) : any
 		errMsg = tostring(e)
 		return e
 	end)
-	local sec = s.sections[name] or {}
-	sec.lastWall = wall
-	s.sections[name] = sec
 	if not ok then
 		addError(s, name .. ': ' .. tostring(errMsg))
 		return
 	end
-	local parts : {string}
-	if name == 'meta' or name == 'finance' then
-		parts = { json.encode(data) }
-	else
-		local rowsJson : {string} = {}
-		for i, r in ipairs(data as {any}) do rowsJson[i] = json.encode(r) end
-		parts = wire.chunkRows(rowsJson, wire.MAX_LINE_BYTES)
-	end
-	if name ~= 'meta' and #parts == 1 then
-		local fp = wire.fingerprint(parts[1])
-		if sec.fp == fp then return end
-		sec.fp = fp
-	end
+	if deps then s.departures = deps end
+	if skip then return end
+	sec.lastSent = wall
 	emit(s, name, gameTime, parts)
 	if name == 'meta' then s.errors = {} end
 end
@@ -112,21 +131,36 @@ end
 local function emitBackfill(s : ModState, gameTime : integer)
 	local errMsg : string = nil
 	local data : {string : any} = nil
-	local ok = xpcall(function() data = collect.backfill(s.backfillIndex) end, function(e : any) : any
+	local nextOffset : integer = nil
+	local part : string = nil
+	local ok = xpcall(function()
+		data, nextOffset = collect.backfill(s.backfillIndex, s.backfillOffset, schedule.BACKFILL_MONTHS_PER_TICK)
+		if data ~= nil then
+			local m = data['months'] as {any}
+			if m and #m > 0 then part = json.encode(data) end
+		end
+	end, function(e : any) : any
 		errMsg = tostring(e)
 		return e
 	end)
 	if not ok then
 		addError(s, 'backfill: ' .. tostring(errMsg))
 		s.backfillIndex = s.backfillIndex + 1
+		s.backfillOffset = 0
 		return
 	end
 	if data == nil then
 		s.backfillIndex = 0
+		s.backfillOffset = 0
 		return
 	end
-	emit(s, 'backfill', gameTime, { json.encode(data) })
-	s.backfillIndex = s.backfillIndex + 1
+	if part then emit(s, 'backfill', gameTime, { part }) end
+	if nextOffset then
+		s.backfillOffset = nextOffset
+	else
+		s.backfillIndex = s.backfillIndex + 1
+		s.backfillOffset = 0
+	end
 end
 
 local function startSession(s : ModState, wall : integer)
@@ -135,32 +169,50 @@ local function startSession(s : ModState, wall : integer)
 	s.bytes = 0
 	s.sections = {}
 	s.backfillIndex = 1
+	s.backfillOffset = 0
 	s.departures = {}
 	s.errors = {}
+end
+
+local function run(s : ModState, dt : number)
+	local wall = os.time()
+	if not s.saveId then s.saveId = schedule.newId(os.clock() + wall) end
+	if schedule.isNewSession(s.lastEmitWall, wall) or not s.sessionId then startSession(s, wall) end
+	local paused = collect.isPaused(dt)
+	local gameTime = collect.gameTime()
+	local emitted = false
+	local processedOther = false
+	for _, name in ipairs(schedule.ORDER) do
+		if name == 'meta' or not paused then
+			local sec = s.sections[name]
+			if schedule.isDue(sec and sec.lastWall, wall, schedule.INTERVALS[name]) then
+				emitSection(s, name, dt, gameTime, wall)
+				emitted = true
+				if name ~= 'meta' then
+					processedOther = true
+					break
+				end
+			end
+		end
+	end
+	if not paused and not processedOther and s.backfillIndex and s.backfillIndex > 0 then
+		emitBackfill(s, gameTime)
+	end
+	if emitted then s.lastEmitWall = wall end
 end
 
 local ret : GameScript<ModState> = {
 	update = function(_userParams : table, state : GameScriptState<ModState>, dt : number) : any
 		local s = state:get() or {}
-		local wall = os.time()
-		if not s.saveId then s.saveId = schedule.newId(os.clock() + wall) end
-		if schedule.isNewSession(s.lastEmitWall, wall) or not s.sessionId then startSession(s, wall) end
-		local paused = collect.isPaused(dt)
-		local gameTime = collect.gameTime()
-		local emitted = false
-		for _, name in ipairs(schedule.ORDER) do
-			if name == 'meta' or not paused then
-				local sec = s.sections[name]
-				if schedule.isDue(sec and sec.lastWall, wall, schedule.INTERVALS[name]) then
-					emitSection(s, name, dt, gameTime, wall)
-					emitted = true
-				end
-			end
+		local err : string = nil
+		local ok = xpcall(function() run(s, dt) end, function(e : any) : any
+			err = tostring(e)
+			return e
+		end)
+		if not ok then
+			if not s.errors then s.errors = {} end
+			addError(s, 'update: ' .. tostring(err))
 		end
-		if not paused and s.backfillIndex and s.backfillIndex > 0 then
-			emitBackfill(s, gameTime)
-		end
-		if emitted then s.lastEmitWall = wall end
 		state:set(s)
 	end,
 }
