@@ -66,6 +66,15 @@ describe('Pojazdy dense', () => {
 });
 
 describe('Linie dense', () => {
+  it('długa nazwa: tagi ostrzeżeń w osobnym elemencie obok .lname z pełnym title', () => {
+    const s = fixtureState();
+    const long = 'Linia z bardzo długą nazwą '.repeat(5).slice(0, 120);
+    s.snapshot.lines = s.snapshot.lines.map((l) => (l.id === 55014 ? { ...l, name: long } : l));
+    const { w } = mountDense(LinesView, { dense: true }, s);
+    const row = w.findAll('tbody tr').find((r) => r.find('.lname').attributes('title') === long)!;
+    expect(row.find('.namecell .tag').text()).toBe('🚫 bez pojazdów');
+    expect(row.find('.lname').text()).toBe(long);
+  });
   it('bez panelu bocznego, z mini-wykresem; wiersz rozwija i zwija szczegóły', async () => {
     const { w } = mountDense(LinesView);
     expect(w.find('[data-test="detail"]').exists()).toBe(false);

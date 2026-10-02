@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import KpiStrip from '../components/KpiStrip.vue';
 import MonthsChart from '../components/MonthsChart.vue';
 import Panel from '../components/Panel.vue';
+import { isServed } from '../lib/derive';
 import { useStore } from '../state/store';
 import AlertsView from './AlertsView.vue';
 import IndustryView from './IndustryView.vue';
@@ -12,6 +13,14 @@ import VehiclesView from './VehiclesView.vue';
 
 const { state } = useStore();
 const sn = computed(() => state.snapshot);
+const servedIndustries = computed(() => {
+  const m = sn.value.meta;
+  return m ? sn.value.industries.filter((i) => isServed(i.lastServedTime, m.gameTime, m.dayMs)).length : 0;
+});
+const servedTowns = computed(() => {
+  const m = sn.value.meta;
+  return m ? sn.value.towns.filter((t) => isServed(t.lastServedTime, m.gameTime, m.dayMs)).length : 0;
+});
 const activeAlerts = computed(() => state.alerts.filter((a) => !a.muted).length);
 </script>
 
@@ -30,8 +39,8 @@ const activeAlerts = computed(() => state.alerts.filter((a) => !a.muted).length)
         </div>
         <div class="col">
           <Panel class="p-auto" title="📊 Wynik operacyjny"><MonthsChart compact /></Panel>
-          <Panel class="p-fill" title="🏭 Przemysł" :count="sn.industries.length" href="#/przemysl"><IndustryView dense /></Panel>
-          <Panel class="p-fill" title="🏙️ Miasta" :count="sn.towns.length" href="#/miasta"><TownsView dense /></Panel>
+          <Panel class="p-fill" title="🏭 Przemysł" :count="servedIndustries" href="#/przemysl"><IndustryView dense /></Panel>
+          <Panel class="p-fill" title="🏙️ Miasta" :count="servedTowns" href="#/miasta"><TownsView dense /></Panel>
         </div>
       </div>
     </template>

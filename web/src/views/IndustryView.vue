@@ -98,7 +98,7 @@ h2 { margin: 0; font-size: 19px; }
 .view { display: flex; flex-direction: column; gap: 18px; }
 .view.dense { gap: 6px; }
 .dense .threat { padding: 4px 8px; font-size: .92em; border-radius: 6px; gap: 6px; }
-.dense .crit { font-size: 10px; padding: 2px 6px; }
+.dense .crit { font-size: 11px; padding: 2px 6px; }
 .rows { display: flex; flex-direction: column; }
 .irow { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 4px 0; border-top: 1px solid var(--line); }
 .irow:first-child { border-top: none; }

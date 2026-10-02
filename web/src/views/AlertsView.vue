@@ -79,9 +79,9 @@ async function act(a: Alert, fn: () => Promise<void>) {
 .view.dense { gap: 6px; }
 .dense .row { padding: 5px 2px; gap: 8px; flex-wrap: nowrap; align-items: flex-start; }
 .dense .body { min-width: 0; }
-.dense .title { font-size: 1em; }
-.dense .sub { font-size: .86em; }
+.dense .title { font-size: 1em; overflow-wrap: anywhere; }
+.dense .sub { font-size: .86em; overflow-wrap: anywhere; }
 .dense .list { background: transparent; border: none; overflow: visible; }
 .dense .action-error { padding: 6px 10px; }
-.dense .sev { min-width: 58px; height: 20px; font-size: 10px; }
+.dense .sev { min-width: 58px; height: 22px; font-size: 11px; }
 </style>
