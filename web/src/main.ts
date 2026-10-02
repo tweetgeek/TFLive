@@ -1,21 +1,12 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import { startRouting } from './state/route';
-import { createStore, STORE_KEY, wsUrl, type WebSocketLike } from './state/store';
+import { browserWebSocket, createStore, STORE_KEY, wsUrl } from './state/store';
 import './styles.css';
 
 const store = createStore({
   url: wsUrl(window.location),
-  wsFactory: (u): WebSocketLike => {
-    const ws = new WebSocket(u);
-    return {
-      onopen: null,
-      onmessage: null,
-      onclose: null,
-      onerror: null,
-      close: () => ws.close(),
-    };
-  },
+  wsFactory: browserWebSocket,
   fetch: (i, init) => fetch(i, init),
 });
 startRouting(window);

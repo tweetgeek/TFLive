@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { BACKOFF_MS, createStore, wsUrl, type StoreDeps, type WebSocketLike } from '../src/state/store';
+import { BACKOFF_MS, browserWebSocket, createStore, wsUrl, type StoreDeps, type WebSocketLike } from '../src/state/store';
 import { fixtureState } from './fixture';
 
 class FakeWS implements WebSocketLike {
@@ -13,11 +13,81 @@ class FakeWS implements WebSocketLike {
   close() { this.closed = true; this.onclose?.(); }
 }
 
+class FakeConstructorWS {
+  static instances: FakeConstructorWS[] = [];
+  onopen: ((ev?: Event) => void) | null = null;
+  onmessage: ((ev: MessageEvent) => void) | null = null;
+  onclose: ((ev?: Event) => void) | null = null;
+  onerror: ((ev?: Event) => void) | null = null;
+  closed = false;
+  constructor(readonly url: string) { FakeConstructorWS.instances.push(this); }
+  close() { this.closed = true; }
+}
+
 function setup(fetchImpl: StoreDeps['fetch'] = async () => new Response('[]', { status: 200 })) {
   FakeWS.all = [];
   const store = createStore({ url: 'ws://h/ws', wsFactory: (u) => new FakeWS(u), fetch: fetchImpl });
   return { store, fetchImpl };
 }
+
+describe('browserWebSocket', () => {
+  it('forwards real WebSocket events to adapter handlers', () => {
+    FakeConstructorWS.instances = [];
+    const adapter = browserWebSocket('ws://x/ws', FakeConstructorWS as unknown as new (url: string) => WebSocket);
+    expect(FakeConstructorWS.instances).toHaveLength(1);
+    const fake = FakeConstructorWS.instances[0];
+
+    const openSpy = vi.fn();
+    const messageSpy = vi.fn();
+    const closeSpy = vi.fn();
+    const errorSpy = vi.fn();
+
+    adapter.onopen = openSpy;
+    adapter.onmessage = messageSpy;
+    adapter.onclose = closeSpy;
+    adapter.onerror = errorSpy;
+
+    // Trigger real WebSocket handlers
+    fake.onopen?.();
+    expect(openSpy).toHaveBeenCalledTimes(1);
+
+    fake.onmessage?.(new MessageEvent('message', { data: 'abc' }));
+    expect(messageSpy).toHaveBeenCalledWith({ data: 'abc' });
+
+    fake.onclose?.();
+    expect(closeSpy).toHaveBeenCalledTimes(1);
+
+    fake.onerror?.();
+    expect(errorSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('adapter.close() closes real WebSocket', () => {
+    FakeConstructorWS.instances = [];
+    const adapter = browserWebSocket('ws://x/ws', FakeConstructorWS as unknown as new (url: string) => WebSocket);
+    const fake = FakeConstructorWS.instances[0];
+    adapter.close();
+    expect(fake.closed).toBe(true);
+  });
+
+  it('createStore with browserWebSocket receives real socket events', () => {
+    FakeConstructorWS.instances = [];
+    const store = createStore({
+      url: 'ws://h/ws',
+      wsFactory: (u) => browserWebSocket(u, FakeConstructorWS as unknown as new (url: string) => WebSocket),
+      fetch: async () => new Response('[]', { status: 200 }),
+    });
+    store.connect();
+    expect(store.state.conn).toBe('connecting');
+
+    const fake = FakeConstructorWS.instances[0];
+    fake.onopen?.();
+    expect(store.state.conn).toBe('open');
+
+    fake.onmessage?.(new MessageEvent('message', { data: JSON.stringify({ type: 'state', ...fixtureState() }) }));
+    expect(store.state.received).toBe(true);
+    expect(store.state.snapshot.vehicles).toHaveLength(3);
+  });
+});
 
 describe('store', () => {
   beforeEach(() => vi.useFakeTimers());

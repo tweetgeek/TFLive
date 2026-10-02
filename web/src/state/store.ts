@@ -44,6 +44,16 @@ export function wsUrl(loc: { protocol: string; host: string }): string {
   return `${loc.protocol === 'https:' ? 'wss' : 'ws'}://${loc.host}/ws`;
 }
 
+export function browserWebSocket(url: string, Ctor: new (url: string) => WebSocket = WebSocket): WebSocketLike {
+  const ws = new Ctor(url);
+  const adapter: WebSocketLike = { onopen: null, onmessage: null, onclose: null, onerror: null, close: () => ws.close() };
+  ws.onopen = () => adapter.onopen?.();
+  ws.onmessage = (e) => adapter.onmessage?.({ data: e.data });
+  ws.onclose = () => adapter.onclose?.();
+  ws.onerror = () => adapter.onerror?.();
+  return adapter;
+}
+
 function isWire(x: unknown): x is WireMessage {
   const m = x as Partial<WireMessage> | null;
   return !!m && m.type === 'state' && typeof m.snapshot === 'object' && m.snapshot !== null && Array.isArray(m.alerts) && typeof m.status === 'object' && m.status !== null;
