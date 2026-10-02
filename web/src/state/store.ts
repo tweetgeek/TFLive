@@ -23,6 +23,7 @@ export interface AppState extends HubState {
   conn: Conn;
   mutes: Mute[];
   received: boolean;
+  actionError: string | null;
 }
 
 export interface Store {
@@ -45,15 +46,16 @@ export function wsUrl(loc: { protocol: string; host: string }): string {
 
 function isWire(x: unknown): x is WireMessage {
   const m = x as Partial<WireMessage> | null;
-  return !!m && m.type === 'state' && typeof m.snapshot === 'object' && Array.isArray(m.alerts) && typeof m.status === 'object';
+  return !!m && m.type === 'state' && typeof m.snapshot === 'object' && m.snapshot !== null && Array.isArray(m.alerts) && typeof m.status === 'object' && m.status !== null;
 }
 
 export function createStore(deps: StoreDeps): Store {
   const schedule = deps.setTimeout ?? ((fn: () => void, ms: number) => setTimeout(fn, ms));
-  const state = reactive<AppState>({ snapshot: emptySnapshot(), alerts: [], status: emptyStatus(), conn: 'closed', mutes: [], received: false });
+  const state = reactive<AppState>({ snapshot: emptySnapshot(), alerts: [], status: emptyStatus(), conn: 'closed', mutes: [], received: false, actionError: null });
   let ws: WebSocketLike | null = null;
   let attempt = 0;
   let stopped = false;
+  let generation = 0;
 
   const open = () => {
     state.conn = 'connecting';
@@ -62,6 +64,7 @@ export function createStore(deps: StoreDeps): Store {
     sock.onopen = () => {
       attempt = 0;
       state.conn = 'open';
+      void refreshMutes();
     };
     sock.onmessage = (ev) => {
       let msg: unknown;
@@ -84,40 +87,65 @@ export function createStore(deps: StoreDeps): Store {
       if (stopped) return;
       const delay = BACKOFF_MS[Math.min(attempt, BACKOFF_MS.length - 1)];
       attempt += 1;
+      const gen = generation;
       schedule(() => {
-        if (!stopped) open();
+        if (!stopped && gen === generation) open();
       }, delay);
     };
   };
 
   const refreshMutes = async () => {
-    const res = await deps.fetch('/api/mutes');
-    if (res.ok) state.mutes = (await res.json()) as Mute[];
+    try {
+      const res = await deps.fetch('/api/mutes');
+      if (res.ok) state.mutes = (await res.json()) as Mute[];
+    } catch {
+      // swallow error, keep previous mutes
+    }
   };
 
   return {
     state,
     connect() {
       stopped = false;
+      generation += 1;
       if (!ws) open();
     },
     close() {
       stopped = true;
+      generation += 1;
       ws?.close();
     },
     refreshMutes,
     async mute(alert, kind) {
-      await deps.fetch('/api/mutes', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ alertType: alert.type, entityId: alert.entityId, kind }),
-      });
+      try {
+        const res = await deps.fetch('/api/mutes', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ alertType: alert.type, entityId: alert.entityId, kind }),
+        });
+        if (!res.ok) {
+          state.actionError = `Nie udało się zapisać wyciszenia (HTTP ${res.status})`;
+        } else {
+          state.actionError = null;
+        }
+      } catch {
+        state.actionError = 'Brak połączenia z serwerem — wyciszenie nie zostało zapisane';
+      }
       await refreshMutes();
     },
     async unmute(alert) {
       const m = state.mutes.find((x) => x.alertType === alert.type && x.entityId === alert.entityId);
       if (!m) return;
-      await deps.fetch(`/api/mutes/${m.id}`, { method: 'DELETE' });
+      try {
+        const res = await deps.fetch(`/api/mutes/${m.id}`, { method: 'DELETE' });
+        if (!res.ok) {
+          state.actionError = `Nie udało się zapisać wyciszenia (HTTP ${res.status})`;
+        } else {
+          state.actionError = null;
+        }
+      } catch {
+        state.actionError = 'Brak połączenia z serwerem — wyciszenie nie zostało zapisane';
+      }
       await refreshMutes();
     },
   };
