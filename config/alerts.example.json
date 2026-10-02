@@ -1,0 +1,19 @@
+{
+  "reserveWarnMonths": 3,
+  "reserveCriticalMonths": 1,
+  "rampUpMonths": 6,
+  "lowLoadRatio": 0.25,
+  "lowLoadWindowMonths": 3,
+  "overloadedWaitDays": 14,
+  "waitingDays": 30,
+  "idleDays": 30,
+  "lowConditionRatio": 0.5,
+  "missingInputMonths": 2,
+  "stalledOutputRatio": 0.8,
+  "stalledOutputMonths": 1,
+  "supplyLowRatio": 0.5,
+  "supplyDropRatio": 0.3,
+  "supplyDropWindowMonths": 3,
+  "servedWindowMonths": 12,
+  "snoozeMonths": 3
+}
