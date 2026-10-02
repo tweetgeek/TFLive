@@ -6,6 +6,8 @@ import { modeEmoji, modeLabel, VEHICLE_STATE } from '../lib/emoji';
 import { fmtDecimal, fmtPct, fmtSigned } from '../lib/format';
 import { useStore } from '../state/store';
 
+defineProps<{ dense?: boolean }>();
+
 const { state } = useStore();
 const sn = computed(() => state.snapshot);
 type Filter = 'all' | 'old' | 'nopath' | 'idle' | `mode:${string}`;
@@ -50,7 +52,7 @@ function stateText(v: Vehicle): { dot: string; text: string } {
 
 <template>
   <section v-if="!sn.meta" class="empty">⏳ Czekam na dane z gry…</section>
-  <template v-else>
+  <div v-else class="view" :class="{ dense }">
     <div class="toolbar">
       <button class="chip" type="button" :aria-pressed="filter === 'all'" @click="filter = 'all'">Wszystkie · {{ sn.vehicles.length }}</button>
       <button v-for="m in modes" :key="m" class="chip" type="button" :aria-pressed="filter === `mode:${m}`" @click="filter = `mode:${m}`">{{ modeEmoji(m) }} {{ modeLabel(m) }}</button>
@@ -71,7 +73,7 @@ function stateText(v: Vehicle): { dot: string; text: string } {
         <tbody>
           <tr v-for="v in list" :key="v.id">
             <td>
-              {{ modeEmoji(v.mode) }} {{ v.name }} <span v-if="v.parts[0]" class="muted model">· {{ v.parts[0].model }}</span>
+              {{ modeEmoji(v.mode) }} {{ v.name }} <span v-if="v.parts[0] && !dense" class="muted model">· {{ v.parts[0].model }}</span>
               <span v-if="isOld(v)" class="tag tag-warn">👴 stary</span>
               <span v-if="v.userStopped" class="tag tag-neutral">✋ zatrzymany</span>
             </td>
@@ -88,12 +90,12 @@ function stateText(v: Vehicle): { dot: string; text: string } {
         </tbody>
       </table>
     </section>
-  </template>
+  </div>
 </template>
 
 <style scoped>
 .linesel { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #b7c3cc; }
-.linesel select { min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--text); font: 500 15px 'Barlow Semi Condensed', sans-serif; max-width: 320px; }
+.linesel select { min-height: var(--ctl-h); padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--text); font: 500 15px 'Barlow Semi Condensed', sans-serif; max-width: 320px; }
 .model { font-size: 14px; }
 .soft { color: var(--soft); }
 .st { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; white-space: nowrap; }
@@ -101,4 +103,9 @@ function stateText(v: Vehicle): { dot: string; text: string } {
 .dot.pos { background: var(--pos-fill); } .dot.warn { background: var(--accent); } .dot.neg { background: var(--neg-fill); }
 .cond { display: flex; align-items: center; gap: 8px; }
 .cond .bar { width: 90px; }
+.view { display: flex; flex-direction: column; gap: 18px; }
+.view.dense { gap: 6px; }
+.dense .linesel select { font-size: .9em; max-width: 200px; padding: 0 6px; }
+.dense .cond .bar { width: 50px; }
+.dense .st { font-size: .9em; }
 </style>
