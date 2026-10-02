@@ -31,6 +31,8 @@ td { padding: 12px 14px; border-bottom: 1px solid #1f2931; font-size: 16px; }
 th.r, td.r { text-align: right; }
 tr.clickable { cursor: pointer; } tr.clickable:hover td { background: #1a222a; }
 tr.sel td { background: #1d2630; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+tr.clickable:focus-visible td { background: #1d2630; }
 .empty { padding: 48px 24px; text-align: center; color: var(--muted); font-size: 18px; }
 .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .grid { display: grid; gap: 16px; }

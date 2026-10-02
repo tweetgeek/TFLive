@@ -38,6 +38,29 @@ describe('Linie', () => {
     expect(d).toContain('100%');
     expect(d).toContain('lis 1906');
   });
+  it('click non-first row updates detail header', async () => {
+    const w = mountWith();
+    const ecclesRow = w.findAll('tbody tr').find((r) => r.text().includes('Bus - Pasażerski - Eccles LO'));
+    expect(ecclesRow).toBeDefined();
+    await ecclesRow!.trigger('click');
+    const d = w.find('[data-test="detail"]').text();
+    expect(d).toContain('Bus - Pasażerski - Eccles LO');
+  });
+  it('keydown.enter on row updates detail header', async () => {
+    const w = mountWith();
+    const ecclesRow = w.findAll('tbody tr').find((r) => r.text().includes('Bus - Pasażerski - Eccles LO'));
+    expect(ecclesRow).toBeDefined();
+    await ecclesRow!.trigger('keydown.enter');
+    const d = w.find('[data-test="detail"]').text();
+    expect(d).toContain('Bus - Pasażerski - Eccles LO');
+  });
+  it('muted alerts not shown in detail panel', async () => {
+    const w = mountWith();
+    const ecclesRow = w.findAll('tbody tr').find((r) => r.text().includes('Bus - Pasażerski - Eccles LO'));
+    await ecclesRow!.trigger('click');
+    const d = w.find('[data-test="detail"]').text();
+    expect(d).not.toContain('Niskie obłożenie');
+  });
   it('pusty stan', () => {
     expect(mountWith(emptyState()).text()).toContain('Czekam na dane z gry');
   });
