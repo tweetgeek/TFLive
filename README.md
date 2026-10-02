@@ -2,7 +2,7 @@
 
 Dashboard live dla Transport Fever 3: finanse, linie, pojazdy, przemysł i miasta z bieżącej rozgrywki oraz alerty o problemach. Otwierany w przeglądarce na komputerze lub tablecie w sieci domowej.
 
-Stan projektu: serwer (plan 1). Mod gry (plan 2) i interfejs (plan 3) w przygotowaniu.
+Stan projektu: serwer (plan 1) i mod gry (plan 2). Interfejs (plan 3) w przygotowaniu.
 
 ## Wymagania
 
@@ -23,6 +23,16 @@ Serwer wypisuje adresy, pod którymi jest dostępny (np. `http://192.168.1.20:87
 Serwer nasłuchuje w całej sieci domowej i nie ma hasła — nie wystawiaj go do internetu.
 
 API: `GET /api/health`, `GET /api/state`, `GET/POST /api/mutes`, `DELETE /api/mutes/:id`, WebSocket `/ws`.
+
+## Mod gry
+
+```bash
+npm run mod:install   # kopiuje mod/tflive do katalogu modów TF3 (Steam, macOS/Windows)
+```
+
+W grze włącz mod **tflive** w menu modów, wczytaj zapis i uruchom `npm start`. Mod co 10–120 s wypisuje stan gry do jej logu; serwer odczytuje go automatycznie.
+
+Rozwój modu (opcjonalnie): `luajit` i `tl` 0.24.8 (`luarocks --local install tl`), potem `npm run mod:check` (typy gry) i `npm run mod:test` (testy modułów + plik kontraktu `mod/test/golden.log`).
 
 ## Konfiguracja
 
