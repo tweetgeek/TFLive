@@ -7,6 +7,8 @@ import { alertEmoji, CATEGORY } from '../lib/emoji';
 import { fmtGameDate } from '../lib/format';
 import { useStore } from '../state/store';
 
+defineProps<{ dense?: boolean }>();
+
 const store = useStore();
 const { state } = store;
 const filter = ref<AlertCategory | 'all'>('all');
@@ -33,13 +35,16 @@ async function act(a: Alert, fn: () => Promise<void>) {
 </script>
 
 <template>
+  <div class="view" :class="{ dense }">
   <div class="toolbar">
     <button class="chip" type="button" :aria-pressed="filter === 'all'" @click="filter = 'all'">Wszystkie · {{ activeCount('all') }}</button>
     <button v-for="c in cats" :key="c" class="chip" type="button" :aria-pressed="filter === c" @click="filter = c">{{ CATEGORY[c].emoji }} {{ CATEGORY[c].label }} · {{ activeCount(c) }}</button>
+    <template v-if="!dense">
     <span class="sep" aria-hidden="true"></span>
     <button class="chip" type="button" :aria-pressed="severity === 'all'" @click="severity = 'all'">Każda ważność</button>
     <button v-for="s in SEVERITIES" :key="s" class="chip" type="button" :aria-pressed="severity === s" @click="severity = s">{{ SEV_LABEL[s] }}</button>
     <label class="muted-toggle"><input v-model="showMuted" type="checkbox">🔕 Pokaż wyciszone</label>
+    </template>
   </div>
   <div v-if="state.actionError" role="alert" class="action-error">⚠️ {{ state.actionError }}</div>
   <section class="table-wrap list">
@@ -51,12 +56,13 @@ async function act(a: Alert, fn: () => Promise<void>) {
         <div class="sub"><span class="num">{{ a.detail }}</span> · od {{ dateOf(a.firstSeenGameTime) }}<template v-if="a.muted"> · {{ mutedText(a) }}</template></div>
       </div>
       <template v-if="!a.muted">
-        <button class="btn" type="button" :disabled="busy === a.id" @click="act(a, () => store.mute(a, 'snooze'))">⏰ Odłóż 3 mies.</button>
-        <button class="btn" type="button" :disabled="busy === a.id" @click="act(a, () => store.mute(a, 'ignore'))">🔕 Ignoruj</button>
+        <button class="btn" type="button" aria-label="Odłóż 3 mies." title="Odłóż 3 mies." :disabled="busy === a.id" @click="act(a, () => store.mute(a, 'snooze'))">⏰<template v-if="!dense"> Odłóż 3 mies.</template></button>
+        <button class="btn" type="button" aria-label="Ignoruj" title="Ignoruj" :disabled="busy === a.id" @click="act(a, () => store.mute(a, 'ignore'))">🔕<template v-if="!dense"> Ignoruj</template></button>
       </template>
-      <button v-else class="btn" type="button" :disabled="busy === a.id" @click="act(a, () => store.unmute(a))">🔔 Przywróć</button>
+      <button v-else class="btn" type="button" aria-label="Przywróć" title="Przywróć" :disabled="busy === a.id" @click="act(a, () => store.unmute(a))">🔔<template v-if="!dense"> Przywróć</template></button>
     </div>
   </section>
+  </div>
 </template>
 
 <style scoped>
@@ -69,4 +75,13 @@ async function act(a: Alert, fn: () => Promise<void>) {
 .body { flex: 1; min-width: 240px; }
 .title { font-size: 18px; font-weight: 600; }
 .sub { font-size: 14px; color: var(--muted); margin-top: 2px; }
+.view { display: flex; flex-direction: column; gap: 18px; }
+.view.dense { gap: 6px; }
+.dense .row { padding: 5px 2px; gap: 8px; flex-wrap: nowrap; align-items: flex-start; }
+.dense .body { min-width: 0; }
+.dense .title { font-size: 1em; }
+.dense .sub { font-size: .86em; }
+.dense .list { background: transparent; border: none; overflow: visible; }
+.dense .action-error { padding: 6px 10px; }
+.dense .sev { min-width: 58px; height: 20px; font-size: 10px; }
 </style>

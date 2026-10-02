@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Component } from 'vue';
 import KpiStrip from '../src/components/KpiStrip.vue';
 import MonthsChart from '../src/components/MonthsChart.vue';
+import AlertsView from '../src/views/AlertsView.vue';
+import VehiclesView from '../src/views/VehiclesView.vue';
 import { createStore, STORE_KEY, type Store } from '../src/state/store';
 import { fixtureState } from './fixture';
 
@@ -30,5 +32,32 @@ describe('KpiStrip i MonthsChart', () => {
     expect(nb(w.text())).toContain('lis 1906');
     expect(nb(w.text())).toContain('3 218 127');
     expect(w.text()).toContain('Pociąg 2');
+  });
+});
+
+describe('Alerty dense', () => {
+  it('bez chipsów ważności i przełącznika wyciszonych, przyciski z etykietą dostępności', async () => {
+    const { w, store } = mountDense(AlertsView);
+    expect(w.find('.view').classes()).toContain('dense');
+    expect(w.text()).not.toContain('Każda ważność');
+    expect(w.find('input[type="checkbox"]').exists()).toBe(false);
+    const snooze = w.find('[data-test="alert"] button[aria-label="Odłóż 3 mies."]');
+    expect(snooze.text()).toBe('⏰');
+    await snooze.trigger('click');
+    expect(store.mute).toHaveBeenCalledWith(expect.objectContaining({ id: store.state.alerts[0].id }), 'snooze');
+  });
+  it('bez dense: przyciski z pełnym tekstem jak dotąd', () => {
+    const { w } = mountDense(AlertsView, {});
+    expect(w.find('.view').classes()).not.toContain('dense');
+    expect(w.find('[data-test="alert"] button[aria-label="Odłóż 3 mies."]').text()).toBe('⏰ Odłóż 3 mies.');
+  });
+});
+
+describe('Pojazdy dense', () => {
+  it('wszystkie pojazdy, bez nazwy modelu', () => {
+    const { w } = mountDense(VehiclesView);
+    expect(w.find('.view').classes()).toContain('dense');
+    expect(w.findAll('tbody tr')).toHaveLength(3);
+    expect(w.text()).not.toContain('mogul_2_6_0');
   });
 });
