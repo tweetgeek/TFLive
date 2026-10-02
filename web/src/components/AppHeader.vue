@@ -52,6 +52,11 @@ const live = computed(() => state.conn === 'open' && state.status.live);
 .dot { width: 9px; height: 9px; border-radius: 50%; background: #6b7a86; }
 .dot.on { background: var(--pos-fill); }
 .mb { font-size: 14px; }
+@media (min-width: 1800px) and (min-height: 900px) {
+  .hdr { min-height: 46px; }
+  .tab { min-height: 32px; font-size: 15px; }
+  .pill { padding: 3px 10px; }
+}
 @media (max-width: 759px) {
   .hdr { gap: 10px; padding: 8px 12px; flex-wrap: wrap; }
   .brand { font-size: 17px; }
