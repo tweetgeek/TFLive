@@ -35,6 +35,13 @@ describe('Przemysł', () => {
   it('pusty stan', () => {
     expect(mountWith(IndustryView, emptyState()).text()).toContain('Czekam na dane z gry');
   });
+  it('closureTime 0 nie tworzy groźby', () => {
+    const s = fixtureState();
+    s.snapshot.industries[0].closureTime = 0;
+    const w = mountWith(IndustryView, s);
+    expect(w.text()).not.toContain('🚨');
+    expect(w.text()).not.toContain('45 dni');
+  });
 });
 
 describe('Miasta', () => {
@@ -54,5 +61,14 @@ describe('Miasta', () => {
     const w = mountWith(TownsView);
     await w.find('button[data-test="show-all"]').trigger('click');
     expect(w.findAll('[data-test="town"]')).toHaveLength(3);
+  });
+  it('demand 0 nie dzieli przez zero', () => {
+    const s = fixtureState();
+    s.snapshot.towns[0].needs.push({ district: 'RESIDENTIAL', cargo: 'food', demand: 0, supplied: 5 });
+    const w = mountWith(TownsView, s);
+    const t = w.text();
+    expect(t).not.toContain('Infinity');
+    expect(t).not.toContain('NaN');
+    expect(w.findAll('[style*="width"]').some((el) => el.attributes('style')?.includes('width: —'))).toBe(false);
   });
 });

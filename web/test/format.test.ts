@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fmtDecimal, fmtGameDate, fmtInt, fmtMBh, fmtMonthIndex, fmtPct, fmtSigned } from '../src/lib/format';
+import { fmtDecimal, fmtGameDate, fmtInt, fmtMBh, fmtMonthIndex, fmtPct, fmtSigned, plSzansa } from '../src/lib/format';
 
 const nb = (s: string) => s.replace(/\s/g, ' ');
 
@@ -29,5 +29,12 @@ describe('format', () => {
   it('MB/h', () => {
     expect(fmtMBh(1.02)).toBe('1,0 MB/h');
     expect(fmtMBh(null)).toBe('— MB/h');
+  });
+  it('Polska liczba mnogości dla szans', () => {
+    expect(plSzansa(1)).toBe('szansa');
+    expect(plSzansa(2)).toBe('szanse');
+    expect(plSzansa(5)).toBe('szans');
+    expect(plSzansa(12)).toBe('szans');
+    expect(plSzansa(22)).toBe('szanse');
   });
 });
