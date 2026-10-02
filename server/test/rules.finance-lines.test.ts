@@ -70,10 +70,19 @@ describe('lineWithoutVehicles', () => {
 });
 
 describe('overloadedStop', () => {
-  it('najdłuższe oczekiwanie > 14 dni', () => {
-    const g = 24 * M;
-    expect(overloadedStop(ctx({ stops: [stop({ longestWaitStartTime: g - 15 * DAY })] }, g))).toHaveLength(1);
-    expect(overloadedStop(ctx({ stops: [stop({ longestWaitStartTime: g - 13 * DAY })] }, g))).toEqual([]);
-    expect(overloadedStop(ctx({ stops: [stop({ longestWaitStartTime: null })] }, g))).toEqual([]);
+  const w = (count: number, bad: number) => [{ cargo: 'passengers', count, bad }];
+  it('alert, gdy gra oznacza przystanek jako bardzo zły', () => {
+    expect(overloadedStop(ctx({ stops: [stop({ waiting: w(10, 0), veryBad: true })] }))).toHaveLength(1);
+  });
+  it('alert, gdy ≥ 25% oczekujących jest źle obsłużonych', () => {
+    expect(overloadedStop(ctx({ stops: [stop({ waiting: [...w(70, 20), { cargo: 'coal', count: 30, bad: 5 }] })] }))).toHaveLength(1);
+    expect(overloadedStop(ctx({ stops: [stop({ waiting: w(100, 24) })] }))).toEqual([]);
+  });
+  it('mała liczba oczekujących (2/2) — brak alertu, 20/10 — alert', () => {
+    expect(overloadedStop(ctx({ stops: [stop({ waiting: w(2, 2) })] }))).toEqual([]);
+    expect(overloadedStop(ctx({ stops: [stop({ waiting: w(20, 10) })] }))).toHaveLength(1);
+  });
+  it('brak oczekujących — brak alertu', () => {
+    expect(overloadedStop(ctx({ stops: [stop()] }))).toEqual([]);
   });
 });

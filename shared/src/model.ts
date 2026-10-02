@@ -100,8 +100,8 @@ export interface Town {
 export interface Stop {
   id: number;
   name: string;
-  waiting: { cargo: string; count: number }[];
-  longestWaitStartTime: number | null;
+  waiting: { cargo: string; count: number; bad: number }[];
+  veryBad: boolean;
 }
 
 export interface Backfill { scope: 'global' | 'line'; entityId: number | null; months: MonthValue[] }

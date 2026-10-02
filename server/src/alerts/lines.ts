@@ -46,11 +46,12 @@ export const lineWithoutVehicles: Rule = ({ snap }) =>
       detail: 'Do Linii nie jest przypisany żaden Pojazd',
     }));
 
-export const overloadedStop: Rule = ({ snap, gameTime, dayMs, config }) =>
+export const overloadedStop: Rule = ({ snap, config }) =>
   snap.stops.flatMap((s) => {
-    if (s.longestWaitStartTime === null) return [];
-    const days = (gameTime - s.longestWaitStartTime) / dayMs;
-    if (days <= config.overloadedWaitDays) return [];
+    const total = s.waiting.reduce((sum, w) => sum + w.count, 0);
+    const bad = s.waiting.reduce((sum, w) => sum + w.bad, 0);
+    const ratio = total > 0 ? bad / total : 0;
+    if (!s.veryBad && (total < config.overloadedMinWaiting || ratio < config.overloadedBadRatio)) return [];
     return [{
       type: 'overloaded-stop' as const,
       category: 'lines' as const,
@@ -58,6 +59,6 @@ export const overloadedStop: Rule = ({ snap, gameTime, dayMs, config }) =>
       entityType: 'stop' as const,
       entityId: s.id,
       title: `Przeciążony przystanek: ${s.name}`,
-      detail: `Najdłuższe oczekiwanie: ${Math.floor(days)} dni`,
+      detail: s.veryBad ? 'Gra ocenia obsługę oczekujących jako bardzo złą' : `Źle obsłużeni: ${Math.round(ratio * 100)}% oczekujących`,
     }];
   });

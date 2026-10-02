@@ -25,6 +25,10 @@ describe('parseLine', () => {
     expect(parseLine(raw)).toEqual({ ok: false, reason: 'not-tflive' });
   });
 
+  it('ignoruje linie błędów [TFLIVE-ERR]', () => {
+    expect(parseLine(PREFIX + '[TFLIVE-ERR] update: boom')).toEqual({ ok: false, reason: 'not-tflive' });
+  });
+
   it('usuwa \\r z końca linii (Windows)', () => {
     const r = parseLine(PREFIX + '[TFLIVE] 1 a b 1 2 meta 1/1 {"x":1}\r');
     expect(r.ok && r.line.payload).toEqual({ x: 1 });
