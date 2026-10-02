@@ -26,4 +26,5 @@ const message = computed(() => {
 .neg { background: #3a1a14; color: #ffd0c4; }
 .warn { background: #3a2f12; color: #ffe0a3; }
 .info { background: #172b3d; color: #cfe6ff; }
+@media (min-width: 1800px) and (min-height: 900px) { .banner { padding: 5px 16px; font-size: 14px; } }
 </style>
