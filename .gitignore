@@ -3,3 +3,4 @@ server/data/
 config/config.json
 config/alerts.json
 mod/build/
+web/dist/
