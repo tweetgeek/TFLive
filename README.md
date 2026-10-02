@@ -2,7 +2,7 @@
 
 Dashboard live dla Transport Fever 3: finanse, linie, pojazdy, przemysł i miasta z bieżącej rozgrywki oraz alerty o problemach. Otwierany w przeglądarce na komputerze lub tablecie w sieci domowej.
 
-Stan projektu: serwer (plan 1) i mod gry (plan 2). Interfejs (plan 3) w przygotowaniu.
+Stan projektu: serwer (plan 1), mod gry (plan 2) i interfejs (plan 3).
 
 ## Wymagania
 
@@ -17,6 +17,8 @@ npm start        # czyta log gry na żywo
 npm run demo     # dane przykładowe, bez gry
 npm test         # testy
 ```
+
+`npm start` i `npm run demo` najpierw budują interfejs (`npm run build`). Otwórz adres z konsoli na tablecie lub komputerze w tej samej sieci. Podczas pracy nad interfejsem: `npm run dev:web` (Vite z przekierowaniem `/api` i `/ws` do serwera na porcie 8787).
 
 Serwer wypisuje adresy, pod którymi jest dostępny (np. `http://192.168.1.20:8787` dla tabletu).
 
