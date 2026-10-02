@@ -25,6 +25,7 @@ export interface AlertConfig {
   lowLoadRatio: number;
   lowLoadWindowMonths: number;
   overloadedBadRatio: number;
+  overloadedMinWaiting: number;
   waitingDays: number;
   idleDays: number;
   lowConditionRatio: number;
@@ -45,6 +46,7 @@ export const DEFAULT_ALERT_CONFIG: AlertConfig = {
   lowLoadRatio: 0.25,
   lowLoadWindowMonths: 3,
   overloadedBadRatio: 0.25,
+  overloadedMinWaiting: 10,
   waitingDays: 30,
   idleDays: 30,
   lowConditionRatio: 0.5,

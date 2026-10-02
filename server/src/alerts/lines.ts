@@ -51,7 +51,7 @@ export const overloadedStop: Rule = ({ snap, config }) =>
     const total = s.waiting.reduce((sum, w) => sum + w.count, 0);
     const bad = s.waiting.reduce((sum, w) => sum + w.bad, 0);
     const ratio = total > 0 ? bad / total : 0;
-    if (!s.veryBad && ratio < config.overloadedBadRatio) return [];
+    if (!s.veryBad && (total < config.overloadedMinWaiting || ratio < config.overloadedBadRatio)) return [];
     return [{
       type: 'overloaded-stop' as const,
       category: 'lines' as const,

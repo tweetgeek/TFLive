@@ -5,6 +5,7 @@
   "lowLoadRatio": 0.25,
   "lowLoadWindowMonths": 3,
   "overloadedBadRatio": 0.25,
+  "overloadedMinWaiting": 10,
   "waitingDays": 30,
   "idleDays": 30,
   "lowConditionRatio": 0.5,
