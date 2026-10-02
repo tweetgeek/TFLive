@@ -144,11 +144,11 @@ function stop(r: unknown): Stop {
   return {
     id: num(t[0], 'stop.id'),
     name: str(t[1], 'stop.name'),
-    waiting: arr(t[2], 'stop.waiting').map((w) => {
-      const x = arr(w, 'stop.waiting', 2);
-      return { cargo: str(x[0], 'waiting.cargo'), count: num(x[1], 'waiting.count') };
+    waiting: arr(t[2], 'stop.waiting').map((w, i) => {
+      const x = arr(w, `stop.waiting[${i}]`, 3);
+      return { cargo: str(x[0], 'waiting.cargo'), count: num(x[1], 'waiting.count'), bad: num(x[2], 'waiting.bad') };
     }),
-    longestWaitStartTime: nnum(t[3], 'stop.longestWaitStart'),
+    veryBad: bool(t[3], 'stop.veryBad'),
   };
 }
 
