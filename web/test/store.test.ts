@@ -1,0 +1,90 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { BACKOFF_MS, createStore, wsUrl, type StoreDeps, type WebSocketLike } from '../src/state/store';
+import { fixtureState } from './fixture';
+
+class FakeWS implements WebSocketLike {
+  static all: FakeWS[] = [];
+  onopen: (() => void) | null = null;
+  onmessage: ((ev: { data: unknown }) => void) | null = null;
+  onclose: (() => void) | null = null;
+  onerror: (() => void) | null = null;
+  closed = false;
+  constructor(readonly url: string) { FakeWS.all.push(this); }
+  close() { this.closed = true; this.onclose?.(); }
+}
+
+function setup(fetchImpl: StoreDeps['fetch'] = async () => new Response('[]', { status: 200 })) {
+  FakeWS.all = [];
+  const store = createStore({ url: 'ws://h/ws', wsFactory: (u) => new FakeWS(u), fetch: fetchImpl });
+  return { store, fetchImpl };
+}
+
+describe('store', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  it('wsUrl wg protokołu strony', () => {
+    expect(wsUrl({ protocol: 'http:', host: '10.0.0.5:8787' })).toBe('ws://10.0.0.5:8787/ws');
+    expect(wsUrl({ protocol: 'https:', host: 'x' })).toBe('wss://x/ws');
+  });
+
+  it('łączy się, przyjmuje stan i oznacza połączenie', () => {
+    const { store } = setup();
+    store.connect();
+    expect(store.state.conn).toBe('connecting');
+    const ws = FakeWS.all[0];
+    ws.onopen?.();
+    expect(store.state.conn).toBe('open');
+    ws.onmessage?.({ data: JSON.stringify({ type: 'state', ...fixtureState() }) });
+    expect(store.state.received).toBe(true);
+    expect(store.state.snapshot.vehicles).toHaveLength(3);
+    expect(store.state.status.live).toBe(true);
+  });
+
+  it('ignoruje uszkodzone wiadomości', () => {
+    const { store } = setup();
+    store.connect();
+    FakeWS.all[0].onmessage?.({ data: '{zepsute' });
+    FakeWS.all[0].onmessage?.({ data: JSON.stringify({ type: 'inne' }) });
+    expect(store.state.received).toBe(false);
+  });
+
+  it('po zerwaniu łączy ponownie z rosnącym odstępem, reset po udanym połączeniu', () => {
+    const { store } = setup();
+    store.connect();
+    FakeWS.all[0].onclose?.();
+    expect(store.state.conn).toBe('closed');
+    vi.advanceTimersByTime(BACKOFF_MS[0] - 1);
+    expect(FakeWS.all).toHaveLength(1);
+    vi.advanceTimersByTime(1);
+    expect(FakeWS.all).toHaveLength(2);
+    FakeWS.all[1].onclose?.();
+    vi.advanceTimersByTime(BACKOFF_MS[1]);
+    expect(FakeWS.all).toHaveLength(3);
+    FakeWS.all[2].onopen?.();
+    FakeWS.all[2].onclose?.();
+    vi.advanceTimersByTime(BACKOFF_MS[0]);
+    expect(FakeWS.all).toHaveLength(4);
+  });
+
+  it('close() zatrzymuje ponowne łączenie', () => {
+    const { store } = setup();
+    store.connect();
+    store.close();
+    vi.advanceTimersByTime(60_000);
+    expect(FakeWS.all).toHaveLength(1);
+  });
+
+  it('mute wysyła POST i odświeża listę; unmute usuwa pasujące Wyciszenie', async () => {
+    const mutes = [{ id: 7, saveId: 's', alertType: 'low-line-load', entityId: 56357, kind: 'snooze', untilGameTime: 1 }];
+    const fetchImpl = vi.fn(async (input: string, init?: RequestInit) =>
+      new Response(init?.method ? '{}' : JSON.stringify(mutes), { status: init?.method === 'POST' ? 201 : 200 }));
+    const { store } = setup(fetchImpl);
+    const alert = fixtureState().alerts.find((a) => a.type === 'low-line-load')!;
+    await store.mute(alert, 'ignore');
+    expect(fetchImpl).toHaveBeenCalledWith('/api/mutes', expect.objectContaining({ method: 'POST', body: JSON.stringify({ alertType: 'low-line-load', entityId: 56357, kind: 'ignore' }) }));
+    expect(store.state.mutes).toHaveLength(1);
+    await store.unmute(alert);
+    expect(fetchImpl).toHaveBeenCalledWith('/api/mutes/7', expect.objectContaining({ method: 'DELETE' }));
+  });
+});
