@@ -102,6 +102,7 @@ describe('kontrakt mod → serwer (golden.log)', () => {
     expect(v1.capacity).toBe(41);
     expect(v1.operatingResult12m).toBe(1500);
     expect(v1.parts).toHaveLength(1);
+    expect(v1.parts[0]).toEqual({ model: 'bus_a', purchaseTime: 2241600, lifespanSec: 29220, maintenanceState: expect.closeTo(0.57302629947662, 5) });
 
     const v7 = vehicles[6];
     expect(v7.noPath).toBe(true);
@@ -137,6 +138,8 @@ describe('kontrakt mod → serwer (golden.log)', () => {
 
     const ind1 = industries[0];
     expect(ind1.id).toBe(61423);
+    expect(ind1.name).toBe('Platforma wiertnicza');
+    expect(ind1.type).toBe('oil_well');
     expect(ind1.level).toBe(5);
     expect(ind1.maxLevel).toBe(7);
     expect(ind1.closureTime).toBe(null);
