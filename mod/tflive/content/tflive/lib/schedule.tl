@@ -14,6 +14,8 @@ local schedule : Schedule = {
 	INTERVALS = { meta = 10, finance = 10, lines = 60, vehicles = 60, stops = 60, industries = 120, towns = 120 },
 }
 
+local seeded = false
+
 schedule.isNewSession = function(lastEmitWall : integer, wall : integer) : boolean
 	return lastEmitWall == nil or wall - lastEmitWall > schedule.SESSION_GAP_SEC
 end
@@ -23,7 +25,10 @@ schedule.isDue = function(lastWall : integer, wall : integer, interval : integer
 end
 
 schedule.newId = function(seed : number) : string
-	math.randomseed(math.floor(seed * 1000) % 2147483647)
+	if not seeded then
+		math.randomseed(math.floor(seed * 1000) % 2147483647)
+		seeded = true
+	end
 	return string.format('%08x%08x', math.random(0, 0x7fffffff), math.random(0, 0x7fffffff))
 end
 

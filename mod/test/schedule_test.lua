@@ -21,8 +21,8 @@ test("schedule: kolejność zaczyna się od meta, interwały wg spec", function(
 	eq(schedule.INTERVALS.towns, 120)
 end)
 
-test("schedule: newId — 16 znaków hex, różne dla różnych ziaren", function()
-	local a, b = schedule.newId(1.5), schedule.newId(2.5)
+test("schedule: newId — 16 znaków hex, każde wywołanie zwraca inny id", function()
+	local a, b = schedule.newId(1.5), schedule.newId(1.5)
 	ok(a:match("^%x+$") and #a == 16, "format: " .. a)
-	ok(a ~= b, "różne identyfikatory")
+	ok(a ~= b, "kolejne wywołania zwracają różne identyfikatory")
 end)
