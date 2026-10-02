@@ -1,0 +1,28 @@
+local schedule = M.load("schedule")
+
+test("schedule: nowa sesja po przerwie > 30 s albo bez historii", function()
+	ok(schedule.isNewSession(nil, 1000), "brak lastEmitWall")
+	ok(not schedule.isNewSession(990, 1000), "10 s przerwy")
+	ok(not schedule.isNewSession(970, 1000), "30 s przerwy")
+	ok(schedule.isNewSession(969, 1000), "31 s przerwy")
+end)
+
+test("schedule: termin sekcji", function()
+	ok(schedule.isDue(nil, 1000, 60), "pierwszy raz")
+	ok(not schedule.isDue(950, 1000, 60), "za wcześnie")
+	ok(schedule.isDue(940, 1000, 60), "po interwale")
+end)
+
+test("schedule: kolejność zaczyna się od meta, interwały wg spec", function()
+	eq(schedule.ORDER[1], "meta")
+	eq(schedule.INTERVALS.meta, 10)
+	eq(schedule.INTERVALS.finance, 10)
+	eq(schedule.INTERVALS.vehicles, 60)
+	eq(schedule.INTERVALS.towns, 120)
+end)
+
+test("schedule: newId — 16 znaków hex, różne dla różnych ziaren", function()
+	local a, b = schedule.newId(1.5), schedule.newId(2.5)
+	ok(a:match("^%x+$") and #a == 16, "format: " .. a)
+	ok(a ~= b, "różne identyfikatory")
+end)
