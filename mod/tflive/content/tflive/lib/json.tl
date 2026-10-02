@@ -4,7 +4,14 @@ local record Json
 	encode : function(any) : string
 end
 
-local json : Json = { NULL = {} }
+-- NULL jest strukturalny (znacznik w metatabeli), żeby działał między instancjami modułu.
+local NULL_MT : metatable<table> = { __tflive_null = true } as metatable<table>
+local json : Json = { NULL = setmetatable({} as table, NULL_MT) }
+
+local function isNull(v : table) : boolean
+	local mt = getmetatable(v) as {string : any}
+	return mt ~= nil and mt['__tflive_null'] == true
+end
 
 local function escape(s : string) : string
 	local out = s:gsub('[%c"\\]', function(c : string) : string
@@ -21,7 +28,9 @@ end
 local function number(n : number) : string
 	if n ~= n or n == math.huge or n == -math.huge then return 'null' end
 	if n == math.floor(n) and math.abs(n) < 1e15 then return string.format('%.0f', n) end
-	return string.format('%.6g', n)
+	local s = string.format('%.14g', n)
+	s = s:gsub(',', '.')
+	return s
 end
 
 local function isArray(t : table) : boolean
@@ -33,13 +42,14 @@ end
 
 local encode : function(any) : string
 encode = function(v : any) : string
-	if v == nil or v == json.NULL then return 'null' end
+	if v == nil then return 'null' end
 	local tv = type(v)
 	if tv == 'boolean' then return (v as boolean) and 'true' or 'false' end
 	if tv == 'number' then return number(v as number) end
 	if tv == 'string' then return '"' .. escape(v as string) .. '"' end
 	if tv == 'table' then
 		local t = v as table
+		if isNull(t) then return 'null' end
 		if isArray(t) then
 			local arr = t as {any}
 			local parts : {string} = {}
