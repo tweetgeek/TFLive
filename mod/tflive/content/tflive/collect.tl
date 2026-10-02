@@ -181,15 +181,15 @@ end
 
 -- Ładunek i pojemność: per ładunek, bo getVehicleSimEntitiesCount zwraca tabelę (krok 0 #27).
 local function loadAndCap(v : Engine.Entity, tv : Engine.Component.TransportVehicle) : integer, integer
-	local load, cap = 0, 0
+	local ld, cap = 0, 0
 	local sys = api.engine.system.simEntityAtVehicleSystem
 	for k, c in ipairs(tv.config.capacities as {integer}) do
 		if c > 0 then
 			cap = cap + c
-			load = load + sys.getVehicleSimEntitiesCountForCargoType(v, (k - 1) as CargoTypeId)
+			ld = ld + sys.getVehicleSimEntitiesCountForCargoType(v, (k - 1) as CargoTypeId)
 		end
 	end
-	return load, cap
+	return ld, cap
 end
 
 collect.lines = function(departures : {string : integer}) : {any}
@@ -205,18 +205,21 @@ collect.lines = function(departures : {string : integer}) : {any}
 		if lc then
 			for i, st in ipairs(lc.stops) do stopIds[i] = st.stationGroup end
 		end
-		local vehicles = api.engine.system.transportVehicleSystem.getLineVehicles(line)
+		local vids : {integer} = {}
+		for _, v in ipairs(api.engine.system.transportVehicleSystem.getLineVehicles(line)) do
+			vids[#vids + 1] = v
+		end
 		local deps : {any} = {}
-		for _, v in ipairs(vehicles) do
+		for _, v in ipairs(vids) do
 			local tv = api.engine.getComponent(v, api.type.ComponentType.TRANSPORT_VEHICLE) as Engine.Component.TransportVehicle
 			local last = tv and tv.lastLineStopDeparture or 0
 			local key = tostring(v)
 			if last > 0 and (departures[key] or 0) < last then
-				departures[key] = last
 				for i, t in ipairs(tv.lineStopDepartures) do
 					if t == last then
-						local load, cap = loadAndCap(v, tv)
-						table.insert(deps, { i - 1, load, cap, t })
+						local ld, cap = loadAndCap(v, tv)
+						table.insert(deps, { i - 1, ld, cap, t })
+						departures[key] = last
 						break
 					end
 				end
@@ -229,8 +232,8 @@ collect.lines = function(departures : {string : integer}) : {any}
 			lineMode(line),
 			colorOf(line),
 			stopIds,
-			vehicles,
-			(okFirst and first ~= nil) and (first as any) or NULL,
+			vids,
+			(okFirst and first ~= nil and first > 0) and (first as any) or NULL,
 			fin.calculateBalance({ line }, t0, now, true),
 			NULL,
 			deps,
@@ -264,7 +267,7 @@ collect.vehicles = function() : {any}
 	for _, v in ipairs(list) do
 		local tv = api.engine.getComponent(v, api.type.ComponentType.TRANSPORT_VEHICLE) as Engine.Component.TransportVehicle
 		if tv then
-			local load, cap = loadAndCap(v, tv)
+			local ld, cap = loadAndCap(v, tv)
 			local lineId : any = NULL
 			if tv.line and tv.line > 0 and api.engine.entityExists(tv.line) then lineId = tv.line end
 			table.insert(rows, {
@@ -277,7 +280,7 @@ collect.vehicles = function() : {any}
 				tv.noPath and 1 or 0,
 				tv.daysAtTerminal or 0,
 				tv.daysInDepot or 0,
-				load,
+				ld,
 				cap,
 				fin.calculateBalance({ v }, t0, now, true),
 				partRows(tv),
