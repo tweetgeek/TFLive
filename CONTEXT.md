@@ -77,7 +77,7 @@ Nazwane miejsce, w którym Linia zatrzymuje się, by zabrać lub zostawić pasa�
 _Unikaj_: stacja, terminal, station group
 
 **Przeciążony przystanek**:
-Przystanek, na którym najdłużej czekający pasażer lub towar czeka dłużej niż 14 dni czasu gry.
+Przystanek, który gra ocenia jako źle obsłużony: oznacza go jako bardzo zły albo co najmniej 25% oczekujących pasażerów lub towaru uznaje za źle obsłużonych.
 _Unikaj_: przepełniona stacja, zatłoczony przystanek
 
 ### Pojazdy
