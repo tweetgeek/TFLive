@@ -59,8 +59,8 @@ export function makeDemoLog(): string[] {
       { id: 302, name: 'Suwałki', population: 2600, developmentActive: true, noise: 30, pollution: 1, lastServedTime: null, needs: [] },
     ];
     const stops: Stop[] = [
-      { id: 101, name: 'Dworzec Główny', waiting: [{ cargo: 'PASSENGERS', count: 640 }], longestWaitStartTime: g - 20 * DAY },
-      { id: 103, name: 'Ełk Rynek', waiting: [{ cargo: 'PASSENGERS', count: 12 }], longestWaitStartTime: g - DAY },
+      { id: 101, name: 'Dworzec Główny', waiting: [{ cargo: 'passengers', count: 640, bad: 300 }], veryBad: false },
+      { id: 103, name: 'Ełk Rynek', waiting: [{ cargo: 'passengers', count: 12, bad: 0 }], veryBad: false },
     ];
     emit(g, { section: 'lines', data: lines });
     emit(g, { section: 'vehicles', data: vehicles });

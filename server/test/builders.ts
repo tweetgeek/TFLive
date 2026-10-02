@@ -37,7 +37,7 @@ export function town(p: Partial<Town> = {}): Town {
   return { id: 30, name: 'Ełk', population: 1000, developmentActive: true, noise: 0, pollution: 0, needs: [], lastServedTime: null, ...p };
 }
 export function stop(p: Partial<Stop> = {}): Stop {
-  return { id: 100, name: 'Dworzec', waiting: [], longestWaitStartTime: null, ...p };
+  return { id: 100, name: 'Dworzec', waiting: [], veryBad: false, ...p };
 }
 export function finance(p: Partial<Finance> = {}): Finance {
   return { balance: 1_000_000, loan: 0, operatingResult12m: 120_000, runningCosts12m: 120_000, investments12m: null, operatingResultByMonth: [], ...p };

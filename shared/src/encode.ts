@@ -21,7 +21,7 @@ export function encodeSection(s: DecodedSection): unknown {
     case 'towns':
       return s.data.map((t) => [t.id, t.name, t.population, b(t.developmentActive), t.noise, t.pollution, t.needs.map((n) => [n.district, n.cargo, n.demand, n.supplied]), t.lastServedTime]);
     case 'stops':
-      return s.data.map((st) => [st.id, st.name, st.waiting.map((w) => [w.cargo, w.count]), st.longestWaitStartTime]);
+      return s.data.map((st) => [st.id, st.name, st.waiting.map((w) => [w.cargo, w.count, w.bad]), b(st.veryBad)]);
     case 'backfill':
       return { scope: s.data.scope, id: s.data.entityId, months: s.data.months.map((x) => [x.month, x.value]) };
   }

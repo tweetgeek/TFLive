@@ -44,7 +44,7 @@ describe('decodeSection', () => {
       { section: 'vehicles', data: [{ id: 9, name: 'Bus', lineId: 1, mode: 'ROAD', state: 'AT_TERMINAL', userStopped: true, noPath: false, daysAtTerminal: 1, daysInDepot: 0, load: 3, capacity: 40, operatingResult12m: 100, parts: [] }] },
       { section: 'industries', data: [{ id: 3, name: 'Huta', type: 'steel_mill', level: 1, maxLevel: 7, closureTime: null, upgradeProgress: 0.5, inputs: [{ cargo: 'COAL', stock: 0, lastReceivedTime: null }], outputs: [{ cargo: 'STEEL', stock: 10, capacity: 100 }], lastServedTime: 8000 }] },
       { section: 'towns', data: [{ id: 4, name: 'Ełk', population: 900, developmentActive: true, noise: 50, pollution: 2, needs: [{ district: 'COMMERCIAL', cargo: 'FOOD', demand: 100, supplied: 40 }], lastServedTime: null }] },
-      { section: 'stops', data: [{ id: 5, name: 'Dworzec', waiting: [{ cargo: 'PASSENGERS', count: 12 }], longestWaitStartTime: 1000 }] },
+      { section: 'stops', data: [{ id: 5, name: 'Dworzec', waiting: [{ cargo: 'passengers', count: 12, bad: 3 }], veryBad: false }] },
       { section: 'backfill', data: { scope: 'line', entityId: 1, months: [{ month: 22801, value: 50 }] } },
     ];
     for (const s of samples) {
@@ -99,11 +99,12 @@ describe('decodeSection', () => {
       });
     });
 
-    it('stops', () => {
-      expect(decodeSection('stops', [[5, 'Dworzec', [['PASSENGERS', 12], ['MAIL', 3]], 1000]])).toEqual({
+    it('stops: [id,name,[[cargo,count,bad]],veryBad01]', () => {
+      expect(decodeSection('stops', [[5, 'Dworzec', [['passengers', 12, 3], ['coal', 40, 0]], 1]])).toEqual({
         section: 'stops',
-        data: [{ id: 5, name: 'Dworzec', waiting: [{ cargo: 'PASSENGERS', count: 12 }, { cargo: 'MAIL', count: 3 }], longestWaitStartTime: 1000 }],
+        data: [{ id: 5, name: 'Dworzec', waiting: [{ cargo: 'passengers', count: 12, bad: 3 }, { cargo: 'coal', count: 40, bad: 0 }], veryBad: true }],
       });
+      expect(() => decodeSection('stops', [[5, 'Dworzec', [['passengers', 12]], 0]])).toThrow(DecodeError);
     });
 
     it('backfill', () => {

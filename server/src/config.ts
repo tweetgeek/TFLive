@@ -24,7 +24,7 @@ export interface AlertConfig {
   rampUpMonths: number;
   lowLoadRatio: number;
   lowLoadWindowMonths: number;
-  overloadedWaitDays: number;
+  overloadedBadRatio: number;
   waitingDays: number;
   idleDays: number;
   lowConditionRatio: number;
@@ -44,7 +44,7 @@ export const DEFAULT_ALERT_CONFIG: AlertConfig = {
   rampUpMonths: 6,
   lowLoadRatio: 0.25,
   lowLoadWindowMonths: 3,
-  overloadedWaitDays: 14,
+  overloadedBadRatio: 0.25,
   waitingDays: 30,
   idleDays: 30,
   lowConditionRatio: 0.5,
