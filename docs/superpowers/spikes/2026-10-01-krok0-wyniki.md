@@ -48,3 +48,25 @@ Logi: `spike/probe-log-macos.txt` (runda 1), `spike/probe-log-macos-r2.txt` (run
 - **Detekcja pauzy:** `dt == 0` (#18).
 - **Uzupełnienie historii:** wykonalność i koszt **nie ustalone** (#12, #13). Pomiar w planie 2 na dużej mapie; jeśli księga nie trzyma historii albo koszt jest zbyt wysoki, Uzupełnienie wypada z v1 (decyzja użytkownika). Wynik wysyłany partiami, jedna linia logu na partię.
 - **Windows:** wszystkie odpowiedzi „oczekuje”. Do potwierdzenia przed ukończeniem planu 1: odczyt `stdout.txt` podczas gry, utworzenie nowego logu przy cyklicznym odczycie, opóźnienie zapisu (spec §8).
+
+## Runda 3 (2026-10-01, macOS) — niewiadome planu 2
+
+Log: `spike/probe-log-macos-r3.txt`. Mapa API: wnioski poniżej są wiążące dla planu 2.
+
+| # | Pytanie | Wynik |
+|---|---|---|
+| 20 | Moduły modu | `ug_require "<modId>::/<modId>/plik.tl"` działa; `"/<modId>/…"` i `"::/<modId>/…"` nie |
+| 21 | Długość dnia, pauza | `GAME_SPEED.millisPerDay` = 4000 niezależnie od prędkości; `speedup` = 1/4/0 (0 = pauza) |
+| 22 | Koszty bieżące | `calcIncomeSince(t0, player) − ops12` (3 058 214) = −(VEHICLE + INFRASTRUCTURE + VEHICLE_MAINTENANCE); kategoria `OTHER` w filtrze zwraca przychody — nie używać |
+| 23 | Inwestycje | `computeFinanceTable` daje tylko rok kalendarzowy → `inv12 = null` w v1 |
+| 24 | Wynik miesięczny | `calculateBalance(ents, startMiesiąca, startNastępnego, true)` z granic z `GameTime.dates` (`day == 1`) — działa dla firmy i linii; historia linii sprzed 2 lat niezerowa → Uzupełnienie historii wykonalne; 14 linii × 25 mies. = 0,1 ms |
+| 25 | Początek linii | `finance.getFirstIncomeTime(line)` działa (np. 4 748 250) |
+| 26 | Pojazdy gracza | `getEntitiesWithComponent(TRANSPORT_VEHICLE, {requireOwnedByPlayer = player})` (29/29) |
+| 27 | Ładunek pojazdu | `getVehicleSimEntitiesCount` zwraca **tabelę** — używać `getVehicleSimEntitiesCountForCargoType(v, cargoId)` dla `cargoId` z `config.capacities[cargoId+1] > 0` |
+| 28 | Odjazdy | `tv.lineStopDepartures` = czas ostatniego odjazdu per przystanek (indeks = stopIndex+1), `tv.lastLineStopDeparture` |
+| 29 | Enumy w runtime | liczby: `Carrier.ROAD=0, RAIL=1`, `TransportVehicleState.EN_ROUTE=1`, `LandUseType.RESIDENTIAL=0`, `StockListType.InputStock=0` — mapować przez `api.type["enum"]` |
+| 30 | Miasta | ludność `getTownCapacityUsage(t)[RES+1].capacity`; potrzeby `townBuildingSystem.getCargoSupplyAndLimit(t, lu)` → `{[cargoId] = {supplied, limit}}`; emisje `getTownEmissionDB(t)` (hałas dB, zanieczyszczenie surowe) |
+| 31 | Dzienniki (LOG_BOOK) | fabryki: `itemsProduced<cargo>`, `itemsDestroyed<cargo>` (inne klucze, np. `itemsLoaded`, `itemsConsumed<cargo>`, pojawiają się zapewne dopiero przy obsłudze — brak → `null`); linie: `itemsTransported<cargo>`, `itemsAtStop<n>_c<cargo>` |
+| 32 | Oczekujący na przystanku | `util.cargo.getCargoQualityDataAtStationGroup(sg, cargo)` → `countTotal`, `countBad`, `isVeryBad`; **czasu oczekiwania nie da się odczytać** (`getLineStopSimEntities` puste dla pasażerów) → „Przeciążony przystanek” przedefiniowany na ocenę gry (decyzja użytkownika) |
+| 33 | Zdarzenia | handleEvent dostaje wszystkie zdarzenia (np. `OnCargoLoaded`, `handleLegacy`), struktura `param` inna niż zakładana — w v1 nie używamy zdarzeń |
+| 34 | Kolor i tryb linii | `COLOR.color` (x,y,z 0..1), `util.line.getLineTransportModesUnion(line)` |

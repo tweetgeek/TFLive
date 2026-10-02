@@ -98,7 +98,7 @@ Mapa i minimapa, sterowanie grą, dostęp z internetu, multiplayer, wykresy tren
   - brakujące wartości są zapisywane jawnie jako `null` (w krotkach i kluczach obiektów), nigdy pominięte;
   - liczby w nagłówku linii są całkowite (`\d+`);
   - `lastReceivedTime = null` oznacza „nie wiadomo” (reguła Niedostarczonego surowca wtedy milczy), a nie „nigdy nie dostarczono”;
-  - kolejność pól w krotkach określa tabela formatu w planie 1 (Task 2) z rozszerzeniem `lines` o `operatingResultByMonth` (11. pole: `[[month,value]]`).
+  - kolejność pól w krotkach określa tabela formatu w planie 1 (Task 2) z rozszerzeniem `lines` o `operatingResultByMonth` (11. pole: `[[month,value]]`) i zmianą `stops` na `[id,name,[[cargo,count,bad]],veryBad01]` (krok 0 runda 3: czasu oczekiwania nie da się odczytać).
 
 ## 4. Model danych
 
@@ -131,7 +131,7 @@ Snapshot {
                 lastServedTime? /* do Obsługiwanej fabryki */ }]
   towns:     [{ id, name, population, developmentActive, noise, pollution,
                 needs: [{ district, cargo, demand, supplied? }], lastServedTime? }]
-  stops:     [{ id, name, waiting: [{ cargo, count }], longestWaitStartTime? }]
+  stops:     [{ id, name, waiting: [{ cargo, count, bad }], veryBad }] /* ocena gry: getCargoQualityDataAtStationGroup */
 }
 ```
 
@@ -140,7 +140,6 @@ Wartości pochodne liczone przez serwer:
 - Wykorzystanie żywotności: `(gameTime - purchaseTime) / (lifespan * 1000)` dla każdej części.
 - Rezerwa: `balance / (runningCosts12m / 12)`.
 - Obłożenie linii: średnia z `departureLoads` z ostatnich 3 miesięcy, trzymana w buforze serwera.
-- Czas oczekiwania na Przystanku: `gameTime - longestWaitStartTime`, z `getStockSimEntity`.
 
 
 W logu dane są w formacie kompaktowym: tablice wartości w ustalonej kolejności pól. Nazwy są zawarte w tej samej linii (§3). `server/ingest` rozpakowuje je do powyższego modelu. Format kompaktowy jest wersjonowany razem z `schemaVersion`. Nieznana wersja jest odrzucana, a UI pokazuje czytelny komunikat.
@@ -185,7 +184,7 @@ Definicje pojęć są w `CONTEXT.md`.
 | Linie | Nierentowna linia | po Rozruchu (6 mies.), Wynik operacyjny 12 mies. < 0 | warn |
 | Linie | Niskie obłożenie | Obłożenie linii < 25% (3 mies.) | info |
 | Linie | Linia bez pojazdów | 0 Pojazdów | warn |
-| Linie | Przeciążony przystanek | najdłuższe oczekiwanie > 14 dni gry | warn |
+| Linie | Przeciążony przystanek | `veryBad` albo Σbad / Σcount ≥ 25% | warn |
 | Pojazdy | Pojazd bez trasy | `noPath` | critical |
 | Pojazdy | Pojazd czekający | `daysAtTerminal` > 30 | warn |
 | Pojazdy | Bezczynny pojazd | brak Linii lub `daysInDepot` > 30 | warn |
