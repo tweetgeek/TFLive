@@ -40,7 +40,7 @@ const detail = computed(() => {
     stops,
     vehicles,
     months: months.map((m) => ({ ...m, label: fmtMonthIndex(m.month), h: `${Math.max(6, (Math.abs(m.value) / max) * 100)}%`, pos: m.value >= 0 })),
-    alerts: alertsFor(state.alerts, 'line', l.id),
+    alerts: alertsFor(state.alerts, 'line', l.id).filter((a) => !a.muted),
   };
 });
 
