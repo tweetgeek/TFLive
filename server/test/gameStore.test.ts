@@ -61,11 +61,21 @@ describe('GameStore', () => {
     expect(r.events[0]).toEqual({ type: 'game-changed', saveId: 'save1' });
   });
 
-  it('cofnięcie czasu tej samej Rozgrywki emituje rewind i czyści sekcje', () => {
+  it('cofnięcie w tej samej sesji modu emituje rewind i zachowuje sekcje snapshotu', () => {
     const s = new GameStore();
     s.apply(parsed(metaLine({ gameTime: 400 * DAY, date: d(1901, 2) })));
     s.apply(parsed(sectionLines('vehicles', [vehicle()], { seq: 2, gameTime: 400 * DAY })[0]));
     const r = s.apply(parsed(metaLine({ seq: 3, gameTime: 100 * DAY, date: d(1900, 4) })));
+    expect(r.events).toContainEqual({ type: 'rewind', saveId: 'save1', toGameTime: 100 * DAY, toMonth: 1900 * 12 + 3 });
+    expect(r.events).toContainEqual({ type: 'new-month', saveId: 'save1', month: 1900 * 12 + 3 });
+    expect(s.snapshot().vehicles).toHaveLength(1);
+  });
+
+  it('cofnięcie z nową sesją modu emituje rewind i czyści sekcje', () => {
+    const s = new GameStore();
+    s.apply(parsed(metaLine({ gameTime: 400 * DAY, date: d(1901, 2) })));
+    s.apply(parsed(sectionLines('vehicles', [vehicle()], { seq: 2, gameTime: 400 * DAY })[0]));
+    const r = s.apply(parsed(metaLine({ sessionId: 'sess2', seq: 1, gameTime: 100 * DAY, date: d(1900, 4) })));
     expect(r.events).toContainEqual({ type: 'rewind', saveId: 'save1', toGameTime: 100 * DAY, toMonth: 1900 * 12 + 3 });
     expect(s.snapshot().vehicles).toEqual([]);
   });
