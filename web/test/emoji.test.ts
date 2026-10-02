@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { alertEmoji, CATEGORY, cargoEmoji, DISTRICT, industryEmoji, modeEmoji, modeLabel, VEHICLE_STATE } from '../src/lib/emoji';
+import { alertEmoji, CATEGORY, cargoEmoji, cargoLabel, DISTRICT, industryEmoji, modeEmoji, modeLabel, VEHICLE_STATE } from '../src/lib/emoji';
 
 describe('emoji i etykiety', () => {
   it('tryby transportu', () => {
@@ -21,5 +21,11 @@ describe('emoji i etykiety', () => {
     expect(industryEmoji('oil_platform')).toBe('🛢️');
     expect(industryEmoji('forest')).toBe('🪓');
     expect(industryEmoji('cos_innego')).toBe('🏭');
+  });
+  it('towary: wielkie litery, klucze prototypu i etykiety', () => {
+    expect(cargoEmoji('COAL')).toBe('⛏️');
+    expect(cargoEmoji('constructor')).toBe('📦');
+    expect(cargoLabel('IRON_ORE')).toBe('iron ore');
+    expect(cargoLabel('passengers')).toBe('passengers');
   });
 });

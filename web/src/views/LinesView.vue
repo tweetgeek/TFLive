@@ -2,13 +2,13 @@
 import type { Line } from '@tflive/shared';
 import { computed, ref } from 'vue';
 import { alertsFor, isRampUp, lineLoadNow } from '../lib/derive';
-import { alertEmoji, cargoEmoji, modeEmoji, modeLabel, VEHICLE_STATE } from '../lib/emoji';
+import { alertEmoji, cargoEmoji, cargoLabel, modeEmoji, modeLabel, VEHICLE_STATE } from '../lib/emoji';
 import { fmtInt, fmtMonthIndex, fmtPct, fmtSigned } from '../lib/format';
 import { useStore } from '../state/store';
 
 const { state } = useStore();
 const sn = computed(() => state.snapshot);
-type SortKey = 'result' | 'vehicles';
+type SortKey = 'result' | 'vehicles' | 'load';
 const sort = ref<{ key: SortKey; dir: 1 | -1 }>({ key: 'result', dir: 1 });
 const selectedId = ref<number | null>(null);
 
@@ -21,6 +21,12 @@ const rows = computed(() =>
       alerts: alertsFor(state.alerts, 'line', l.id).filter((a) => !a.muted),
     }))
     .sort((a, b) => {
+      if (sort.value.key === 'load') {
+        if (a.load === null && b.load === null) return 0;
+        if (a.load === null) return 1;
+        if (b.load === null) return -1;
+        return (a.load - b.load) * sort.value.dir;
+      }
       const va = sort.value.key === 'result' ? a.line.operatingResult12m : a.line.vehicleIds.length;
       const vb = sort.value.key === 'result' ? b.line.operatingResult12m : b.line.vehicleIds.length;
       return (va - vb) * sort.value.dir;
@@ -45,7 +51,7 @@ const detail = computed(() => {
 });
 
 function toggle(key: SortKey) {
-  sort.value = sort.value.key === key ? { key, dir: sort.value.dir === 1 ? -1 : 1 } : { key, dir: key === 'result' ? 1 : -1 };
+  sort.value = sort.value.key === key ? { key, dir: sort.value.dir === 1 ? -1 : 1 } : { key, dir: key === 'vehicles' ? -1 : 1 };
 }
 const ariaSort = (key: SortKey) => (sort.value.key === key ? (sort.value.dir === 1 ? 'ascending' : 'descending') : undefined);
 </script>
@@ -62,7 +68,7 @@ const ariaSort = (key: SortKey) => (sort.value.key === key ? (sort.value.dir ===
             <th>Tryb</th>
             <th class="r" :aria-sort="ariaSort('vehicles')"><button class="sortbtn" type="button" data-sort="vehicles" @click="toggle('vehicles')">Pojazdy</button></th>
             <th class="r" :aria-sort="ariaSort('result')"><button class="sortbtn" type="button" data-sort="result" @click="toggle('result')">Wynik · 12 mies. {{ sort.key === 'result' ? (sort.dir === 1 ? '▴' : '▾') : '' }}</button></th>
-            <th>Obłożenie teraz</th>
+            <th :aria-sort="ariaSort('load')"><button class="sortbtn" type="button" data-sort="load" @click="toggle('load')">Obłożenie teraz {{ sort.key === 'load' ? (sort.dir === 1 ? '▴' : '▾') : '' }}</button></th>
           </tr>
         </thead>
         <tbody>
@@ -101,7 +107,7 @@ const ariaSort = (key: SortKey) => (sort.value.key === key ? (sort.value.dir ===
       <div v-if="!detail.stops.length" class="muted">—</div>
       <div v-for="s in detail.stops" :key="s!.id" class="li">
         <span>{{ s!.name }}</span>
-        <span class="muted">oczekuje <template v-for="w in s!.waiting" :key="w.cargo">{{ cargoEmoji(w.cargo) }} <span class="num txt">{{ fmtInt(w.count) }}</span> </template><template v-if="!s!.waiting.length">0</template></span>
+        <span class="muted">oczekuje <template v-for="w in s!.waiting" :key="w.cargo">{{ cargoEmoji(w.cargo) }} {{ cargoLabel(w.cargo) }} <span class="num txt">{{ fmtInt(w.count) }}</span> </template><template v-if="!s!.waiting.length">0</template></span>
       </div>
       <h3>🚆 Pojazdy na linii</h3>
       <div v-if="!detail.vehicles.length" class="muted">—</div>
@@ -129,6 +135,7 @@ const ariaSort = (key: SortKey) => (sort.value.key === key ? (sort.value.dir ===
 h2 { margin: 0; font-size: 22px; }
 h3 { margin: 10px 0 0; font-size: 15px; }
 .sortbtn { all: unset; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; font: inherit; }
+.sortbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .loadcell { display: flex; align-items: center; gap: 8px; }
 .loadcell .bar { width: 90px; }
 .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }

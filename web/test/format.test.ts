@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fmtDecimal, fmtGameDate, fmtInt, fmtMBh, fmtMonthIndex, fmtPct, fmtSigned, plSzansa } from '../src/lib/format';
+import { fmtDecimal, fmtGameDate, fmtInt, fmtMBh, fmtMonthIndex, fmtPct, fmtSigned, plMiasto, plSzansa } from '../src/lib/format';
 
 const nb = (s: string) => s.replace(/\s/g, ' ');
 
@@ -36,5 +36,13 @@ describe('format', () => {
     expect(plSzansa(5)).toBe('szans');
     expect(plSzansa(12)).toBe('szans');
     expect(plSzansa(22)).toBe('szanse');
+  });
+  it('Polska liczba mnogości dla miast', () => {
+    expect(plMiasto(1)).toBe('miasto nieobsługiwane');
+    expect(plMiasto(2)).toBe('miasta nieobsługiwane');
+    expect(plMiasto(4)).toBe('miasta nieobsługiwane');
+    expect(plMiasto(5)).toBe('miast nieobsługiwanych');
+    expect(plMiasto(12)).toBe('miast nieobsługiwanych');
+    expect(plMiasto(22)).toBe('miasta nieobsługiwane');
   });
 });

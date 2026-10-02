@@ -40,4 +40,23 @@ describe('Przegląd', () => {
   it('pusty stan', () => {
     expect(mountWith(emptyState()).text()).toContain('Czekam na dane z gry');
   });
+  it('brak rezerwy: bez jednostki „mies."', () => {
+    const s = fixtureState();
+    s.snapshot.finance!.runningCosts12m = 0;
+    const w = mountWith(s);
+    const card = w.findAll('.card').find((c) => c.text().includes('Rezerwa'))!;
+    expect(card.text()).toContain('—');
+    expect(card.text()).not.toContain('mies.');
+  });
+  it('najlepszy pojazd: klasa wg znaku', () => {
+    const s = fixtureState();
+    expect(mountWith(s).find('.facts .num.pos').exists()).toBe(true);
+    s.snapshot.vehicles.forEach((v) => { v.operatingResult12m = v.id === 51559 ? -5 : null; });
+    const w = mountWith(s);
+    const v = w.findAll('.facts .num').find((e) => e.text() === '−5')!;
+    expect(v.classes()).toContain('neg');
+    s.snapshot.vehicles[0].operatingResult12m = 0;
+    const z = mountWith(s).findAll('.facts .num').find((e) => e.text() === '0')!;
+    expect(z.classes()).toContain('muted');
+  });
 });

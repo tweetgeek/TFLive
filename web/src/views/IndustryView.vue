@@ -2,7 +2,7 @@
 import type { Industry } from '@tflive/shared';
 import { computed, ref } from 'vue';
 import { alertsFor, gameDateAt, isServed } from '../lib/derive';
-import { alertEmoji, cargoEmoji, industryEmoji } from '../lib/emoji';
+import { alertEmoji, cargoEmoji, cargoLabel, industryEmoji } from '../lib/emoji';
 import { fmtGameDate, fmtInt, fmtPct } from '../lib/format';
 import { useStore } from '../state/store';
 
@@ -53,14 +53,14 @@ function tag(i: Industry) {
         <template v-if="i.inputs.length">
           <div class="lbl">Wejścia</div>
           <div v-for="x in i.inputs" :key="x.cargo" class="li">
-            <span>{{ cargoEmoji(x.cargo) }} {{ x.cargo }}</span>
+            <span>{{ cargoEmoji(x.cargo) }} {{ cargoLabel(x.cargo) }}</span>
             <span class="muted">magazyn <span class="num txt">{{ fmtInt(x.stock) }}</span> · {{ date(x.lastReceivedTime) ? `ostatnia dostawa: ${date(x.lastReceivedTime)}` : 'brak danych o dostawie' }}</span>
           </div>
         </template>
         <template v-if="i.outputs.length">
           <div class="lbl">Produkcja</div>
           <div v-for="o in i.outputs" :key="o.cargo">
-            <div class="li"><span>{{ cargoEmoji(o.cargo) }} {{ o.cargo }}</span><span class="num">{{ fmtInt(o.stock) }}/{{ fmtInt(o.capacity) }} · {{ fmtPct(o.capacity > 0 ? o.stock / o.capacity : null) }}</span></div>
+            <div class="li"><span>{{ cargoEmoji(o.cargo) }} {{ cargoLabel(o.cargo) }}</span><span class="num">{{ fmtInt(o.stock) }}/{{ fmtInt(o.capacity) }} · {{ fmtPct(o.capacity > 0 ? o.stock / o.capacity : null) }}</span></div>
             <div class="bar"><span :class="{ warn: o.capacity > 0 && o.stock / o.capacity >= 0.8 }" :style="{ width: fmtPct(o.capacity > 0 ? Math.min(1, o.stock / o.capacity) : 0) }"></span></div>
           </div>
         </template>

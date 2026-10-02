@@ -5,10 +5,14 @@ import { useStore } from '../state/store';
 const { state } = useStore();
 const message = computed(() => {
   if (state.conn !== 'open') return { tone: 'neg', text: '🔌 Brak połączenia z serwerem TFLive — łączę ponownie…' };
+  if (!state.received) return { tone: 'info', text: '⏳ Łączę z serwerem…' };
   if (state.status.logState === 'missing') return { tone: 'neg', text: '📄 Nie znaleziono logu gry. Uruchom grę z modem tflive albo ustaw „logPath" w config/config.json.' };
+  const err = state.status.lastError;
+  if (err) return { tone: 'warn', text: `⚠️ ${err}${err.includes('unsupported-version') ? ' — zaktualizuj mod lub serwer.' : ''}` };
   if (!state.status.live && state.status.paused) return { tone: 'info', text: '⏸️ Pauza w grze — dane z chwili zatrzymania.' };
   if (!state.status.live) return { tone: 'warn', text: '⏳ Brak nowych danych z gry — gra w menu, zamknięta albo mod wyłączony. Pokazuję ostatni znany stan.' };
-  if (state.status.lastError) return { tone: 'warn', text: `⚠️ ${state.status.lastError}` };
+  const modErrors = state.snapshot.meta?.errors ?? [];
+  if (modErrors.length) return { tone: 'warn', text: `⚠️ Mod zgłosił błędy: ${modErrors[0]}${modErrors.length > 1 ? ` (+${modErrors.length - 1})` : ''}` };
   return null;
 });
 </script>
