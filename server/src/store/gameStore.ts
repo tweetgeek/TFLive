@@ -24,6 +24,7 @@ export class GameStore {
   private currentSessionId: string | null = null;
   private lastGameTime: number | null = null;
   private lastMonth: number | null = null;
+  private lastMetaSessionId: string | null = null;
   private pending = new Map<SectionName, Pending>();
 
   snapshot(): Snapshot {
@@ -40,6 +41,7 @@ export class GameStore {
     this.currentSessionId = null;
     this.lastGameTime = null;
     this.lastMonth = null;
+    this.lastMetaSessionId = null;
     this.pending.clear();
   }
 
@@ -73,12 +75,19 @@ export class GameStore {
         const data = decoded.data;
         if (this.lastGameTime !== null && h.gameTime < this.lastGameTime - data.dayMs) {
           const saveId = h.saveId;
-          this.reset();
-          this.currentSave = saveId;
+          if (h.sessionId === this.lastMetaSessionId) {
+            this.pending.clear();
+            this.lastMonth = null;
+          } else {
+            this.reset();
+            this.currentSave = saveId;
+            this.currentSessionId = h.sessionId;
+          }
           events.push({ type: 'rewind', saveId, toGameTime: h.gameTime, toMonth: monthIndex(data.date) });
         }
         this.snap = { ...this.snap, meta: { ...data, saveId: h.saveId, sessionId: h.sessionId, gameTime: h.gameTime } };
         this.lastGameTime = h.gameTime;
+        this.lastMetaSessionId = h.sessionId;
         const month = monthIndex(data.date);
         if (month !== this.lastMonth) events.push({ type: 'new-month', saveId: h.saveId, month });
         this.lastMonth = month;
