@@ -45,7 +45,7 @@ tr.clickable:focus-visible td { background: #1d2630; }
 .dense { --fs: 1em; --cell-py: 4px; --cell-px: 8px; --ctl-h: 28px; --gap: 8px; }
 .dense .chip { padding: 0 10px; font-size: .9em; }
 .dense .btn { padding: 0 8px; font-size: .9em; }
-.dense th { font-size: .75em; }
+.dense th { font-size: .85em; }
 .dense thead th { position: sticky; top: -6px; background: var(--surface); z-index: 1; }
 .dense .table-wrap { background: transparent; border: none; border-radius: 0; overflow: visible; }
 .dense .empty { padding: 16px 8px; font-size: 1em; }

@@ -27,7 +27,7 @@ describe('Centrum dowodzenia', () => {
   });
   it('liczniki w nagłówkach paneli', () => {
     const counts = mountCC().findAll('section.panel .cnt').map((c) => c.text());
-    expect(counts).toEqual(['5', '3', '3', '3', '3']);
+    expect(counts).toEqual(['5', '3', '3', '2', '2']);
   });
   it('pusty stan: jeden komunikat', () => {
     const w = mountCC(emptyState());

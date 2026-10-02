@@ -28,7 +28,7 @@ const reserve = computed(() => reserveMonths(fin.value));
 .kpi.soft { color: var(--soft); }
 .unit { font-size: 16px; color: var(--muted); }
 .compact .card { padding: 6px 12px; border-radius: 8px; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; min-width: 0; }
-.compact .lbl { font-size: .75em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.compact .lbl { font-size: .85em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .compact .kpi { font-size: 1.5em; margin-top: 0; white-space: nowrap; }
 .compact .unit { font-size: .6em; }
 @media (max-width: 759px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } .kpi { font-size: 22px; } }

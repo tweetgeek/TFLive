@@ -98,10 +98,12 @@ const ariaSort = (key: SortKey) => (sort.value.key === key ? (sort.value.dir ===
               @keydown.enter="choose(r.line.id)"
             >
               <td class="name">
-                {{ r.line.name }}
-                <span v-if="!r.line.vehicleIds.length" class="tag tag-warn">🚫 bez pojazdów</span>
-                <span v-if="r.rampUp" class="tag tag-info">🌱 rozruch</span>
-                <span v-if="r.alerts.length" class="tag tag-warn">⚠️ {{ r.alerts.length }}</span>
+                <div class="namecell">
+                  <span class="lname" :title="r.line.name">{{ r.line.name }}</span>
+                  <span v-if="!r.line.vehicleIds.length" class="tag tag-warn">🚫 bez pojazdów</span>
+                  <span v-if="r.rampUp" class="tag tag-info">🌱 rozruch</span>
+                  <span v-if="r.alerts.length" class="tag tag-warn">⚠️ {{ r.alerts.length }}</span>
+                </div>
               </td>
               <td><span class="tag tag-neutral" :title="modeLabel(r.line.mode)">{{ modeEmoji(r.line.mode) }}{{ dense ? '' : ' ' + modeLabel(r.line.mode) }}</span></td>
               <td class="r num">{{ r.line.vehicleIds.length }}</td>
@@ -188,7 +190,12 @@ h3 { margin: 10px 0 0; font-size: 15px; }
 .mlab { font-size: 12px; }
 .layout.dense { display: block; }
 .dense .loadcell .bar { width: 56px; }
-.dense .name { max-width: 0; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dense .name { max-width: 0; width: 100%; }
+.namecell { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.dense .namecell { flex-wrap: nowrap; }
+.dense .lname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.namecell .tag { flex-shrink: 0; }
+.exp .lbl { margin-right: 6px; }
 .spark { display: inline-flex; align-items: flex-end; gap: 2px; height: 16px; }
 .spark > span { width: 6px; border-radius: 1px; }
 .spark .p { background: var(--pos-fill); } .spark .n { background: var(--neg-fill); }
