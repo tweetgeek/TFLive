@@ -1,0 +1,707 @@
+626:[2026-10-01 18:05:54Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P0 hello
+627:[2026-10-01 18:05:54Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+628:[2026-10-01 18:05:54Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+629:[2026-10-01 18:05:54Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+630:[2026-10-01 18:05:54Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+631:[2026-10-01 18:05:54Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10065000 gameTime0=10064800 timeOfDaySec=50452
+30863:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 balance=1155058 firstIncomeTime=0 lastIncomeTime=10045200
+30864:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=1155058 loan=13554171
+30865:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=1155058 playerOps(first..now)=14423641
+30866:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+30867:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+30868:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0001 lines=14
+30869:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+31343:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10065000
+31344:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=154 longest=61983 startTime=8035600 now=10065000
+31345:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10065000
+31346:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10065000
+31352:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.60313695669174
+31353:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.57302629947662 modelId=4264
+31354:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+31364:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P8 new saveId=48bf11b716dbdab9
+31365:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0001 vehiclesRead=29 sink=493
+31366:[2026-10-01 18:06:00Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10065000 clock=151.03
+31375:[2026-10-01 18:06:54Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0005 vehicleDetailSec=0.0052 vehiclesRead=29 sink=493
+31376:[2026-10-01 18:06:54Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10065200 clock=204.09
+31381:[2026-10-01 18:06:54Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P0 hello
+31382:[2026-10-01 18:06:54Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+31383:[2026-10-01 18:06:54Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+31384:[2026-10-01 18:06:54Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+31385:[2026-10-01 18:06:54Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+31386:[2026-10-01 18:06:54Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10065400 gameTime0=10065200 timeOfDaySec=50490
+61593:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 balance=1155058 firstIncomeTime=0 lastIncomeTime=10045200
+61594:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=1155058 loan=13554171
+61595:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=1155058 playerOps(first..now)=14423641
+61596:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+61597:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+61598:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0001 lines=14
+61599:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+62073:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10065400
+62074:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=154 longest=61983 startTime=8035600 now=10065400
+62075:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10065400
+62076:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10065400
+62082:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.60313695669174
+62083:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.57302629947662 modelId=4264
+62084:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+62094:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10065200
+62095:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=493
+62096:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10065400 clock=216.48
+62101:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P0 hello
+62102:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+62103:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+62104:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+62105:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+62106:[2026-10-01 18:07:00Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10065600 gameTime0=10065400 timeOfDaySec=50509
+92316:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 balance=1155058 firstIncomeTime=0 lastIncomeTime=10045200
+92317:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=1155058 loan=13554171
+92318:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=1155058 playerOps(first..now)=14423641
+92319:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+92320:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+92321:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0003 lines=14
+92322:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+92796:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10065600
+92797:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=154 longest=61983 startTime=8035600 now=10065600
+92798:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10065600
+92799:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10065600
+92805:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.60313695669174
+92806:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.57302629947662 modelId=4264
+92807:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+92817:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10065400
+92818:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=493
+92819:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10065600 clock=228.89
+92824:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P0 hello
+92825:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+92826:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+92827:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+92828:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+92829:[2026-10-01 18:07:05Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10065800 gameTime0=10065600 timeOfDaySec=50528
+123037:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 balance=1155058 firstIncomeTime=0 lastIncomeTime=10045200
+123038:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=1155058 loan=13554171
+123039:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=1155058 playerOps(first..now)=14423641
+123040:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+123041:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+123042:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+123043:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+123517:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10065800
+123518:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=154 longest=61983 startTime=8035600 now=10065800
+123519:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10065800
+123520:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10065800
+123526:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.60313695669174
+123527:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.57302629947662 modelId=4264
+123528:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+123538:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10065600
+123539:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0001 vehiclesRead=29 sink=493
+123540:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10065800 clock=242.06
+123545:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0003 vehiclesRead=29 sink=493
+123546:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10066000 clock=242.11
+123551:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P0 hello
+123552:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+123553:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+123554:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+123555:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+123556:[2026-10-01 18:07:11Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10066200 gameTime0=10066000 timeOfDaySec=50566
+153763:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 balance=1155058 firstIncomeTime=0 lastIncomeTime=10045200
+153764:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=1155058 loan=13554171
+153765:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=1155058 playerOps(first..now)=14423641
+153766:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+153767:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+153768:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+153769:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+154243:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10066200
+154244:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=154 longest=61983 startTime=8035600 now=10066200
+154245:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10066200
+154246:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10066200
+154252:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.60313695669174
+154253:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.57302629947662 modelId=4264
+154254:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+154264:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10066000
+154265:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=493
+154266:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10066200 clock=254.26
+154271:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P0 hello
+154272:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+154273:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+154274:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+154275:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+154276:[2026-10-01 18:07:17Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10066400 gameTime0=10066200 timeOfDaySec=50576
+184484:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 balance=1155058 firstIncomeTime=0 lastIncomeTime=10045200
+184485:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=1155058 loan=13554171
+184486:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=1155058 playerOps(first..now)=14423641
+184487:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+184488:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+184489:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+184490:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+184964:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10066400
+184965:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=154 longest=61983 startTime=8035600 now=10066400
+184966:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10066400
+184967:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10066400
+184973:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.60313695669174
+184974:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.57302629947662 modelId=4264
+184975:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+184985:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10066200
+184986:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=493
+184987:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10066400 clock=264.94
+184992:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P0 hello
+184993:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+184994:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+184995:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+184996:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+184997:[2026-10-01 18:07:21Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10066600 gameTime0=10066400 timeOfDaySec=50576
+215204:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 balance=1155058 firstIncomeTime=0 lastIncomeTime=10045200
+215205:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=1155058 loan=13554171
+215206:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=1155058 playerOps(first..now)=14423641
+215207:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+215208:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+215209:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+215210:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+215684:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10066600
+215685:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=154 longest=61983 startTime=8035600 now=10066600
+215686:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10066600
+215687:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10066600
+215693:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.60313695669174
+215694:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.57302629947662 modelId=4264
+215695:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+215705:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10066400
+215706:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=493
+215707:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10066600 clock=275.72
+215712:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P0 hello
+215713:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+215714:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+215715:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+215716:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+215717:[2026-10-01 18:07:26Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10066800 gameTime0=10066600 timeOfDaySec=50576
+245924:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 balance=1155058 firstIncomeTime=0 lastIncomeTime=10045200
+245925:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=1155058 loan=13554171
+245926:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=1155058 playerOps(first..now)=14423641
+245927:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+245928:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+245929:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+245930:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+246404:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10066800
+246405:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=154 longest=61983 startTime=8035600 now=10066800
+246406:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10066800
+246407:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10066800
+246413:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.60313695669174
+246414:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.57302629947662 modelId=4264
+246415:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+246425:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10066600
+246426:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=493
+246427:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10066800 clock=288.41
+246432:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0001 vehiclesRead=29 sink=493
+246433:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10067000 clock=288.42
+246438:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0004 vehicleDetailSec=0.0002 vehiclesRead=29 sink=493
+246439:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10067400 clock=288.44
+246444:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0003 vehiclesRead=29 sink=493
+246445:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10067600 clock=288.53
+246450:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P0 hello
+246451:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+246452:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+246453:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+246454:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+246455:[2026-10-01 18:07:32Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10067800 gameTime0=10067400 timeOfDaySec=50576
+276662:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 balance=1155058 firstIncomeTime=0 lastIncomeTime=10045200
+276663:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=1155058 loan=13554171
+276664:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=1155058 playerOps(first..now)=14423641
+276665:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+276666:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+276667:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0002 lines=14
+276668:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+277142:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10067800
+277143:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=154 longest=61983 startTime=8035600 now=10067800
+277144:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10067800
+277145:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10067800
+277151:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.60313695669174
+277152:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.57302629947662 modelId=4264
+277153:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+277163:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10067600
+277164:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0001 vehiclesRead=29 sink=493
+277165:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10067800 clock=301.17
+277170:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0003 vehiclesRead=29 sink=501
+277171:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10068000 clock=301.18
+277176:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0004 vehiclesRead=29 sink=501
+277177:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10068200 clock=301.19
+277182:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0007 vehiclesRead=29 sink=501
+277183:[2026-10-01 18:07:38Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10068400 clock=301.23
+277192:[2026-10-01 18:07:39Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P0 hello
+277193:[2026-10-01 18:07:39Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+277194:[2026-10-01 18:07:39Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+277195:[2026-10-01 18:07:39Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+277196:[2026-10-01 18:07:39Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+277197:[2026-10-01 18:07:39Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10068600 gameTime0=10068400 timeOfDaySec=50576
+307421:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 balance=1155058 firstIncomeTime=0 lastIncomeTime=10045200
+307422:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=1155058 loan=13554171
+307423:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=1155058 playerOps(first..now)=14423641
+307424:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+307425:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+307426:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0001 lines=14
+307427:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+307901:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10068600
+307902:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=154 longest=61983 startTime=8035600 now=10068600
+307903:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10068600
+307904:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10068600
+307910:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.60198712348938
+307911:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.57165735960007 modelId=4264
+307912:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+307922:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10068400
+307923:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=501
+307924:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10068600 clock=315.61
+307929:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0004 vehiclesRead=29 sink=501
+307930:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10068800 clock=315.66
+307935:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0003 vehiclesRead=29 sink=501
+307936:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10069000 clock=316.24
+307941:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0003 vehicleDetailSec=0.0004 vehiclesRead=29 sink=501
+307942:[2026-10-01 18:07:45Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10069200 clock=316.81
+307947:[2026-10-01 18:07:46Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0003 vehiclesRead=29 sink=501
+307948:[2026-10-01 18:07:46Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10069400 clock=317.36
+307954:[2026-10-01 18:07:47Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0001 vehiclesRead=29 sink=501
+307955:[2026-10-01 18:07:47Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10069800 clock=318.37
+307960:[2026-10-01 18:07:47Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0004 vehicleDetailSec=0.0003 vehiclesRead=29 sink=501
+307961:[2026-10-01 18:07:47Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10070200 clock=319.38
+307966:[2026-10-01 18:07:48Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0003 vehiclesRead=29 sink=501
+307967:[2026-10-01 18:07:48Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10070600 clock=320.28
+307972:[2026-10-01 18:07:49Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0004 vehiclesRead=29 sink=501
+307973:[2026-10-01 18:07:49Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10070800 clock=320.76
+307978:[2026-10-01 18:07:51Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P0 hello
+307979:[2026-10-01 18:07:51Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+307980:[2026-10-01 18:07:51Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+307981:[2026-10-01 18:07:51Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+307982:[2026-10-01 18:07:51Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+307983:[2026-10-01 18:07:51Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10072200 gameTime0=10072000 timeOfDaySec=50576
+338214:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 balance=1155058 firstIncomeTime=0 lastIncomeTime=10045200
+338215:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=1155058 loan=13554171
+338216:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=1155058 playerOps(first..now)=14423641
+338217:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+338218:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+338219:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0002 lines=14
+338220:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+338694:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10072200
+338695:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=154 longest=61983 startTime=8035600 now=10072200
+338696:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10072200
+338697:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10072200
+338703:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.60083729028702
+338704:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.57028841972351 modelId=4264
+338705:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+338715:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10070800
+338716:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0001 vehiclesRead=29 sink=509
+338717:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10072200 clock=338.55
+338722:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0010 vehiclesRead=29 sink=509
+338723:[2026-10-01 18:07:58Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=338.57
+338728:[2026-10-01 18:07:59Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0003 vehicleDetailSec=0.0002 vehiclesRead=29 sink=509
+338729:[2026-10-01 18:07:59Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=338.96
+338734:[2026-10-01 18:07:59Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0005 vehiclesRead=29 sink=509
+338735:[2026-10-01 18:07:59Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=339.18
+338740:[2026-10-01 18:07:59Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0006 vehiclesRead=29 sink=509
+338741:[2026-10-01 18:07:59Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=339.59
+338746:[2026-10-01 18:08:00Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0007 vehiclesRead=29 sink=509
+338747:[2026-10-01 18:08:00Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=339.80
+338752:[2026-10-01 18:08:00Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0001 vehiclesRead=29 sink=509
+338753:[2026-10-01 18:08:00Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=340.04
+338758:[2026-10-01 18:08:00Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0003 vehiclesRead=29 sink=509
+338759:[2026-10-01 18:08:00Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=340.78
+338764:[2026-10-01 18:08:01Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0001 vehiclesRead=29 sink=509
+338765:[2026-10-01 18:08:01Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=341.27
+338770:[2026-10-01 18:08:02Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0003 vehicleDetailSec=0.0004 vehiclesRead=29 sink=509
+338771:[2026-10-01 18:08:02Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=343.20
+338776:[2026-10-01 18:08:04Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0003 vehiclesRead=29 sink=509
+338777:[2026-10-01 18:08:04Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=345.11
+338782:[2026-10-01 18:08:07Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0003 vehiclesRead=29 sink=509
+338783:[2026-10-01 18:08:07Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=348.85
+338788:[2026-10-01 18:08:07Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0008 vehiclesRead=29 sink=509
+338789:[2026-10-01 18:08:07Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=349.08
+338794:[2026-10-01 18:08:08Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0003 vehiclesRead=29 sink=509
+338795:[2026-10-01 18:08:08Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=350.29
+338800:[2026-10-01 18:08:09Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0003 vehiclesRead=29 sink=509
+338801:[2026-10-01 18:08:09Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=351.25
+338806:[2026-10-01 18:08:10Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P0 hello
+338807:[2026-10-01 18:08:10Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+338808:[2026-10-01 18:08:10Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+338809:[2026-10-01 18:08:10Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+338810:[2026-10-01 18:08:10Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+338811:[2026-10-01 18:08:10Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10072200 gameTime0=10072200 timeOfDaySec=50576
+369042:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 balance=1155058 firstIncomeTime=0 lastIncomeTime=10045200
+369043:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=1155058 loan=13554171
+369044:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=1155058 playerOps(first..now)=14423641
+369045:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+369046:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+369047:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+369048:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+369522:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10072200
+369523:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=154 longest=61983 startTime=8035600 now=10072200
+369524:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10072200
+369525:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10072200
+369531:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.60083729028702
+369532:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.57028841972351 modelId=4264
+369533:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+369543:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10072200
+369544:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=509
+369545:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=365.23
+369550:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0002 vehiclesRead=29 sink=509
+369551:[2026-10-01 18:08:16Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=365.43
+369556:[2026-10-01 18:08:17Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0001 vehiclesRead=29 sink=509
+369557:[2026-10-01 18:08:17Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=365.90
+369562:[2026-10-01 18:08:17Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=509
+369563:[2026-10-01 18:08:17Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=366.39
+369568:[2026-10-01 18:08:18Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0003 vehiclesRead=29 sink=509
+369569:[2026-10-01 18:08:18Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=366.86
+369574:[2026-10-01 18:08:18Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0003 vehicleDetailSec=0.0002 vehiclesRead=29 sink=509
+369575:[2026-10-01 18:08:18Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=367.10
+369580:[2026-10-01 18:08:18Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0005 vehiclesRead=29 sink=509
+369581:[2026-10-01 18:08:18Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=367.58
+369586:[2026-10-01 18:08:18Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0007 vehiclesRead=29 sink=509
+369587:[2026-10-01 18:08:18Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=367.82
+369592:[2026-10-01 18:08:19Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0003 vehiclesRead=29 sink=509
+369593:[2026-10-01 18:08:19Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0 gameTime=10072200 clock=368.52
+369598:[2026-10-01 18:08:19Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0003 vehiclesRead=29 sink=509
+369599:[2026-10-01 18:08:19Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10072600 clock=369.06
+369604:[2026-10-01 18:08:21Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0003 vehicleDetailSec=0.0002 vehiclesRead=29 sink=509
+369605:[2026-10-01 18:08:21Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10073400 clock=370.78
+369610:[2026-10-01 18:08:25Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0005 vehicleDetailSec=0.0001 vehiclesRead=29 sink=509
+369611:[2026-10-01 18:08:25Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10075200 clock=374.58
+369616:[2026-10-01 18:08:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0004 vehicleDetailSec=0.0003 vehiclesRead=29 sink=509
+369617:[2026-10-01 18:08:26Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10075800 clock=375.93
+369622:[2026-10-01 18:08:28Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0007 vehiclesRead=29 sink=517
+369623:[2026-10-01 18:08:28Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10076600 clock=378.02
+369628:[2026-10-01 18:08:28Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0003 vehiclesRead=29 sink=517
+369629:[2026-10-01 18:08:28Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10076800 clock=378.46
+369634:[2026-10-01 18:08:28Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0006 vehicleDetailSec=0.0009 vehiclesRead=29 sink=517
+369635:[2026-10-01 18:08:28Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10077000 clock=378.92
+369640:[2026-10-01 18:08:29Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0005 vehiclesRead=29 sink=517
+369641:[2026-10-01 18:08:29Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10077200 clock=379.35
+369646:[2026-10-01 18:08:31Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0003 vehiclesRead=29 sink=517
+369647:[2026-10-01 18:08:31Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10078200 clock=381.64
+369652:[2026-10-01 18:08:32Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0003 vehicleDetailSec=0.0006 vehiclesRead=29 sink=517
+369653:[2026-10-01 18:08:32Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10078800 clock=383.27
+369658:[2026-10-01 18:08:35Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0001 vehiclesRead=29 sink=442
+369659:[2026-10-01 18:08:35Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10080600 clock=387.83
+369664:[2026-10-01 18:08:36Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0001 vehiclesRead=29 sink=442
+369665:[2026-10-01 18:08:36Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10081000 clock=388.80
+369670:[2026-10-01 18:08:38Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0004 vehiclesRead=29 sink=442
+369671:[2026-10-01 18:08:38Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10081600 clock=390.21
+369676:[2026-10-01 18:08:39Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0003 vehicleDetailSec=0.0006 vehiclesRead=29 sink=442
+369677:[2026-10-01 18:08:39Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10082200 clock=391.63
+369682:[2026-10-01 18:08:39Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0003 vehiclesRead=29 sink=442
+369683:[2026-10-01 18:08:39Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10082400 clock=392.08
+369688:[2026-10-01 18:08:40Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0003 vehiclesRead=29 sink=442
+369689:[2026-10-01 18:08:40Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10082800 clock=392.97
+369694:[2026-10-01 18:08:40Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0005 vehiclesRead=29 sink=442
+369695:[2026-10-01 18:08:40Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10083000 clock=393.45
+369700:[2026-10-01 18:08:41Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0004 vehiclesRead=29 sink=442
+369701:[2026-10-01 18:08:41Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10083600 clock=394.87
+369706:[2026-10-01 18:08:42Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0000 vehiclesRead=29 sink=450
+369707:[2026-10-01 18:08:42Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10084200 clock=395.85
+369712:[2026-10-01 18:08:43Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0004 vehiclesRead=29 sink=450
+369713:[2026-10-01 18:08:43Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10086000 clock=396.85
+369718:[2026-10-01 18:08:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0003 vehiclesRead=29 sink=459
+369719:[2026-10-01 18:08:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10091800 clock=399.39
+369724:[2026-10-01 18:08:46Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0001 vehiclesRead=29 sink=470
+369725:[2026-10-01 18:08:46Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10094000 clock=400.18
+369730:[2026-10-01 18:08:46Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0003 vehicleDetailSec=0.0002 vehiclesRead=29 sink=478
+369731:[2026-10-01 18:08:46Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10096000 clock=401.19
+369736:[2026-10-01 18:08:47Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0003 vehiclesRead=29 sink=478
+369737:[2026-10-01 18:08:47Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10096800 clock=401.48
+369742:[2026-10-01 18:08:47Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0003 vehiclesRead=29 sink=478
+369743:[2026-10-01 18:08:47Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10097400 clock=401.75
+369748:[2026-10-01 18:08:48Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=486
+369749:[2026-10-01 18:08:48Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10100800 clock=403.30
+369754:[2026-10-01 18:08:49Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0003 vehiclesRead=29 sink=486
+369755:[2026-10-01 18:08:49Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10101800 clock=404.23
+369760:[2026-10-01 18:08:53Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0013 vehiclesRead=29 sink=493
+369761:[2026-10-01 18:08:53Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10104000 clock=409.59
+369766:[2026-10-01 18:08:53Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0004 vehiclesRead=29 sink=493
+369767:[2026-10-01 18:08:53Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10104200 clock=410.03
+369772:[2026-10-01 18:08:54Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0002 vehiclesRead=29 sink=493
+369773:[2026-10-01 18:08:54Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10104400 clock=410.52
+369778:[2026-10-01 18:08:54Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0004 vehiclesRead=29 sink=493
+369779:[2026-10-01 18:08:54Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10104600 clock=410.98
+369784:[2026-10-01 18:08:55Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0006 vehiclesRead=29 sink=493
+369785:[2026-10-01 18:08:55Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10105200 clock=412.21
+369790:[2026-10-01 18:08:55Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0008 vehiclesRead=29 sink=493
+369791:[2026-10-01 18:08:55Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10105400 clock=412.61
+369796:[2026-10-01 18:08:56Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0009 vehiclesRead=29 sink=493
+369797:[2026-10-01 18:08:56Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10106000 clock=413.80
+369802:[2026-10-01 18:08:57Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0000 vehiclesRead=29 sink=493
+369803:[2026-10-01 18:08:57Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10106400 clock=414.58
+369808:[2026-10-01 18:08:58Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0003 vehicleDetailSec=0.0017 vehiclesRead=29 sink=493
+369809:[2026-10-01 18:08:58Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10107000 clock=415.76
+369814:[2026-10-01 18:08:59Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0002 vehiclesRead=29 sink=493
+369815:[2026-10-01 18:08:59Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10107600 clock=416.90
+369830:[2026-10-01 18:09:10Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0003 vehiclesRead=29 sink=493
+369831:[2026-10-01 18:09:10Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10107800 clock=431.17
+369836:[2026-10-01 18:09:10Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0004 vehicleDetailSec=0.0003 vehiclesRead=29 sink=500
+369837:[2026-10-01 18:09:10Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10108000 clock=431.21
+369842:[2026-10-01 18:09:11Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0002 vehiclesRead=29 sink=500
+369843:[2026-10-01 18:09:11Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10108200 clock=431.56
+370120:[2026-10-01 18:09:30Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P0 hello
+370121:[2026-10-01 18:09:30Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+370122:[2026-10-01 18:09:30Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+370123:[2026-10-01 18:09:30Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+370124:[2026-10-01 18:09:30Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+370125:[2026-10-01 18:09:30Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10107800 gameTime0=10107600 timeOfDaySec=50576
+400477:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 balance=934156 firstIncomeTime=0 lastIncomeTime=10098000
+400478:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=934156 loan=13437504
+400479:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=934156 playerOps(first..now)=14327573
+400480:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+400481:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+400482:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0001 lines=14
+400483:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+400957:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10107800
+400958:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=156 longest=61983 startTime=8035600 now=10107800
+400959:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10107800
+400960:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10107800
+400966:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.59163820743561
+400967:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.55933690071106 modelId=4264
+400968:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+400978:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10107600
+400979:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0001 vehiclesRead=29 sink=493
+400980:[2026-10-01 18:09:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10107800 clock=492.83
+400989:[2026-10-01 18:09:51Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0003 vehiclesRead=29 sink=500
+400990:[2026-10-01 18:09:51Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10108000 clock=509.67
+400995:[2026-10-01 18:09:51Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P0 hello
+400996:[2026-10-01 18:09:51Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+400997:[2026-10-01 18:09:51Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+400998:[2026-10-01 18:09:51Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+400999:[2026-10-01 18:09:51Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+401000:[2026-10-01 18:09:51Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10108200 gameTime0=10108000 timeOfDaySec=50576
+431339:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 balance=934156 firstIncomeTime=0 lastIncomeTime=10098000
+431340:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=934156 loan=13437504
+431341:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=934156 playerOps(first..now)=14327573
+431342:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+431343:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+431344:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0013 lines=14
+431345:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+431819:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10108200
+431820:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=156 longest=61983 startTime=8035600 now=10108200
+431821:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10108200
+431822:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10108200
+431828:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.5904883146286
+431829:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.5579679608345 modelId=4264
+431830:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+431840:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10108000
+431841:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=500
+431842:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10108200 clock=522.08
+431847:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P0 hello
+431848:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+431849:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+431850:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+431851:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+431852:[2026-10-01 18:09:56Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10108400 gameTime0=10108200 timeOfDaySec=50576
+462191:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 balance=934156 firstIncomeTime=0 lastIncomeTime=10098000
+462192:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=934156 loan=13437504
+462193:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=934156 playerOps(first..now)=14327573
+462194:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+462195:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+462196:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+462197:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+462671:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10108400
+462672:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=156 longest=61983 startTime=8035600 now=10108400
+462673:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10108400
+462674:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10108400
+462680:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.5904883146286
+462681:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.5579679608345 modelId=4264
+462682:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+462692:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10108200
+462693:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=500
+462694:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10108400 clock=532.35
+462699:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P0 hello
+462700:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+462701:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+462702:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+462703:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+462704:[2026-10-01 18:10:01Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10108600 gameTime0=10108400 timeOfDaySec=50576
+493043:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 balance=934156 firstIncomeTime=0 lastIncomeTime=10098000
+493044:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=934156 loan=13437504
+493045:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=934156 playerOps(first..now)=14327573
+493046:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+493047:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+493048:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+493049:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+493523:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10108600
+493524:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=156 longest=61983 startTime=8035600 now=10108600
+493525:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10108600
+493526:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10108600
+493532:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.5904883146286
+493533:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.5579679608345 modelId=4264
+493534:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+493544:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10108400
+493545:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=500
+493546:[2026-10-01 18:10:06Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10108600 clock=543.09
+493551:[2026-10-01 18:10:07Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P0 hello
+493552:[2026-10-01 18:10:07Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+493553:[2026-10-01 18:10:07Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+493554:[2026-10-01 18:10:07Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+493555:[2026-10-01 18:10:07Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+493556:[2026-10-01 18:10:07Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10108800 gameTime0=10108600 timeOfDaySec=50576
+523895:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 balance=934156 firstIncomeTime=0 lastIncomeTime=10098000
+523896:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=934156 loan=13437504
+523897:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=934156 playerOps(first..now)=14327573
+523898:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+523899:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+523900:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+523901:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+524375:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10108800
+524376:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=156 longest=61983 startTime=8035600 now=10108800
+524377:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10108800
+524378:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10108800
+524384:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.5904883146286
+524385:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.5579679608345 modelId=4264
+524386:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+524396:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10108600
+524397:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0001 vehiclesRead=29 sink=500
+524398:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10108800 clock=555.10
+524403:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P0 hello
+524404:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+524405:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+524406:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+524407:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+524408:[2026-10-01 18:10:12Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10109000 gameTime0=10108800 timeOfDaySec=50576
+554747:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P5 balance=934156 firstIncomeTime=0 lastIncomeTime=10098000
+554748:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=934156 loan=13437504
+554749:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=934156 playerOps(first..now)=14327573
+554750:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+554751:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+554752:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0007 lines=14
+554753:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+555227:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10109000
+555228:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=156 longest=61983 startTime=8035600 now=10109000
+555229:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10109000
+555230:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10109000
+555236:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.5904883146286
+555237:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.5579679608345 modelId=4264
+555238:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+555248:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10108800
+555249:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=500
+555250:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 5       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10109000 clock=566.61
+555255:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0003 vehiclesRead=29 sink=500
+555256:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10109200 clock=566.66
+555261:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P0 hello
+555262:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+555263:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+555264:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+555265:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+555266:[2026-10-01 18:10:18Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10109400 gameTime0=10109200 timeOfDaySec=50576
+585605:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 balance=934156 firstIncomeTime=0 lastIncomeTime=10098000
+585606:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=934156 loan=13437504
+585607:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=934156 playerOps(first..now)=14327573
+585608:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+585609:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+585610:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+585611:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+586085:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10109400
+586086:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=156 longest=61983 startTime=8035600 now=10109400
+586087:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10109400
+586088:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10109400
+586094:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.5904883146286
+586095:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.5579679608345 modelId=4264
+586096:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+586106:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10109200
+586107:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=500
+586108:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10109400 clock=578.70
+586113:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0004 vehicleDetailSec=0.0003 vehiclesRead=29 sink=500
+586114:[2026-10-01 18:10:23Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10109600 clock=578.74
+586119:[2026-10-01 18:10:24Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P0 hello
+586120:[2026-10-01 18:10:24Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+586121:[2026-10-01 18:10:24Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+586122:[2026-10-01 18:10:24Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+586123:[2026-10-01 18:10:24Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+586124:[2026-10-01 18:10:24Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10109800 gameTime0=10109600 timeOfDaySec=50576
+616463:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 balance=934156 firstIncomeTime=0 lastIncomeTime=10098000
+616464:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=934156 loan=13437504
+616465:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=934156 playerOps(first..now)=14327573
+616466:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+616467:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+616468:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+616469:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+616943:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10109800
+616944:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=156 longest=61983 startTime=8035600 now=10109800
+616945:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10109800
+616946:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10109800
+616952:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.5904883146286
+616953:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.5579679608345 modelId=4264
+616954:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+616964:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10109600
+616965:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=500
+616966:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10109800 clock=589.88
+616971:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0003 vehicleDetailSec=0.0003 vehiclesRead=29 sink=500
+616972:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 4       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10110000 clock=589.92
+616977:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P0 hello
+616978:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+616979:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+616980:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+616981:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+616982:[2026-10-01 18:10:29Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10110200 gameTime0=10110000 timeOfDaySec=50576
+647321:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 balance=934156 firstIncomeTime=0 lastIncomeTime=10098000
+647322:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=934156 loan=13437504
+647323:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=934156 playerOps(first..now)=14327573
+647324:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+647325:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+647326:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+647327:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+647794:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10110200
+647795:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=156 longest=61983 startTime=8035600 now=10110200
+647796:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10110200
+647797:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10110200
+647803:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.5904883146286
+647804:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.5579679608345 modelId=4264
+647805:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+647815:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10110000
+647816:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=500
+647817:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10110200 clock=603.12
+647822:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0004 vehiclesRead=29 sink=500
+647823:[2026-10-01 18:10:35Z - MESSAGE  - Sim Pool 2       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10110400 clock=603.16
+647828:[2026-10-01 18:10:36Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0005 vehiclesRead=29 sink=500
+647829:[2026-10-01 18:10:36Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10110800 clock=604.03
+647834:[2026-10-01 18:10:36Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0005 vehiclesRead=29 sink=500
+647835:[2026-10-01 18:10:36Z - MESSAGE  - Sim Pool 1       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10111000 clock=604.48
+647840:[2026-10-01 18:10:37Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0008 vehiclesRead=29 sink=500
+647841:[2026-10-01 18:10:37Z - MESSAGE  - Sim Pool 3       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10111400 clock=605.39
+647846:[2026-10-01 18:10:37Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0002 vehicleDetailSec=0.0011 vehiclesRead=29 sink=500
+647847:[2026-10-01 18:10:37Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10111600 clock=605.84
+647852:[2026-10-01 18:10:40Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P0 hello
+647853:[2026-10-01 18:10:40Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+647854:[2026-10-01 18:10:40Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+647855:[2026-10-01 18:10:40Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+647856:[2026-10-01 18:10:40Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+647857:[2026-10-01 18:10:40Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10112800 gameTime0=10112600 timeOfDaySec=50576
+678208:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 balance=934156 firstIncomeTime=0 lastIncomeTime=10098000
+678209:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=934156 loan=13437504
+678210:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=934156 playerOps(first..now)=14327573
+678211:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+678212:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+678213:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+678214:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+678681:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10112800
+678682:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=156 longest=61983 startTime=8035600 now=10112800
+678683:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10112800
+678684:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10112800
+678690:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.58933842182159
+678691:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.55659902095795 modelId=4264
+678692:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+678702:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10111600
+678703:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=504
+678704:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10112800 clock=619.53
+678709:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0008 vehiclesRead=29 sink=504
+678710:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 8       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10113000 clock=619.56
+678715:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0001 vehicleDetailSec=0.0005 vehiclesRead=29 sink=504
+678716:[2026-10-01 18:10:45Z - MESSAGE  - Sim Pool 7       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10113200 clock=619.99
+678721:[2026-10-01 18:10:46Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P0 hello
+678722:[2026-10-01 18:10:46Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 version=Lua 5.2 io=nil io.open=nil os=table os.getenv=function os.rename=nil os.remove=nil require=function
+678723:[2026-10-01 18:10:46Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P1 HOME=/Users/sdawidziak APPDATA=nil LOCALAPPDATA=nil USERPROFILE=nil
+678724:[2026-10-01 18:10:46Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P2 SKIP io.open niedostępne
+678725:[2026-10-01 18:10:46Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P3 SKIP
+678726:[2026-10-01 18:10:46Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 gameTime=10113400 gameTime0=10113200 timeOfDaySec=50576
+709081:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 balance=934156 firstIncomeTime=0 lastIncomeTime=10098000
+709082:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAccount balance=934156 loan=13437504
+709083:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 playerAll(first..now)=934156 playerOps(first..now)=14327573
+709084:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 line=60555 name=TC - Drewno,Deski - Uxbridge-Preesall IC hasAccount=true lineAll(first..now)=0 lineOps(first..now)=0
+709085:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 lineOpsBuckets=0,0,0,0,0,0,0,0,0,0,0,0
+709086:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P5 allLinesLedgerSec=0.0000 lines=14
+709087:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 industry=61423 name=Brentford Platforma wiertnicza Północ level=5 maxLevel=7 closureTimeStamp=0 stockList=61423
+709554:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=0 count=0 longest=-1 startTime=nil now=10113400
+709555:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=1 count=156 longest=61983 startTime=8035600 now=10113400
+709556:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=2 count=0 longest=-1 startTime=nil now=10113400
+709557:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P6 stock=3 count=0 longest=-1 startTime=nil now=10113400
+709563:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 vehicle=51559 state=1 line=53369 userStopped=false noPath=false daysAtTerminal=0 daysInDepot=0 parts=5 maintenanceStateUtil=0.58933842182159
+709564:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 part1 purchaseTime=2241600 maintenanceState=0.55659902095795 modelId=4264
+709565:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P7 lifespan=29220
+709575:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P8 existing saveId=48bf11b716dbdab9 lastSeenGameTime=10113200
+709576:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P4 lines=14 vehicles=29 industries=20 towns=10 stationGroups=46 listSec=0.0000 vehicleDetailSec=0.0000 vehiclesRead=29 sink=504
+709577:[2026-10-01 18:10:52Z - MESSAGE  - Sim Pool 6       - Main           ]  [TFLIVE-PROBE] P9 dt=0.20000000298023 gameTime=10113400 clock=633.07

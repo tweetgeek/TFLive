@@ -1,0 +1,20 @@
+{
+  "name": "tflive",
+  "private": true,
+  "type": "module",
+  "workspaces": ["shared", "server"],
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json",
+    "start": "tsx server/src/main.ts",
+    "demo": "tsx server/src/main.ts --demo",
+    "demo:log": "tsx server/scripts/make-demo-log.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.0",
+    "tsx": "^4.23.0",
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.3"
+  }
+}
