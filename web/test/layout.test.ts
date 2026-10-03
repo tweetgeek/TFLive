@@ -35,6 +35,10 @@ describe('układ', () => {
     expect(layout.wide).toBe(false);
   });
 
+  it('próg dużego ekranu obejmuje MacBooki z Retiną (≥1400×720)', () => {
+    expect(WIDE_QUERY).toBe('(min-width: 1400px) and (min-height: 720px)');
+  });
+
   it('startLayout bez matchMedia zostawia wąski układ', () => {
     startLayout({});
     expect(layout.wide).toBe(false);
