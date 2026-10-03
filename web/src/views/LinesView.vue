@@ -80,7 +80,7 @@ const ariaSort = (key: SortKey) => (sort.value.key === key ? (sort.value.dir ===
         <thead>
           <tr>
             <th>Linia</th>
-            <th>Tryb</th>
+            <th class="c-mode">Tryb</th>
             <th class="r" :aria-sort="ariaSort('vehicles')"><button class="sortbtn" type="button" data-sort="vehicles" @click="toggle('vehicles')">Pojazdy</button></th>
             <th class="r" :aria-sort="ariaSort('result')"><button class="sortbtn" type="button" data-sort="result" @click="toggle('result')">Wynik · 12 mies. {{ sort.key === 'result' ? (sort.dir === 1 ? '▴' : '▾') : '' }}</button></th>
             <th :aria-sort="ariaSort('load')"><button class="sortbtn" type="button" data-sort="load" @click="toggle('load')">Obłożenie teraz {{ sort.key === 'load' ? (sort.dir === 1 ? '▴' : '▾') : '' }}</button></th>
@@ -100,12 +100,12 @@ const ariaSort = (key: SortKey) => (sort.value.key === key ? (sort.value.dir ===
               <td class="name">
                 <div class="namecell">
                   <span class="lname" :title="r.line.name">{{ r.line.name }}</span>
-                  <span v-if="!r.line.vehicleIds.length" class="tag tag-warn">🚫 bez pojazdów</span>
-                  <span v-if="r.rampUp" class="tag tag-info">🌱 rozruch</span>
+                  <span v-if="!r.line.vehicleIds.length" class="tag tag-warn" title="bez pojazdów">🚫<span class="tlabel"> bez pojazdów</span></span>
+                  <span v-if="r.rampUp" class="tag tag-info" title="rozruch">🌱<span class="tlabel"> rozruch</span></span>
                   <span v-if="r.alerts.length" class="tag tag-warn">⚠️ {{ r.alerts.length }}</span>
                 </div>
               </td>
-              <td><span class="tag tag-neutral" :title="modeLabel(r.line.mode)">{{ modeEmoji(r.line.mode) }}{{ dense ? '' : ' ' + modeLabel(r.line.mode) }}</span></td>
+              <td class="c-mode"><span class="tag tag-neutral" :title="modeLabel(r.line.mode)">{{ modeEmoji(r.line.mode) }}{{ dense ? '' : ' ' + modeLabel(r.line.mode) }}</span></td>
               <td class="r num">{{ r.line.vehicleIds.length }}</td>
               <td class="r num" :class="r.line.operatingResult12m < 0 ? 'neg' : r.line.operatingResult12m > 0 ? 'pos' : 'muted'">{{ fmtSigned(r.line.operatingResult12m) }}</td>
               <td><div v-if="r.load !== null" class="loadcell"><div class="bar"><span :class="{ warn: r.load < 0.25 }" :style="{ width: fmtPct(r.load) }"></span></div><span class="num">{{ fmtPct(r.load) }}</span></div><span v-else class="muted">—</span></td>
@@ -202,4 +202,9 @@ h3 { margin: 10px 0 0; font-size: 15px; }
 tr.expand td { background: #12181d; }
 .exp { display: flex; flex-direction: column; gap: 3px; font-size: .92em; padding: 2px 0 4px; white-space: normal; }
 .item { margin-right: 12px; }
+.dense .lname { min-width: 5em; }
+@container (max-width: 760px) {
+  .dense .c-mode { display: none; }
+  .dense .tlabel { display: none; }
+}
 </style>
