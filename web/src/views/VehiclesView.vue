@@ -69,7 +69,7 @@ function stateText(v: Vehicle): { dot: string; text: string } {
     <section class="table-wrap">
       <div v-if="!list.length" class="empty">Brak pojazdów dla tego filtra.</div>
       <table v-else>
-        <thead><tr><th>Pojazd</th><th>Linia</th><th>Stan ruchu</th><th class="r">Ładunek</th><th class="r">Wiek</th><th>Stan pojazdu</th><th class="r">Wynik · 12 mies. ▾</th></tr></thead>
+        <thead><tr><th>Pojazd</th><th>Linia</th><th>Stan ruchu</th><th class="r">Ładunek</th><th class="r c-age">Wiek</th><th>Stan pojazdu</th><th class="r">Wynik · 12 mies. ▾</th></tr></thead>
         <tbody>
           <tr v-for="v in list" :key="v.id">
             <td>
@@ -80,7 +80,7 @@ function stateText(v: Vehicle): { dot: string; text: string } {
             <td class="soft">{{ lineName(v.lineId) }}</td>
             <td><span class="st"><span class="dot" :class="stateText(v).dot"></span>{{ stateText(v).text }}</span></td>
             <td class="r num">{{ v.load }}/{{ v.capacity }}</td>
-            <td class="r num">{{ fmtDecimal(vehicleAgeYears(v, now, sn.meta.dayMs)) }}</td>
+            <td class="r num c-age">{{ fmtDecimal(vehicleAgeYears(v, now, sn.meta.dayMs)) }}</td>
             <td>
               <div v-if="vehicleCondition(v) !== null" class="cond"><div class="bar"><span :class="{ warn: (vehicleCondition(v) ?? 1) < 0.5 }" :style="{ width: fmtPct(vehicleCondition(v)) }"></span></div><span class="num">{{ fmtPct(vehicleCondition(v)) }}</span></div>
               <span v-else class="muted">—</span>
@@ -108,4 +108,9 @@ function stateText(v: Vehicle): { dot: string; text: string } {
 .dense .linesel select { font-size: .9em; max-width: 200px; padding: 0 6px; }
 .dense .cond .bar { width: 50px; }
 .dense .st { font-size: .9em; }
+@container (max-width: 760px) {
+  .dense .c-age { display: none; }
+  .dense .cond .bar { display: none; }
+  .dense th, .dense .st { white-space: normal; }
+}
 </style>

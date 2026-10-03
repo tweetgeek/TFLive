@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 
-export const WIDE_QUERY = '(min-width: 1800px) and (min-height: 900px)';
+export const WIDE_QUERY = '(min-width: 1400px) and (min-height: 720px)';
 
 export const layout = reactive<{ wide: boolean }>({ wide: false });
 

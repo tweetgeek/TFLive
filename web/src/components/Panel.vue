@@ -20,5 +20,5 @@ h2 { margin: 0; font-size: 1.05em; font-weight: 700; white-space: nowrap; }
 .cnt { font-size: .85em; padding: 1px 7px; border-radius: 999px; background: var(--surface-2); color: var(--soft); }
 .full { margin-left: auto; min-width: 28px; min-height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; text-decoration: none; font-weight: 700; }
 .full:hover { background: var(--surface-2); }
-.pb { flex: 1; min-height: 0; overflow: auto; scroll-padding-top: 40px; padding: 6px 10px 8px; display: flex; flex-direction: column; }
+.pb { container-type: inline-size; flex: 1; min-height: 0; overflow: auto; scroll-padding-top: 40px; padding: 6px 10px 8px; display: flex; flex-direction: column; }
 </style>
